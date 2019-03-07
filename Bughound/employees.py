@@ -1,4 +1,9 @@
+import cherrypy
+
 class employees:
+    exposed = True
+    @cherrypy.tools.accept(media='text/html')
+    
     def POST(self):
         return "hello world"
 

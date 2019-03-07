@@ -1,5 +1,5 @@
 function test_employees(){
-    var AJAX_Call = getData('', '../CECS544/Employees');
+    var AJAX_Call = getData('', './employees');
 
     $.when(AJAX_Call).then(function (AJAX_Response){
         console.log("made it!");

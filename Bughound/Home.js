@@ -30,6 +30,6 @@ function SessionInfo(){
 
 	// the AJAX call was not issued succesfully
 	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
+		alert("The webpage is unable to load, please contact the system admin");
 	})
 }
