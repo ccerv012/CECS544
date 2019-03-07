@@ -1,9 +1,17 @@
 function test_employees(){
-    var AJAX_Call = getData('', './employees');
+    var params = {
+        'Method' : 'Search'
+    }
 
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        console.log("made it!");
-    })
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './employees');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){})
 
     // the AJAX call was not issued succesfully
 	.fail(function(load){
