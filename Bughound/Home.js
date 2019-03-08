@@ -43,5 +43,5 @@ function OpenBugReport(bugID){
 	setCookie('bugID', bugID, .5);
 
 	// redirect to the bug editor
-	window.open('Bughound/BugEditor.html');
+	window.open('./BugEditor.html');
 }
