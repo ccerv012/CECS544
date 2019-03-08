@@ -1,4 +1,4 @@
-function search_bugs(){
+function SearchBugs(){
     var params = {
         'Method' : 'Search'
     }
