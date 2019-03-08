@@ -13,7 +13,9 @@ class employees:
 
     def __init__(self):
         self.dispatch = {
-            'Search' : self.search_employees
+            'Search' : self.search_employees,
+            'Add': self.add_employee,
+            'Delete': self.delete_employee
         }
     
     def POST(self, params):
@@ -44,7 +46,7 @@ class employees:
         '''
 
         cur.execute(sql,self.Params)
-        conn.commit()
+        self.CECS544_DB.conn.commit()
 
     def update_employee(self, cur):
         sql = '''
@@ -58,7 +60,7 @@ class employees:
         '''
 
         cur.execute(sql)
-        conn.commit()
+        self.CECS544_DB.conn.commit()
     
     def delete_employee(self, cur):
         sql = '''
@@ -67,8 +69,8 @@ class employees:
             emp_id = :id
         '''
 
-        cur.execute(sql)
-        conn.commit()
+        cur.execute(sql, id=self.Params['EmpID'])
+        self.CECS544_DB.conn.commit()
 
     def search_employees(self, cur):
         sql = '''
