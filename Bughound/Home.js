@@ -37,3 +37,11 @@ function SessionInfo(){
 		alert("The webpage is unable to load, please contact the system admin");
 	})
 }
+
+function OpenBugReport(bugID){
+	// set a cookie so the next page can read the cookie and know which bug to open
+	setCookie('bugID', bugID, .5);
+
+	// redirect to the bug editor
+	window.open('Bughound/BugEditor.html');
+}
