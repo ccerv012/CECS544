@@ -4,6 +4,7 @@
 	<head>
 		<title>Login</title>
 		<script src='./Login.js'></script>
+		<link rel="stylesheet" type='text/css' href="./Login.css">
 
 		<script src='./Ajax.js'></script>
 		<script src='./Cookies.js'></script>
@@ -11,9 +12,11 @@
 	</head>
 	
 	<body>
-		Employee ID: <input type="text" id="Username"><br>
-		Password: <input type="password" id="Password">
-		<button type="submit" onclick="Login()">Log In</button>
+		<div id="loginForm">
+			Username: <input type="text" id="Username"><br>
+			Password: <input type="password" id="Password">
+			<button type="submit" onclick="Login()">Log In</button>
+		</div>
 	</body>
 	
 </html>
