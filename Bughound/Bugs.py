@@ -58,9 +58,11 @@ class Bugs:
     
     def DeleteBugs(self, cur):
         sql = '''
+        DELETE FROM BUG_REPORTS
+            WHERE BUG_ID = :bugID
         '''
 
-        cur.execute(sql, id=self.Params['EmpID'])
+        cur.execute(sql, bugID=self.Params['ID'])
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
