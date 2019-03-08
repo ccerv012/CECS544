@@ -67,6 +67,8 @@ class Bugs:
 
     def SearchBugs(self, cur):
         sql = '''
+        SELECT bug_id, prgm_id, report_type, severity
+        FROM bug_reports
         '''
 
         cur.execute(sql) # execute the sql statement
@@ -76,7 +78,10 @@ class Bugs:
         for row in allRows:
             # save the data to our strucutre we are sending back via AJAX
             self.sendData['Data'].append({
-                
+                'ID' : row[0],
+                'Program' : row[0],
+                'ReportType' : row[0],
+                'Severity' : row[0]
             })
 
         self.sendData['Result'] = 'Success'
