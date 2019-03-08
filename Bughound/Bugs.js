@@ -26,11 +26,11 @@ function search_bugs(){
             var tr;
             for (var i = 0; i < AJAX_Response['Data'].length; i++) { 
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
-                tr.append('<td>' + AJAX_Response['Data'][i].ID + '<td>'); // populate the new row, cell by cell
+                tr.append('<td onclick="OpenBugReport(\"' + AJAX_Response['Data'][i].ID + '\")" class="link">' + AJAX_Response['Data'][i].ID + '<td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Program + '<td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '<td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Severity + '<td>'); // populate the new row, cell by cell
-                tr.append('<td><button id="delete_Bug(\"' + AJAX_Response['Data'][i].ID + '\")"<td>'); // populate the new row, cell by cell
+                tr.append('<td><button id="DeleteBug(\"' + AJAX_Response['Data'][i].ID + '\")"<td>'); // populate the new row, cell by cell
             }
         }
     })
@@ -41,7 +41,7 @@ function search_bugs(){
 	})
 }
 
-function delete_Bug(bugID){
+function DeleteBug(bugID){
     var params = {
         'Method' : 'Delete'
     }
@@ -67,8 +67,4 @@ function delete_Bug(bugID){
 	.fail(function(load){
 		alert("The webpage is unable to load, please contact the system admin")
 	})
-}
-
-function LoadBug(){
-    
 }
