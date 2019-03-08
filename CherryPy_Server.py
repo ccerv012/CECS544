@@ -9,6 +9,7 @@ import time
 
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound')
 from employees import employees
+from Bugs import Bugs
 
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
 from Login import Login
@@ -75,6 +76,11 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.response_headers.on': True,
 				'tools.response_header.headers': [('Content-Type', 'text/json')],
 			},
+			'/Bughound/Bugs':{
+				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+				'tools.response_headers.on': True,
+				'tools.response_header.headers': [('Content-Type', 'text/json')],
+			},
 		})
 		
 		cherrypy.config.update ({
@@ -100,6 +106,7 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 		webapp.ReusablePython.Session = Session()
 		
 		webapp.Bughound.employees = employees()
+		webapp.Bughound.Bugs = Bugs()
 		
 		cherrypy.engine.start()
 		cherrypy.engine.block()
