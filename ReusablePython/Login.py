@@ -51,7 +51,7 @@ class Login:
         try:
             self.CECS544_DB = db_CECS544()
             cur = self.CECS544_DB.conn.cursor()
-        except:
+        except ValueError as err:
             raise ValueError(err)
 
         # create an object to send back to the AJAX call
