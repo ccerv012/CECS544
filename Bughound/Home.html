@@ -18,6 +18,21 @@
 		<div id="sessionInfo"></div>
 		<button id="employeeSearch" onclick="search_employees()">Search</button>
 		<button id="employeeDelete" onclick="delete_employees()">Delete</button>
+
+		<!-- The bug search form and results div always exist on the page, 
+			we are going to hide them when the page loads so the user doesnt know -->
+		<div id="bugs">
+			<div id="bugSearch">
+				<form id="bugSearchForm">
+					Bug ID: <input type="text" id="bugID">
+					Report Type: <input type="text" id="bugID">
+					Severity: <input type="text" id="bugID">
+					<button id="BugSearchBtn" onclick="search_bugs()"></button>
+				</form>
+			</div>
+			<div id="bugSearchResults"></div>
+		</div>
+
 	</body>
 	
 </html>
