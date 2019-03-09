@@ -85,9 +85,9 @@ class Bugs:
             # save the data to our strucutre we are sending back via AJAX
             self.sendData['Data'].append({
                 'ID' : row[0],
-                'Program' : row[0],
-                'ReportType' : row[0],
-                'Severity' : row[0]
+                'Program' : row[1],
+                'ReportType' : row[2],
+                'Severity' : row[3]
             })
 
         self.sendData['Result'] = 'Success'

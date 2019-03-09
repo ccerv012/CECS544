@@ -17,7 +17,7 @@ function SearchBugs(){
             $('#bugSearchResults').empty();
 
             //  creeate a table to dsiplay the results
-            $('#bugSearchResults').append('<table id="BugResultsTable">');
+            $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
 
             // add a header row to the table
             $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Delete</th></thead>');
@@ -43,33 +43,36 @@ function SearchBugs(){
 }
 
 function DeleteBug(bugID){
-    var params = {
-        'Method' : 'Delete',
-        'ID' : bugID
-    }
-
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
-
-    // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
-
-    // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
-            // re-run the search to show the user its been deleted
-            SearchBugs();
-
-            // let the user know it was successful
-            alert('You have successfully deleted ' + bugID);
+    // prompt the user to confirm their choice to delete a record
+    if (confirm("Are you sure you want to delete " + bugID + "?")){
+        var params = {
+            'Method' : 'Delete',
+            'ID' : bugID
         }
-    })
-
-    // the AJAX call was not issued succesfully
-	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
-	})
+    
+        // data needs to be formatted before it can be sent via ajax
+        var formData = new FormData()
+        formData.append('params', JSON.stringify(params));
+    
+        // make the ajax call
+        var AJAX_Call = getData(formData, './Bugs');
+    
+        // wait for the ajax call to finish then execute...
+        $.when(AJAX_Call).then(function (AJAX_Response){
+            if (AJAX_Response['Result'] == 'Success'){
+                // re-run the search to show the user its been deleted
+                SearchBugs();
+    
+                // let the user know it was successful
+                alert('You have successfully deleted ' + bugID);
+            }
+        })
+    
+        // the AJAX call was not issued succesfully
+        .fail(function(load){
+            alert("The webpage is unable to load, please contact the system admin")
+        })
+    }
 }
 
 function AddBug(){
@@ -102,4 +105,8 @@ function AddBug(){
 	.fail(function(load){
 		alert("The webpage is unable to load, please contact the system admin")
 	})
+}
+
+function showBugSection(){
+    $('#bugs').show();
 }
