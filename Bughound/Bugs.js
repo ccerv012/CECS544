@@ -110,3 +110,11 @@ function AddBug(){
 function showBugSection(){
     $('#bugs').show();
 }
+
+function OpenBugReport(bugID){
+	// set a cookie so the next page can read the cookie and know which bug to open
+	setCookie('bugID', bugID, .5);
+
+	// redirect to the bug editor
+	window.open('./BugEditor.html');
+}
