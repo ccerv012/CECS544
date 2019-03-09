@@ -7,7 +7,7 @@ function CheckLoginStatus(){
 		// see how we are able to store more sensitive data in the session variable 
 		// that we do not want to store in the cookie because the user can tamper with the cookie
 		// but the user cannot tamper with the session variable
-		SessionInfo(); 
+		// SessionInfo(); 
 		
 		// hide the sections we dont want the user to know about yet
 		$('#bugs').hide();

@@ -14,9 +14,10 @@ class Bugs:
     def __init__(self):
         self.dispatch = {
             'Search' : self.SearchBugs,
-            'Add': self.AddBugs,
-            'Update': self.UpdateBugs,
-            'Delete': self.DeleteBugs,
+            'Add': self.AddBug,
+            'Update': self.UpdateBug,
+            'Delete': self.DeleteBug,
+            'PopulateBug': self.PopulateBugEditor,
         }
     
     def POST(self, params):
@@ -38,7 +39,7 @@ class Bugs:
 
         return json.dumps(self.sendData)
 
-    def AddBugs(self, cur):
+    def AddBug(self, cur):
         sql = '''
             insert into bug_reports
                 (report_type, severity)
@@ -51,16 +52,22 @@ class Bugs:
 
         self.sendData['Result'] = 'Success'
 
-    def UpdateBugs(self, cur):
+    def UpdateBug(self, cur):
         sql = '''
+            update bug_reports
+                set 
+                    report_type = :rptType,
+                    severity = :severity
+                where bug_id = :bugID
+
         '''
 
-        cur.execute(sql)
+        cur.execute(sql, rptType=self.Params['ReportType'], severity=self.Params['Severity'], bugID=self.Params['BugID'])
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
     
-    def DeleteBugs(self, cur):
+    def DeleteBug(self, cur):
         sql = '''
         DELETE FROM BUG_REPORTS
             WHERE BUG_ID = :bugID
@@ -75,9 +82,47 @@ class Bugs:
         sql = '''
         SELECT bug_id, prgm_id, report_type, severity
         FROM bug_reports
+        WHERE 1=1
         '''
 
-        cur.execute(sql) # execute the sql statement
+        #  need to go through each of the search fields and see if they have values
+        #  if they do, we need to add them to our sql string
+        bindVars = {}
+        if self.Params['BugID'] != "":
+            sql = sql + ' AND BUG_ID = :bugID'
+            bindVars['bugID'] = self.Params['BugID']
+
+        if self.Params['ReportType'] != "":
+            sql = sql + ' AND REPORT_TYPE = :rptType'
+            bindVars['rptType'] = self.Params['ReportType']
+
+        if self.Params['Severity'] != "":
+            sql = sql + ' AND SEVERITY = :severity'
+            bindVars['severity'] = self.Params['Severity']
+
+        cur.execute(sql, bindVars) # execute the sql statement
+        allRows = cur.fetchall() # get the results on the query
+
+        # loop through the query results
+        for row in allRows:
+            # save the data to our strucutre we are sending back via AJAX
+            self.sendData['Data'].append({
+                'ID' : row[0],
+                'Program' : row[1],
+                'ReportType' : row[2],
+                'Severity' : row[3]
+            })
+
+        self.sendData['Result'] = 'Success'
+
+    def PopulateBugEditor(self, cur):
+        sql = '''
+        SELECT bug_id, prgm_id, report_type, severity
+        FROM bug_reports
+        where bug_id = :bugID
+        '''
+
+        cur.execute(sql, bugID=self.Params['BugID']) # execute the sql statement
         allRows = cur.fetchall() # get the results on the query
 
         # loop through the query results

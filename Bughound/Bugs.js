@@ -1,6 +1,9 @@
 function SearchBugs(){
     var params = {
-        'Method' : 'Search'
+        'Method': 'Search',
+        'BugID': $('#bugID').val(),
+        'ReportType': $('#rptType').val(),
+        'Severity': $('#severity').val()
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -117,4 +120,74 @@ function OpenBugReport(bugID){
 
 	// redirect to the bug editor
 	window.open('./BugEditor.html');
+}
+
+function LoadBugReport(){
+    if (document.cookie.indexOf("bugID")>=0){
+        // save the bugID to a variable that we will send to the search function
+        var bugID = getCookie("bugID"); 
+        // delete the cookie so if a user opens another page the bugID variable is reset
+        setCookie('bugID', bugID, 0);
+
+        PopulateBugEditor(bugID);
+    }
+}
+
+function PopulateBugEditor(bugID){
+    var params = {
+        'Method': 'PopulateBug',
+        'BugID': bugID
+    }
+
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './Bugs');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){
+        if (AJAX_Response['Result'] == 'Success') {
+            // populate the form with the values that are currently in the database
+            $('#bugID').val(AJAX_Response['ID']);
+            $('#prg').val(AJAX_Response['Program']);
+            $('#rptType').val(AJAX_Response['ReportType']);
+            $('#severity').val(AJAX_Response['Severity']);
+        }
+    })
+
+    // the AJAX call was not issued succesfully
+	.fail(function(load){
+		alert("The webpage is unable to load, please contact the system admin")
+	})
+}
+
+function SaveBug(){
+    var params = {
+        'Method' : 'Update',
+        'BugID' : $('#bugID').val(),
+        'ReportType' : $('#rptType').val(),
+        'Severity' : $('#severity').val()
+    }
+
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './Bugs');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){
+        if (AJAX_Response['Result'] == 'Success'){
+            // let the user know it was successful
+            alert('You have successfully saved your changes');
+        }
+    })
+
+    // the AJAX call was not issued succesfully
+	.fail(function(load){
+		alert("The webpage is unable to load, please contact the system admin")
+	})
 }

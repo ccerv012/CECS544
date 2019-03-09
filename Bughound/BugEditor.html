@@ -2,9 +2,10 @@
 <html lang="en">
     <head>
 		<title>Bug Hound</title>
-		
-		<script src='./Home.js'></script>
+
 		<script src='./Bugs.js'></script>
+
+		<link rel='stylesheet' type='text/css' href='./Home.css'>
 
 		<script src='../ReusableJavascript/Ajax.js'></script>
 		<script src='../ReusableJavascript/Cookies.js'></script>
@@ -12,7 +13,30 @@
 	
     </head>
     
-    <body onload="LoadBug()">
+		<body onload="LoadBugReport()">
+
+			<div class="topnav">
+				<a href="#home">Home</a>
+				<a class="active" href="#" onclick="showBugSection()">Bugs</a>
+				<!-- add each new section here -->
+			</div>
+			
+			<div id="bugEditor">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Edit Bug</div>
+						<label><span>Bug ID: </span><input type="text" class="input-field" id="bugID" value="" /></label>
+						<label><span>Bug ID: </span><input type="text" class="input-field" id="prg" value="" /></label>
+						<label><span>Report Type: </span><input type="text" class="input-field" id="rptType" value="" /></label>
+						<label><span>Severity</span>
+							<select id="severity" class="select-field">
+								<option value="1">General</option>
+								<option value="2">Advertisement</option>
+								<option value="3">Partnership</option>
+							</select>
+						</label>
+						<label><span> </span><button id="BugSearchBtn" onclick="SaveBug()">Save</button></label>
+				</div>
+			</div>
         
     </body>
 </html>
