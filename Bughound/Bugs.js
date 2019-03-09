@@ -150,10 +150,13 @@ function PopulateBugEditor(bugID){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result'] == 'Success') {
             // populate the form with the values that are currently in the database
-            $('#bugID').val(AJAX_Response['ID']);
-            $('#prg').val(AJAX_Response['Program']);
-            $('#rptType').val(AJAX_Response['ReportType']);
-            $('#severity').val(AJAX_Response['Severity']);
+            // we can hardcode [0] because only 1 row will ever be returned since we are searching
+            // by the bug ID.  We could change our sendData variable in python but this way
+            // everything stays consistent
+            $('#bugID').val(AJAX_Response['Data'][0]['ID']);
+            $('#prg').val(AJAX_Response['Data'][0]['Program']);
+            $('#rptType').val(AJAX_Response['Data'][0]['ReportType']);
+            $('#severity').val(AJAX_Response['Data'][0]['Severity']);
         }
     })
 
