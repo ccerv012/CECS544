@@ -25,14 +25,18 @@
 		<!-- The bug search form and results div always exist on the page, 
 			we are going to hide them when the page loads so the user doesnt know -->
 		<div id="bugs">
+			<div id="bugAdd">
+				Add a new bug<br>
+				Report Type: <input type="text" id="newRptType">
+				Severity: <input type="text" id="newSeverity">
+				<button id="BugAddBtn" onclick="AddBug()">Add Bug</button>
+			</div>
 			<div id="bugSearch">
-				<div id="bugSearchForm">
-					Search for Bugs<br>
-					Bug ID: <input type="text" id="bugID">
-					Report Type: <input type="text" id="bugID">
-					Severity: <input type="text" id="bugID">
-					<button id="BugSearchBtn" onclick="SearchBugs()">Search</button>
-				</div>
+				Search for Bugs<br>
+				Bug ID: <input type="text" id="bugID">
+				Report Type: <input type="text" id="rptType">
+				Severity: <input type="text" id="severity">
+				<button id="BugSearchBtn" onclick="SearchBugs()">Search</button>
 			</div>
 			<div id="bugSearchResults"></div>
 		</div>
