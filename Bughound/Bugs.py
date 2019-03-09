@@ -40,9 +40,13 @@ class Bugs:
 
     def AddBugs(self, cur):
         sql = '''
+            insert into bug_reports
+                (report_type, severity)
+            values 
+                (:rptType, :severity)
         '''
 
-        cur.execute(sql,self.Params)
+        cur.execute(sql, rptType=self.Params['RptType'], severity=self.Params['Severity'])
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
