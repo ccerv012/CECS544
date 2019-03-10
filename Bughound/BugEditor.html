@@ -6,10 +6,12 @@
 		<script src='./Bugs.js'></script>
 
 		<link rel='stylesheet' type='text/css' href='./Home.css'>
+		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
 
 		<script src='../ReusableJavascript/Ajax.js'></script>
 		<script src='../ReusableJavascript/Cookies.js'></script>
 		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
+		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
 	
     </head>
     
@@ -24,16 +26,95 @@
 			<div id="bugEditor">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Edit Bug</div>
-						<label><span>Bug ID: </span><input type="text" class="input-field" id="bugID" value="" /></label>
-						<label><span>Program: </span><input type="text" class="input-field" id="prg" value="" /></label>
-						<label><span>Report Type: </span><input type="text" class="input-field" id="rptType" value="" /></label>
-						<label><span>Severity</span>
+						<label><span>Bug ID: </span><input type="text" class="small-input-field" id="bugID" value="" /></label>
+						<label>
+							<span>Program: </span><input type="text" class="small-input-field" id="prg" value="" />
+							<span>Release: </span><input type="text" class="small-input-field" id="rel" value="" />
+							<span>Version: </span><input type="text" class="small-input-field" id="ver" value="" />
+						</label>
+
+						<label>
+							<span>Report Type</span>
+							<select id="rptType" class="select-field">
+								<option value="PleaseSelect">PleaseSelect</option>
+								<option value="1">Coding Error</option>
+								<option value="2">Design Issue</option>
+								<option value="3">Suggestion</option>
+								<option value="3">Documentation</option>
+								<option value="3">Hardware</option>
+								<option value="3">Query</option>
+							</select>
+
+							<span>Severity</span>
 							<select id="severity" class="select-field">
-								<option value="1">General</option>
-								<option value="2">Advertisement</option>
-								<option value="3">Partnership</option>
+									<option value="PleaseSelect">PleaseSelect</option>
+								<option value="1">Fatal</option>
+								<option value="2">Serious</option>
+								<option value="3">Minor</option>
 							</select>
 						</label>
+						
+						<label><span>Problem Summary: </span><textarea class="textarea-field" id="probSumm" cols="30" rows="10"></textarea></label>
+						<label><span>Can You Reproduce The Problem(Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="reproduce" value="" /></label>
+						<label><span>Problem And How To Reproduce: </span><textarea class="textarea-field" id="reproduceSteps" cols="30" rows="10"></textarea></label>
+						<label><span>Suggested Fix: </span><textarea class="textarea-field" id="suggFix" cols="30" rows="10"></textarea></label>
+
+						<label>
+							<span>Reported By: </span><input type="text" class="small-input-field" id="reportBy" value="" />
+							<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
+						</label>
+
+						<br><hr>
+							<p class="center">Items Below Are For Use Only By The Development Team</p>
+						<hr><br>
+
+						<label>
+							<span>Functional Area: </span><input type="text" class="small-input-field" id="funcArea" value="" />
+							<span>Assigned To: </span><input type="text" class="small-input-field" id="assigned" value="" />
+						</label>
+
+						<label><span>Comments: </span><textarea class="textarea-field" id="comments" cols="30" rows="10"></textarea></label>
+
+						<label>
+							<span>Status</span>
+							<select id="status" class="select-field">
+									<option value="PleaseSelect">PleaseSelect</option>
+								<option value="1">Open</option>
+								<option value="2">Closed</option>
+							</select>
+
+							<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
+						</label>
+			
+						<label><span>Resolution</span>
+							<select id="resolution" class="select-field">
+									<option value="PleaseSelect">PleaseSelect</option>
+								<option value="1">Pending</option>
+								<option value="2">Fixed</option>
+								<option value="3">Irreproducible</option>
+								<option value="4">Deferred</option>
+								<option value="5">As Designed</option>
+								<option value="6">Can't Be Fixed</option>
+								<option value="7">Withdrawn By Reporter</option>
+								<option value="8">Need More Info</option>
+								<option value="9">Disagree With Suggestion</option>
+							</select>
+
+							<span>Resolution Version: </span><input type="number" class="small-input-field" id="resolVer" value="" />
+						</label>
+					
+						<label>
+							<span>Resolved By: </span><input type="text" class="small-input-field" id="resolBy" value="" />
+							<span>Date: </span><input type="text" class="small-input-field datepicker" id="resolDate" value="" />
+						</label>
+
+						<label>
+							<span>Resolved Tested By: </span><input type="text" class="small-input-field" id="resolTestedBy" value="" />
+							<span>Date: </span><input type="text" class="small-input-field datepicker" id="resolTestDate" value="" />
+						</label>
+
+						<label><span>Treat As Deferred (Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="defer" value="" /></label>
+					
 						<label><span> </span><button id="BugSearchBtn" onclick="SaveBug()">Save</button></label>
 				</div>
 			</div>

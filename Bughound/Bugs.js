@@ -158,6 +158,9 @@ function PopulateBugEditor(bugID){
             $('#rptType').val(AJAX_Response['Data'][0]['ReportType']);
             $('#severity').val(AJAX_Response['Data'][0]['Severity']);
         }
+
+        // add the jquery date picker to all the date fields
+        $( ".datepicker" ).datepicker();
     })
 
     // the AJAX call was not issued succesfully
