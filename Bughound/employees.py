@@ -42,11 +42,13 @@ class employees:
         INSERT INTO EMPLOYEE
             (emp_name, emp_username, emp_password, emp_role)
         VALUES
-            ('Jane Doe', 'jdoe', 'Password1', 2)
+            (:Employee_Name, :Employee_Username, :Employee_Password, :Employee_Role)
         '''
 
-        cur.execute(sql,self.Params)
+        cur.execute(sql, Employee_Name=self.Params['Employee_Name'], Employee_Username=self.Params['Employee_Username'], Employee_Password=self.Params['Employee_Password'], Employee_Role=self.Params['Employee_Role'])
         self.CECS544_DB.conn.commit()
+
+        self.sendData['Result']='Success'
 
     def update_employee(self, cur):
         sql = '''
@@ -72,13 +74,20 @@ class employees:
         cur.execute(sql, id=self.Params['EmpID'])
         self.CECS544_DB.conn.commit()
 
+        self.sendData['Result'] = 'Success'
+
     def search_employees(self, cur):
         sql = '''
         select EMP_ID, EMP_USERNAME, EMP_NAME, EMP_ROLE 
         from EMPLOYEE 
+        WHERE 1=1
         '''
+        bindVars = {}
+        if self.Params['Employee_ID'] != "":
+            sql = sql + ' AND EMP_ID = :Employee_ID'
+            bindVars['Employee_ID'] = self.Params['Employee_ID']
 
-        cur.execute(sql) # execute the sql statement
+        cur.execute(sql, bindVars) # execute the sql statement
         allRows = cur.fetchall() # get the results on the query
 
         # loop through the query results
