@@ -51,3 +51,13 @@ function Login(){
     else
         alert('Please enter both a username and password and try again');
 }
+
+function EnableLoadingGraphic(){
+	$(document).ajaxStart(function() {
+		$('#wait').css('display', 'block');
+	});
+
+	$(document).ajaxComplete(function() {
+		$('#wait').css('display', 'none');
+	});
+}

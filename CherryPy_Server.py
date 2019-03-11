@@ -55,6 +55,12 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.expires.on': True,
 				'tools.expires.secs': 60
 			},
+			'/ReusableGraphics':{
+				'tools.staticdir.on': True,
+				'tools.staticdir.dir': 'ReusableGraphics',
+				'tools.expires.on': True,
+				'tools.expires.secs': 60
+			},
 			'/ReusablePython/Login':{
 				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
 				'tools.response_headers.on': True,
