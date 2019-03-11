@@ -2,8 +2,17 @@ function SearchBugs(){
     var params = {
         'Method': 'Search',
         'BugID': $('#bugID').val(),
+        'Pgm': $('#prg').val(),
         'ReportType': $('#rptType').val(),
-        'Severity': $('#severity').val()
+        'Severity': $('#severity').val(),
+        'FunctionalArea': $('#funcArea').val(),
+        'Assigned': $('#assigned').val(),
+        'Status': $('#status').val(),
+        'Priority': $('#priority').val(),
+        'Resolution': $('#resolution').val(),
+        'ReportedBy': $('#reportBy').val(),
+        'ReportDate': $('#reportDate').val(),
+        'ResolvedBy': $('#resolBy').val(),
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -23,7 +32,7 @@ function SearchBugs(){
             $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
 
             // add a header row to the table
-            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Delete</th></thead>');
+            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Functional Area</th><th>Assigned</th><th>Status</th><th>Priority</th><th>Resolution</th><th>Reported By</th><th>Report Date</th><th>Resolved By</th><th>Delete</th></thead>');
         
             // loop through the search results and add them to the results table 
             var tr;
@@ -33,6 +42,14 @@ function SearchBugs(){
                 tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Severity + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].ReportedBy + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].ReportedDate + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
                 tr.append('<td><button onclick="DeleteBug(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
                 $('#BugResultsTable').append(tr); // add the row you just built to the table
             }
@@ -155,8 +172,28 @@ function PopulateBugEditor(bugID){
             // everything stays consistent
             $('#bugID').val(AJAX_Response['Data'][0]['ID']);
             $('#prg').val(AJAX_Response['Data'][0]['Program']);
+            $('#rel').val(AJAX_Response['Data'][0]['ProgramRel']);
+            $('#ver').val(AJAX_Response['Data'][0]['ProgramVer']);
             $('#rptType').val(AJAX_Response['Data'][0]['ReportType']);
             $('#severity').val(AJAX_Response['Data'][0]['Severity']);
+            $('#probSumm').val(AJAX_Response['Data'][0]['ProbSumm']);
+            $('#reproduce').val(AJAX_Response['Data'][0]['Reproducable']);
+            //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+            $('#suggFix').val(AJAX_Response['Data'][0]['SuggFix']);
+            $('#reportBy').val(AJAX_Response['Data'][0]['ReportBy']);
+            $('#reportDate').val(AJAX_Response['Data'][0]['ReportDate']);
+            $('#funcArea').val(AJAX_Response['Data'][0]['FuncArea']);
+            $('#assigned').val(AJAX_Response['Data'][0]['Assigned']);
+            $('#comments').val(AJAX_Response['Data'][0]['Comments']);
+            $('#status').val(AJAX_Response['Data'][0]['Status']);
+            $('#priority').val(AJAX_Response['Data'][0]['Priority']);
+            $('#resolution').val(AJAX_Response['Data'][0]['Resolution']);
+            $('#resolVer').val(AJAX_Response['Data'][0]['ResolutionVer']);
+            $('#resolBy').val(AJAX_Response['Data'][0]['ResolvedBy']);
+            $('#resolDate').val(AJAX_Response['Data'][0]['ResolvedDate']);
+            $('#resolTestedBy').val(AJAX_Response['Data'][0]['TestedBy']);
+            $('#resolTestDate').val(AJAX_Response['Data'][0]['TestedDate']);
+            $('#defer').val(AJAX_Response['Data'][0]['Deferred']);
         }
 
         // add the jquery date picker to all the date fields
@@ -173,8 +210,29 @@ function SaveBug(){
     var params = {
         'Method' : 'Update',
         'BugID' : $('#bugID').val(),
+        'Prg' : $('#prg').val(),
+        'Rel' : $('#rel').val(),
+        'Ver' : $('#ver').val(),
         'ReportType' : $('#rptType').val(),
-        'Severity' : $('#severity').val()
+        'Severity' : $('#severity').val(),
+        'ProblemSumm' : $('#probSumm').val(),
+        'Reproduceable' : $('#reproduce').val(),
+        'ReproduceSteps' : $('#reproducSteps').val(), //???
+        'SuggestFix' : $('#suggFix').val(),
+        'ReportBy' : $('#reportBy').val(),
+        'ReportByDate' : $('#reportDate').val(),
+        'FunctionalArea' : $('#funcArea').val(),
+        'AssignedTo' : $('#assigned').val(),
+        'Comments' : $('#comments').val(),
+        'Status' : $('#status').val(),
+        'Priority' : $('#priority').val(),
+        'Resolution' : $('#resolution').val(),
+        'ResolutionVer' : $('#resolVer').val(),
+        'ResolvedBy' : $('#resolBy').val(),
+        'ResolvedDate' : $('#resolDate').val(),
+        'ResolvedTestedBy' : $('#resolTestedBy').val(),
+        'ResolvedTestDate' : $('#resolTestDate').val(),
+        'Defer' : $('#defer').val()        
     }
 
     // data needs to be formatted before it can be sent via ajax

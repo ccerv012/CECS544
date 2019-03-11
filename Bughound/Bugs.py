@@ -51,18 +51,41 @@ class Bugs:
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
-
+    
     def UpdateBug(self, cur):
         sql = '''
             update bug_reports
                 set 
-                    report_type = :rptType,
-                    severity = :severity
-                where bug_id = :bugID
-
+                    BUG_ID = :BugID,
+                    PRGM_NAME = :Prg,
+                    PRGM_RELEASE = :Rel,
+                    PRGM_VERSION = :Ver,
+                    REPORT_TYPE = :ReportType,
+                    SEVERITY = :Severity,
+                    PROB_SUMMARY = :ProblemSumm,
+                    REPRODUCIBILITY = :Reproduceable,
+                    SUGGESTED_FIX = :SuggestFix,
+                    REPORTED_BY_ID = :ReportBy,
+                    REPORT_DATE = :ReportByDate,
+                    FAREA_ID = :FunctionalArea,
+                    ASSIGNED_TO_ID = :AssignedTo,
+                    COMMENTS = :Comments,
+                    BUG_STATUS = :Status,
+                    BUG_PRIORITY = :Priority,
+                    RESOLUTION = :Resolution,
+                    RESOLUTION_VERSION = :ResolutionVer,
+                    RESOLVED_BY_ID = :ResolvedBy,
+                    RESOLUTION_DATE = :ResolvedDate,
+                    TESTED_BY_ID = :ResolvedTestedBy,
+                    TESTED_BY_DATE = :ResolvedTestDate,
+                    TREAT_DEFERRED = :Defer
+                where bug_id = :BugID
         '''
 
-        cur.execute(sql, rptType=self.Params['ReportType'], severity=self.Params['Severity'], bugID=self.Params['BugID'])
+        # delete the method key so you can pass all params without specifying each one
+        del self.Params['Method']
+
+        cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
@@ -80,7 +103,7 @@ class Bugs:
 
     def SearchBugs(self, cur):
         sql = '''
-        SELECT bug_id, prgm_id, report_type, severity
+        SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_ID, REPORT_DATE, RESOLVED_BY_ID
         FROM bug_reports
         WHERE 1=1
         '''
@@ -92,13 +115,49 @@ class Bugs:
             sql = sql + ' AND BUG_ID = :bugID'
             bindVars['bugID'] = self.Params['BugID']
 
+        if self.Params['Pgm'] != "":
+            sql = sql + ' AND PRGM_NAME = :Pgm'
+            bindVars['Pgm'] = self.Params['Pgm']
+
         if self.Params['ReportType'] != "":
             sql = sql + ' AND REPORT_TYPE = :rptType'
             bindVars['rptType'] = self.Params['ReportType']
 
-        if self.Params['Severity'] != "":
+        if self.Params['Severity'] != "" and self.Params['Severity'] != 'PleaseSelect':
             sql = sql + ' AND SEVERITY = :severity'
             bindVars['severity'] = self.Params['Severity']
+
+        if self.Params['FunctionalArea'] != "":
+            sql = sql + ' AND FAREA_ID = :FunctionalArea'
+            bindVars['FunctionalArea'] = self.Params['FunctionalArea']
+
+        if self.Params['Assigned'] != "":
+            sql = sql + ' AND ASSIGNED_TO_ID = :Assigned'
+            bindVars['Assigned'] = self.Params['Assigned']
+
+        if self.Params['Status'] != "" and self.Params['Status'] != 'PleaseSelect':
+            sql = sql + ' AND BUG_STATUS = :Status'
+            bindVars['Status'] = self.Params['Status']
+
+        if self.Params['Priority'] != "":
+            sql = sql + ' AND BUG_PRIORITY = :Priority'
+            bindVars['Priority'] = self.Params['Priority']
+
+        if self.Params['Resolution'] != "" and self.Params['Resolution'] != 'PleaseSelect':
+            sql = sql + ' AND RESOLUTION = :Resolution'
+            bindVars['Resolution'] = self.Params['Resolution']
+
+        if self.Params['ReportedBy'] != "":
+            sql = sql + ' AND REPORTED_BY_ID = :ReportedBy'
+            bindVars['ReportedBy'] = self.Params['ReportedBy']
+
+        if self.Params['ReportDate'] != "":
+            sql = sql + ' AND REPORT_DATE = :ReportDate'
+            bindVars['ReportDate'] = self.Params['ReportDate']
+
+        if self.Params['ResolvedBy'] != "":
+            sql = sql + ' AND RESOLVED_BY_ID = :ResolvedBy'
+            bindVars['ResolvedBy'] = self.Params['ResolvedBy']
 
         cur.execute(sql, bindVars) # execute the sql statement
         allRows = cur.fetchall() # get the results on the query
@@ -110,14 +169,22 @@ class Bugs:
                 'ID' : row[0],
                 'Program' : row[1],
                 'ReportType' : row[2],
-                'Severity' : row[3]
+                'Severity' : row[3],
+                'FuncArea' : row[4],
+                'Assigned' : row[5],
+                'Status' : row[6],
+                'Priority' : row[7],
+                'Resolution' : row[8],
+                'ReportedBy' : row[9],
+                'ReportedDate' : str(row[10]),
+                'ResolvedBy' : row[11]
             })
 
         self.sendData['Result'] = 'Success'
 
     def PopulateBugEditor(self, cur):
         sql = '''
-        SELECT bug_id, prgm_id, report_type, severity
+        SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_ID, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED
         FROM bug_reports
         where bug_id = :bugID
         '''
@@ -131,8 +198,27 @@ class Bugs:
             self.sendData['Data'].append({
                 'ID' : row[0],
                 'Program' : row[1],
-                'ReportType' : row[2],
-                'Severity' : row[3]
+                'ProgramRel' : row[2],
+                'ProgramVer' : row[3],
+                'ReportType' : row[4],
+                'Severity' : row[5],
+                'ProbSumm' : row[6],
+                'Reproducable' : row[7],
+                'SuggFix' : row[8],
+                'ReportBy' : row[9],
+                'ReportDate' : row[10],
+                'FuncArea' : row[11],
+                'Assigned' : row[12],
+                'Comments' : row[13],
+                'Status' : row[14],
+                'Priority' : row[15],
+                'Resolution' : row[16],
+                'ResolutionVer' : row[17],
+                'ResolvedBy' : row[18],
+                'ResolvedDate' : row[19],
+                'TestedBy' : row[20],
+                'TestedDate' : row[21],
+                'Deferred' : row[22],
             })
 
         self.sendData['Result'] = 'Success'

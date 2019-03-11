@@ -37,9 +37,10 @@
 						<label><span>Report Type: </span><input type="text" class="input-field" id="newRptType" value="" /></label>
 						<label><span>Severity</span>
 							<select id="newSeverity" class="select-field">
-								<option value="1">General</option>
-								<option value="2">Advertisement</option>
-								<option value="3">Partnership</option>
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">Fatal</option>
+								<option value="2">Serious</option>
+								<option value="3">Minor</option>
 							</select>
 						</label>
 						<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
@@ -50,14 +51,47 @@
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Search for Bugs</div>
 						<label><span>Bug ID: </span><input type="text" class="input-field" id="bugID" value="" /></label>
+						<label><span>Program: </span><input type="text" class="input-field" id="prg" value="" /></label>
 						<label><span>Report Type: </span><input type="text" class="input-field" id="rptType" value="" /></label>
 						<label><span>Severity</span>
 							<select id="severity" class="select-field">
-								<option value="1">General</option>
-								<option value="2">Advertisement</option>
-								<option value="3">Partnership</option>
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">Fatal</option>
+								<option value="2">Serious</option>
+								<option value="3">Minor</option>
 							</select>
 						</label>
+						<label><span>Functional Area: </span><input type="text" class="input-field" id="funcArea" value="" /></label>
+						<label><span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" /></label>
+						<label>
+							<span>Status</span>
+							<select id="status" class="select-field">
+									<option value="PleaseSelect">Please Select</option>
+								<option value="1">Open</option>
+								<option value="2">Closed</option>
+							</select>
+						</label>
+						<label><span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" /></label>
+						<label><span>Resolution</span>
+							<select id="resolution" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">Pending</option>
+								<option value="2">Fixed</option>
+								<option value="3">Irreproducible</option>
+								<option value="4">Deferred</option>
+								<option value="5">As Designed</option>
+								<option value="6">Can't Be Fixed</option>
+								<option value="7">Withdrawn By Reporter</option>
+								<option value="8">Need More Info</option>
+								<option value="9">Disagree With Suggestion</option>
+							</select>
+						</label>
+						<label>
+							<span>Reported By: </span><input type="text" class="small-input-field" id="reportBy" value="" />
+							<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
+						</label>
+						<label><span>Resolved By: </span><input type="text" class="small-input-field" id="resolBy" value="" /></label>
+								
 						<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>
 				</div>
 			</div>
