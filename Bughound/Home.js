@@ -15,6 +15,8 @@ function CheckLoginStatus(){
 
 		// set up the accordion on each page
 		$( ".bugAccordion" ).accordion({heightStyle: "content"});
+
+		EnableLoadingGraphic();
 		
 	}
 	else
@@ -40,4 +42,14 @@ function SessionInfo(){
 	.fail(function(load){
 		alert("The webpage is unable to load, please contact the system admin");
 	})
+}
+
+function EnableLoadingGraphic(){
+	$(document).ajaxStart(function() {
+		$('#wait').css('display', 'block');
+	});
+
+	$(document).ajaxComplete(function() {
+		$('#wait').css('display', 'none');
+	});
 }
