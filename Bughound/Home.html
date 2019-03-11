@@ -24,6 +24,7 @@
 		<div class="topnav">
 			<a id='Home' class="active" href="#home">Home</a>
 			<a id='Bugs' href="#" onclick="showBugSection()">Bugs</a>
+			<a id='Employees' href="#" onclick="showEmployeesSection()">Employees</a>
 			<!-- add each new section here -->
 		</div>
 
@@ -140,7 +141,47 @@
 					<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
 				</div>
 			</div>
-			
+		</div>
+		
+		<div id="employees">
+			<div id="Employee_Add">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add A New Employee</div>
+						<label><span>Employee Username: </span><input type="text" class="input-field" id="emp_username" value="" /></label>
+						<label><span>Employee Name: </span><input type="text" class="input-field" id="emp_name" value="" /></label>
+						<label><span>Employee Password: </span><input type="password" class="input-field" id="emp_password" value="" /></label>
+						<label><span>Employee Role</span>
+							<select id="emp_role" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</label>
+						<label><span> </span><button id="employeeAddBtn" onclick="add_employee()">Add Employee</button></label>
+				</div>
+			</div>
+
+			<div id="Employee_Search">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Search for Employees</div>
+						<label><span>Employee ID: </span><input type="text" class="input-field" id="emp_id" value="" /></label>
+						<label><span>Employee Username: </span><input type="text" class="input-field" id="emp_username" value="" /></label>
+						<label><span>Employee Name: </span><input type="text" class="input-field" id="emp_name" value="" /></label>
+						<label><span>Employee Role</span>
+							<select id="emp_role" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</label>
+						<label><span> </span><button id="employeeSearch" onclick="search_employees()">Search</button></label>
+				</div>
+			</div>
+
+			<div id="employeeSearchResults"></div>
+					
 		</div>
 
 	</body>
