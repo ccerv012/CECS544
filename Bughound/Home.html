@@ -99,16 +99,44 @@
 			<h3>Add</h3>
 			<div id="bugAdd">
 				<div class="form-style-2">
-					<div class="form-style-2-heading">Add A New Bug</div>
-					<label><span>Report Type: </span><input type="text" class="input-field" id="newRptType" value="" /></label>
-					<label><span>Severity</span>
-						<select id="newSeverity" class="select-field">
+					<div class="form-style-2-heading">Add New Bug</div>
+					<label>
+						<span>Program: </span><input type="text" class="small-input-field" id="addPrg" value="" />
+						<span>Release: </span><input type="text" class="small-input-field" id="addRel" value="" />
+						<span>Version: </span><input type="text" class="small-input-field" id="addVer" value="" />
+					</label>
+
+					<label>
+						<span>Report Type</span>
+						<select id="addRptType" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+							<option value="1">Coding Error</option>
+							<option value="2">Design Issue</option>
+							<option value="3">Suggestion</option>
+							<option value="3">Documentation</option>
+							<option value="3">Hardware</option>
+							<option value="3">Query</option>
+						</select>
+
+						<span>Severity</span>
+						<select id="addSeverity" class="select-field">
 							<option value="PleaseSelect">Please Select</option>
 							<option value="1">Fatal</option>
 							<option value="2">Serious</option>
 							<option value="3">Minor</option>
 						</select>
 					</label>
+					
+					<label><span>Problem Summary: </span><textarea class="textarea-field" id="addProbSumm" cols="30" rows="10"></textarea></label>
+					<label><span>Can You Reproduce The Problem(Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="addReproduce" value="" /></label>
+					<label><span>Problem And How To Reproduce: </span><textarea class="textarea-field" id="addReproduceSteps" cols="30" rows="10"></textarea></label>
+					<label><span>Suggested Fix: </span><textarea class="textarea-field" id="addSuggFix" cols="30" rows="10"></textarea></label>
+
+					<label>
+						<span>Reported By: </span><input type="text" class="small-input-field" id="addReportBy" value="" />
+						<span>Date: </span><input type="text" class="small-input-field datepicker" id="addReportDate" value="" />
+					</label>
+
 					<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
 				</div>
 			</div>

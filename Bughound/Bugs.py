@@ -42,12 +42,14 @@ class Bugs:
     def AddBug(self, cur):
         sql = '''
             insert into bug_reports
-                (report_type, severity)
+                (PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_ID, REPORT_DATE)
             values 
-                (:rptType, :severity)
+                (:Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, TO_DATE(:ReportDate, 'MM/DD/YYYY'))
         '''
+        # delete the method key so you can pass all params without specifying each one
+        del self.Params['Method']
 
-        cur.execute(sql, rptType=self.Params['RptType'], severity=self.Params['Severity'])
+        cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
@@ -206,7 +208,7 @@ class Bugs:
                 'Reproducable' : row[7],
                 'SuggFix' : row[8],
                 'ReportBy' : row[9],
-                'ReportDate' : row[10],
+                'ReportDate' : str(row[10]),
                 'FuncArea' : row[11],
                 'Assigned' : row[12],
                 'Comments' : row[13],
@@ -215,9 +217,9 @@ class Bugs:
                 'Resolution' : row[16],
                 'ResolutionVer' : row[17],
                 'ResolvedBy' : row[18],
-                'ResolvedDate' : row[19],
+                'ResolvedDate' : str(row[19]),
                 'TestedBy' : row[20],
-                'TestedDate' : row[21],
+                'TestedDate' : str(row[21]),
                 'Deferred' : row[22],
             })
 

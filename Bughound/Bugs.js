@@ -98,8 +98,16 @@ function DeleteBug(bugID){
 function AddBug(){
     var params = {
         'Method' : 'Add',
-        'RptType' : $('#newRptType').val(),
-        'Severity' : $('#newSeverity').val()
+        'Program' : $('#addPrg').val(),
+        'Release' : $('#addRel').val(),
+        'Version' : $('#addVer').val(),
+        'ReportType' : $('#addRptType').val(),
+        'Severity' : $('#addSeverity').val(),
+        'ProblemSummary' : $('#addProbSumm').val(),
+        'Reproduce' : $('#addReproduce').val(),
+        'SuggestedFix' : $('#addSuggFix').val(),
+        'ReportBy' : $('#addReportBy').val(),
+        'ReportDate' : $('#addReportDate').val(),
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -113,8 +121,17 @@ function AddBug(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result'] == 'Success'){
             // clear the values the user entered
-            $('#newRptType').val('');
-            $('#newSeverity').val('');
+            $('#addPrg').val('');
+            $('#addRel').val('');
+            $('#addVer').val('');
+            $('#addRptType').val('');
+            $('#addSeverity').val('');
+            $('#addProbSumm').val('');
+            $('#addReproduce').val('');
+            //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+            $('#addSuggFix').val('');
+            $('#addReportBy').val('');
+            $('#addReportDate').val('');
 
             // let the user know it was successful
             alert('You have successfully created a new bug');
