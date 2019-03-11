@@ -13,14 +13,17 @@
 		<script src='../ReusableJavascript/Ajax.js'></script>
 		<script src='../ReusableJavascript/Cookies.js'></script>
 		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
+		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
+
+		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
 	
 	</head>
 	
 	<body onload='CheckLoginStatus()'>
 
 		<div class="topnav">
-			<a class="active" href="#home">Home</a>
-			<a href="#" onclick="showBugSection()">Bugs</a>
+			<a id='Home' class="active" href="#home">Home</a>
+			<a id='Bugs' href="#" onclick="showBugSection()">Bugs</a>
 			<!-- add each new section here -->
 		</div>
 
@@ -29,79 +32,87 @@
 
 		<!-- The bug search form and results div always exist on the page, 
 			we are going to hide them when the page loads so the user doesnt know -->
-		<div id="bugs">
-			
-			<div id="bugAdd">
-				<div class="form-style-2">
-					<div class="form-style-2-heading">Add A New Bug</div>
-						<label><span>Report Type: </span><input type="text" class="input-field" id="newRptType" value="" /></label>
-						<label><span>Severity</span>
-							<select id="newSeverity" class="select-field">
-								<option value="PleaseSelect">Please Select</option>
-								<option value="1">Fatal</option>
-								<option value="2">Serious</option>
-								<option value="3">Minor</option>
-							</select>
-						</label>
-						<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
-				</div>
-			</div>
-
+		<div id="bugs" class="bugAccordion">
+			<h3>Search</h3>
 			<div id="bugSearch">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Search for Bugs</div>
-						<label><span>Bug ID: </span><input type="text" class="input-field" id="bugID" value="" /></label>
-						<label><span>Program: </span><input type="text" class="input-field" id="prg" value="" /></label>
-						<label><span>Report Type: </span><input type="text" class="input-field" id="rptType" value="" /></label>
-						<label><span>Severity</span>
-							<select id="severity" class="select-field">
+					<label>
+						<span>Bug ID: </span><input type="text" class="small-input-field" id="bugID" value="" />
+						<span>Program: </span><input type="text" class="small-input-field" id="prg" value="" />
+						<span>Report Type: </span><input type="text" class="small-input-field" id="rptType" value="" />
+					</label>
+					
+					<label>
+						<span>Severity</span>
+						<select id="severity" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+							<option value="1">Fatal</option>
+							<option value="2">Serious</option>
+							<option value="3">Minor</option>
+						</select>
+
+						<span>Functional Area: </span><input type="text" class="small-input-field" id="funcArea" value="" />
+					</label>
+				
+					<label>
+						<span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" />
+
+						<span>Status</span>
+						<select id="status" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
-								<option value="1">Fatal</option>
-								<option value="2">Serious</option>
-								<option value="3">Minor</option>
-							</select>
-						</label>
-						<label><span>Functional Area: </span><input type="text" class="input-field" id="funcArea" value="" /></label>
-						<label><span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" /></label>
-						<label>
-							<span>Status</span>
-							<select id="status" class="select-field">
-									<option value="PleaseSelect">Please Select</option>
-								<option value="1">Open</option>
-								<option value="2">Closed</option>
-							</select>
-						</label>
-						<label><span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" /></label>
-						<label><span>Resolution</span>
-							<select id="resolution" class="select-field">
-								<option value="PleaseSelect">Please Select</option>
-								<option value="1">Pending</option>
-								<option value="2">Fixed</option>
-								<option value="3">Irreproducible</option>
-								<option value="4">Deferred</option>
-								<option value="5">As Designed</option>
-								<option value="6">Can't Be Fixed</option>
-								<option value="7">Withdrawn By Reporter</option>
-								<option value="8">Need More Info</option>
-								<option value="9">Disagree With Suggestion</option>
-							</select>
-						</label>
-						<label>
-							<span>Reported By: </span><input type="text" class="small-input-field" id="reportBy" value="" />
-							<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
-						</label>
-						<label><span>Resolved By: </span><input type="text" class="small-input-field" id="resolBy" value="" /></label>
-								
-						<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>
+							<option value="1">Open</option>
+							<option value="2">Closed</option>
+						</select>
+					</label>
+						
+					<label>
+						<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
+
+						<span>Resolution</span>
+						<select id="resolution" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+							<option value="1">Pending</option>
+							<option value="2">Fixed</option>
+							<option value="3">Irreproducible</option>
+							<option value="4">Deferred</option>
+							<option value="5">As Designed</option>
+							<option value="6">Can't Be Fixed</option>
+							<option value="7">Withdrawn By Reporter</option>
+							<option value="8">Need More Info</option>
+							<option value="9">Disagree With Suggestion</option>
+						</select>
+					</label>
+
+					<label>
+						<span>Reported By: </span><input type="text" class="small-input-field" id="reportBy" value="" />
+						<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
+						<span>Resolved By: </span><input type="text" class="small-input-field" id="resolBy" value="" />
+					</label>
+							
+					<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>
+				</div>
+
+				<div id="bugSearchResults"></div>
+			</div>			
+			
+			<h3>Add</h3>
+			<div id="bugAdd">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add A New Bug</div>
+					<label><span>Report Type: </span><input type="text" class="input-field" id="newRptType" value="" /></label>
+					<label><span>Severity</span>
+						<select id="newSeverity" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+							<option value="1">Fatal</option>
+							<option value="2">Serious</option>
+							<option value="3">Minor</option>
+						</select>
+					</label>
+					<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
 				</div>
 			</div>
-
-			<div id="bugSearchResults"></div>
-		</div>
-
-		<div id="employees">
-			<button id="employeeSearch" onclick="search_employees()">Search</button>
-			<button id="employeeDelete" onclick="delete_employees()">Delete</button>
+			
 		</div>
 
 	</body>

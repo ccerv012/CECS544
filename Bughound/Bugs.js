@@ -128,7 +128,13 @@ function AddBug(){
 }
 
 function showBugSection(){
+    // show/hide the sections we want the user to see
     $('#bugs').show();
+    $('#employees').hide();
+
+    // change the active flag on the navigation bar
+    $('#Home').removeClass('active');
+    $('#Bugs').addClass('active');
 }
 
 function OpenBugReport(bugID){
