@@ -13,8 +13,8 @@ class Programs:
 
     def __init__(self):
         self.dispatch = {
-            'Search' : self.search_programs,
             'Add': self.add_program,
+            'Update': self.update_program,
             'Delete': self.delete_program
         }
 
@@ -37,6 +37,8 @@ class Programs:
 
         return json.dumps(self.sendData)
 
+    # TODO: check if exists
+    # TODO: disallow duplicates
     def add_program(self, cur):
         sql = '''
         INSERT INTO PROGRAM
@@ -53,6 +55,8 @@ class Programs:
 
         self.sendData['Result']='Success'
 
+    # TODO: check if exists
+    # TODO: as long as ID exists, make it so you can change just one field and the others persist
     def update_program(self, cur):
         sql = '''
         UPDATE PROGRAM
@@ -65,9 +69,15 @@ class Programs:
             PRGM_ID = :Program_ID
         '''
 
-        cur.execute(sql)
+        cur.execute(sql, Program_ID=self.Params['Program_ID'], \
+            Program_Name=self.Params['Program_Name'], \
+            Program_Version=self.Params['Program_Version'], \
+            Program_Release=self.Params['Program_Release'])
         self.CECS544_DB.conn.commit()
 
+        self.sendData['Result']='Success'
+
+    # TODO: check if valid
     def delete_program(self, cur):
         sql = '''
         DELETE FROM PROGRAM
@@ -77,43 +87,5 @@ class Programs:
 
         cur.execute(sql, Program_ID=self.Params['Program_ID'])
         self.CECS544_DB.conn.commit()
-
-        self.sendData['Result'] = 'Success'
-
-    def search_programs(self, cur):
-        sql = '''
-        select PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE
-        from PROGRAM
-        WHERE 1=1
-        '''
-        bindVars = {}
-        if self.Params['Program_ID'] != "":
-            sql = sql + ' AND PRGM_ID = :Program_ID'
-            bindVars['Program_ID'] = self.Params['Program_ID']
-
-        if self.Params['Program_Name'] != "":
-            sql = sql + ' AND PRGM_NAME = :Program_Name'
-            bindVars['Program_Name'] = self.Params['Program_Name']
-
-        if self.Params['Program_Version'] != "":
-            sql = sql + ' AND PRGM_VERSION = :Program_Version'
-            bindVars['Program_Version'] = self.Params['Program_Version']
-
-        if self.Params['Program_Release'] != "":
-            sql = sql + ' AND PRGM_RELEASE = :Program_Release'
-            bindVars['Program_Release'] = self.Params['Program_Release']
-
-        cur.execute(sql, bindVars) # execute the sql statement
-        allRows = cur.fetchall() # get the results on the query
-
-        # loop through the query results
-        for row in allRows:
-            # save the data to our strucutre we are sending back via AJAX
-            self.sendData['Data'].append({
-                'ID': row[0],
-                'Username': row[1],
-                'Name': row[2],
-                'Role': row[3]
-            })
 
         self.sendData['Result'] = 'Success'
