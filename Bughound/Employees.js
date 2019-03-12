@@ -1,10 +1,14 @@
 function showEmployeesSection(){
-    $('#employees').show();
-    $('#bugs').hide();
+  // show/hide the sections we want the user to see
+  $('#bugs').hide();
+  $('#employees').show();
+  $('#programs').hide();
 
-    // change the active flag on the navigation bar
-    $('#Home').removeClass('active');
-    $('#Employees').addClass('active');
+  // change the active flag on the navigation bar
+  $('#Home').removeClass('active');
+  $('#Bugs').removeClass('active');
+  $('#Employees').addClass('active');
+  $('#Programs').removeClass('active');
 }
 
 function add_employee(){
@@ -67,10 +71,10 @@ function search_employees(){
 
             // add a header row to the table
             $('#EmployeeResultsTable').append('<thead><th>Employee ID</th><th>Employee Username</th><th>Employee Name</th><th>Employee Role</th><th>Delete</th></thead>');
-        
-            // loop through the search results and add them to the results table 
+
+            // loop through the search results and add them to the results table
             var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) { 
+            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
                 tr.append('<td onclick="OpenEmployeeReport(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Username + '</td>'); // populate the new row, cell by cell

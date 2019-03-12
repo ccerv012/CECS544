@@ -10,6 +10,7 @@ import time
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound')
 from employees import employees
 from Bugs import Bugs
+from Programs import Programs
 
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
 from Login import Login
@@ -21,30 +22,30 @@ class Bughound:
 	@cherrypy.expose
 	def index(self):
 		return open(CSULB_ROOT+'\Bughound\Home.html')
-		
+
 class ReusablePython:
 	@cherrypy.expose
 	def index(self):
 		return open(CSULB_ROOT+'\ReusablePython\Login.html')
-		
+
 class CSULB:
 	@cherrypy.expose
 	def index(self):
 		return "CSULB Projects"
-		
+
 	Bughound = Bughound()
 	ReusablePython = ReusablePython()
-	
+
 class CSULBWinService(win32serviceutil.ServiceFramework):
-	"""NT Service.""" 
-	
+	"""NT Service."""
+
 	_svc_name_ = "CSULBWinService"
 	_svc_display_name_ = "CSULB Windows Service (CherryPy)"
-	
+
 	@cherrypy.tools.etags(autotags=True)
-	
+
 	def SvcDoRun(self):
-		
+
 		cherrypy.tree.mount(CSULB(), '/', {
 			'/':{
 				'tools.staticdir.root': os.path.abspath(CSULB_ROOT)
@@ -87,8 +88,13 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.response_headers.on': True,
 				'tools.response_header.headers': [('Content-Type', 'text/json')],
 			},
+			'/Bughound/Programs':{
+				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+				'tools.response_headers.on': True,
+				'tools.response_header.headers': [('Content-Type', 'text/json')],
+			},
 		})
-		
+
 		cherrypy.config.update ({
 			'global': {
 				'log.screen': False,
@@ -105,23 +111,24 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.sessions.storage_type': 'ram'
 			},
 		})
-		
+
 		webapp = CSULB()
-		
+
 		webapp.ReusablePython.Login = Login()
 		webapp.ReusablePython.Session = Session()
-		
+
 		webapp.Bughound.employees = employees()
 		webapp.Bughound.Bugs = Bugs()
-		
+		webapp.Bughound.Programs = Programs()
+
 		cherrypy.engine.start()
 		cherrypy.engine.block()
-		
+
 	def SvcStop(self):
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 		cherrypy.engine.exit()
-		
+
 		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
-		
+
 if __name__ == '__main__':
 	win32serviceutil.HandleCommandLine(CSULBWinService)

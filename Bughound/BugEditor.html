@@ -12,9 +12,9 @@
 		<script src='../ReusableJavascript/Cookies.js'></script>
 		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
 		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
-	
+
     </head>
-    
+
 		<body onload="LoadBugReport()">
 
 			<div class="topnav">
@@ -22,7 +22,7 @@
 				<a class="active" href="#" onclick="showBugSection()">Bugs</a>
 				<!-- add each new section here -->
 			</div>
-			
+
 			<div id="bugEditor">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Edit Bug</div>
@@ -53,7 +53,7 @@
 								<option value="3">Minor</option>
 							</select>
 						</label>
-						
+
 						<label><span>Problem Summary: </span><textarea class="textarea-field" id="probSumm" cols="30" rows="10"></textarea></label>
 						<label><span>Can You Reproduce The Problem(Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="reproduce" value="" /></label>
 						<label><span>Problem And How To Reproduce: </span><textarea class="textarea-field" id="reproduceSteps" cols="30" rows="10"></textarea></label>
@@ -85,7 +85,7 @@
 
 							<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
 						</label>
-			
+
 						<label><span>Resolution</span>
 							<select id="resolution" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
@@ -102,7 +102,7 @@
 
 							<span>Resolution Version: </span><input type="number" class="small-input-field" id="resolVer" value="" />
 						</label>
-					
+
 						<label>
 							<span>Resolved By: </span>
 							<select id="resolBy" class="select-field">
@@ -120,10 +120,10 @@
 						</label>
 
 						<label><span>Treat As Deferred (Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="defer" value="" /></label>
-					
+
 						<label><span> </span><button id="BugSearchBtn" onclick="SaveBug()">Save</button></label>
 				</div>
 			</div>
-        
+
     </body>
 </html>

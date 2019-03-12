@@ -16,22 +16,23 @@
 
 		<script src='./Employees.js'></script>
 		<script src='./Bugs.js'></script>
-	
+		<script src='./Programs.js'></script>
+
 	</head>
-	
+
 	<body onload='CheckLoginStatus()'>
 
 		<div class="topnav">
 			<a id='Home' class="active" href="#home">Home</a>
 			<a id='Bugs' href="#" onclick="showBugSection()">Bugs</a>
 			<a id='Employees' href="#" onclick="showEmployeesSection()">Employees</a>
-			<!-- add each new section here -->
+			<a id='Programs' href="#" onclick="showProgramsSection()">Programs</a>
 		</div>
 
 		<p id="greeting"></p>
 		<!-- <div id="sessionInfo"></div> -->
 
-		<!-- The bug search form and results div always exist on the page, 
+		<!-- The bug search form and results div always exist on the page,
 			we are going to hide them when the page loads so the user doesnt know -->
 		<div id="bugs" class="bugAccordion">
 			<h3>Search</h3>
@@ -58,7 +59,7 @@
 							<option value="3">Query</option>
 						</select>
 					</label>
-					
+
 					<label>
 						<span>Severity</span>
 						<select id="severity" class="select-field">
@@ -70,7 +71,7 @@
 
 						<span>Functional Area: </span><input type="text" class="small-input-field" id="funcArea" value="" />
 					</label>
-				
+
 					<label>
 						<span>Status</span>
 						<select id="status" class="select-field">
@@ -93,7 +94,7 @@
 							<option value="9">Disagree With Suggestion</option>
 						</select>
 					</label>
-						
+
 					<label>
 						<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
 
@@ -104,7 +105,7 @@
 						<span>Reported By: </span>
 						<select id="reportBy" class="select-field">
 							<option value="PleaseSelect">Please Select</option>
-						</select>	
+						</select>
 						<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
 					</label>
 					<label>
@@ -113,13 +114,13 @@
 							<option value="PleaseSelect">Please Select</option>
 						</select>
 					</label>
-							
+
 					<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>
 				</div>
 
 				<div id="bugSearchResults"></div>
-			</div>			
-			
+			</div>
+
 			<h3>Add</h3>
 			<div id="bugAdd">
 				<div class="form-style-2">
@@ -161,7 +162,7 @@
 							<option value="3">Minor</option>
 						</select>
 					</label>
-					
+
 					<label><span>Problem Summary: </span><span class="required">*</span><textarea class="textarea-field" id="addProbSumm" cols="30" rows="10"></textarea></label>
 					<label><span>Can You Reproduce The Problem(Y/N): </span><span class="required">*</span><input maxlength="1" type="text" class="small-input-field" id="addReproduce" value="" /></label>
 					<label><span>Problem And How To Reproduce: </span><span class="required">*</span><textarea class="textarea-field" id="addReproduceSteps" cols="30" rows="10"></textarea></label>
@@ -176,7 +177,11 @@
 				</div>
 			</div>
 		</div>
-		
+
+		<!-- END BUG SECTION -->
+
+		<!-- EMPLOYEE SECTION -->
+
 		<div id="employees">
 			<div id="Employee_Add">
 				<div class="form-style-2">
@@ -215,8 +220,53 @@
 			</div>
 
 			<div id="employeeSearchResults"></div>
-					
+
 		</div>
+
+		<!-- END EMPLOYEE SECTION -->
+
+		<!-- PROGRAM SECTION -->
+
+		<div id="programs" class="programAccordion">
+
+			<h3>Add Program</h3>
+			<div id="programAdd">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add a Program</div>
+					<label>
+						<span>Program ID: </span><input type="text" class="small-input-field" id="program-id-to-add" value="" />
+					</label>
+
+					<label>
+						<span>Program Name: </span><input type="text" class="small-input-field" id="program-name" value="" />
+					</label>
+
+					<label>
+						<span>Program Version: </span><input type="number" class="small-input-field" id="program-version" value="" />
+					</label>
+
+					<label>
+						<span>Program Release: </span><input type="number" class="small-input-field" id="program-release" value="" />
+					</label>
+
+					<label><span> </span><button id="ProgramAddBtn" onclick="AddProgram()">Add</button></label>
+				</div>
+			</div> <!-- END programAdd div-->
+
+			<h3>Delete Program</h3>
+			<div id="programDelete">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Delete a Program</div>
+					<label>
+						<span>Program ID: </span><input type="text" class="small-input-field" id="program-id-to-delete" value="" />
+					</label>
+					<label><span> </span><button id="ProgramDeleteBtn" onclick="DeleteProgram()">Delete</button></label>
+				</div>
+			</div> <!-- END programDelete div-->
+
+		</div> <!-- END programs div-->
+
+		<!-- END PROGRAM SECTION -->
 
 		<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
 			<img src="../ReusableGraphics/wait.gif" width="70" height="64">
@@ -224,5 +274,5 @@
 		</div>
 
 	</body>
-	
+
 </html>

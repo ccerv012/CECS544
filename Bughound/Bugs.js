@@ -33,10 +33,10 @@ function SearchBugs(){
 
             // add a header row to the table
             $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Functional Area</th><th>Assigned</th><th>Status</th><th>Priority</th><th>Resolution</th><th>Reported By</th><th>Report Date</th><th>Resolved By</th><th>Delete</th></thead>');
-        
-            // loop through the search results and add them to the results table 
+
+            // loop through the search results and add them to the results table
             var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) { 
+            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
                 tr.append('<td onclick="OpenBugReport(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
@@ -69,25 +69,25 @@ function DeleteBug(bugID){
             'Method' : 'Delete',
             'ID' : bugID
         }
-    
+
         // data needs to be formatted before it can be sent via ajax
         var formData = new FormData()
         formData.append('params', JSON.stringify(params));
-    
+
         // make the ajax call
         var AJAX_Call = getData(formData, './Bugs');
-    
+
         // wait for the ajax call to finish then execute...
         $.when(AJAX_Call).then(function (AJAX_Response){
             if (AJAX_Response['Result'] == 'Success'){
                 // re-run the search to show the user its been deleted
                 SearchBugs();
-    
+
                 // let the user know it was successful
                 alert('You have successfully deleted ' + bugID);
             }
         })
-    
+
         // the AJAX call was not issued succesfully
         .fail(function(load){
             alert("The webpage is unable to load, please contact the system admin")
@@ -149,11 +149,13 @@ function showBugSection(){
     // show/hide the sections we want the user to see
     $('#bugs').show();
     $('#employees').hide();
+    $('#programs').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').addClass('active');
     $('#Employees').removeClass('active');
+    $('#Programs').removeClass('active');
 
     // populate the Add Date
     $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
@@ -227,7 +229,7 @@ function OpenBugReport(bugID){
 function LoadBugReport(){
     if (document.cookie.indexOf("bugID")>=0){
         // save the bugID to a variable that we will send to the search function
-        var bugID = getCookie("bugID"); 
+        var bugID = getCookie("bugID");
         // delete the cookie so if a user opens another page the bugID variable is reset
         setCookie('bugID', bugID, 0);
 
@@ -331,7 +333,7 @@ function SaveBug(){
         'ResolvedDate' : $('#resolDate').val(),
         'ResolvedTestedBy' : $('#resolTestedBy').val(),
         'ResolvedTestDate' : $('#resolTestDate').val(),
-        'Defer' : $('#defer').val()        
+        'Defer' : $('#defer').val()
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -356,7 +358,7 @@ function SaveBug(){
 }
 
 $(document).on('change', '#addPrg', function () {
-    
+
     // clear the choices from the Release and Version dropdowns
     $('#addRel').empty();
     $('#addVer').empty();
