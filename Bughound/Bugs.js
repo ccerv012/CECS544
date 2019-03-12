@@ -144,6 +144,7 @@ function AddBug(){
 	})
 }
 
+var BUG_DROP_DOWN_VALUES = '';
 function showBugSection(){
     // show/hide the sections we want the user to see
     $('#bugs').show();
@@ -152,6 +153,53 @@ function showBugSection(){
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').addClass('active');
+    $('#Employees').removeClass('active');
+
+    // populate the Add Date
+    $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
+    //Populate the Reported by
+    $('#addReportBy').val(getCookie('EmployeeName'));
+
+    var params = {
+        'Method': 'PopulateDropdown'
+    }
+
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './Bugs');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){
+        if (AJAX_Response['Result'] == 'Success') {
+            // save AJAX response to a global variable that we can access later
+            BUG_DROP_DOWN_VALUES = AJAX_Response['DropdownVals'];
+
+            // populate the program dropdown menus on the search and add form
+            var Prgs = Object.keys(AJAX_Response['DropdownVals']['Programs']);
+            $.each(Prgs, function (i, Prg){
+                $('#prg').append($('<option>', {
+                    value: Prg,
+                    text: Prg
+                }));
+
+                $('#addPrg').append($('<option>', {
+                    value: Prg,
+                    text: Prg
+                }));
+            })
+        }
+
+        // add the jquery date picker to all the date fields
+        $( ".datepicker" ).datepicker();
+    })
+
+    // the AJAX call was not issued succesfully
+	.fail(function(load){
+		alert("The webpage is unable to load, please contact the system admin")
+	})
 }
 
 function OpenBugReport(bugID){
@@ -278,3 +326,46 @@ function SaveBug(){
 		alert("The webpage is unable to load, please contact the system admin")
 	})
 }
+
+$(document).on('change', '#addPrg', function () {
+    
+    // clear the choices from the Release and Version dropdowns
+    $('#addRel').empty();
+    $('#addVer').empty();
+
+    $('#addRel').append('<option value="PleaseSelect">Please Select</option>');
+    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
+
+    // get the program the user selected
+    selectedPrg = $('#addPrg').val();
+
+    // populate the two corresponding drop downs
+    Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
+    $.each(Releases, function (i, Rel){
+        $('#addRel').append($('<option>', {
+            value: Rel,
+            text: Rel
+        }));
+    })
+
+});
+
+$(document).on('change', '#addRel', function () {
+    // clear the choices from the Release and Version dropdowns
+    $('#addVer').empty();
+    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
+
+    // get the program the user selected
+    selectedPrg = $('#addPrg').val();
+    selectedRel = $('#addRel').val();
+
+    // populate the two corresponding drop downs
+    Versions = BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][selectedRel]['Ver'];
+    $.each(Versions, function (i, Ver){
+        $('#addVer').append($('<option>', {
+            value: Ver,
+            text: Ver
+        }));
+    })
+
+});

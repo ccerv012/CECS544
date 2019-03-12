@@ -18,6 +18,7 @@ class Bugs:
             'Update': self.UpdateBug,
             'Delete': self.DeleteBug,
             'PopulateBug': self.PopulateBugEditor,
+            'PopulateDropdown': self.PopulateDropdown
         }
     
     def POST(self, params):
@@ -42,12 +43,14 @@ class Bugs:
     def AddBug(self, cur):
         sql = '''
             insert into bug_reports
-                (PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_ID, REPORT_DATE)
+                (PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
             values 
                 (:Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, TO_DATE(:ReportDate, 'MM/DD/YYYY'))
         '''
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
+        self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
+
 
         cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
@@ -67,7 +70,7 @@ class Bugs:
                     PROB_SUMMARY = :ProblemSumm,
                     REPRODUCIBILITY = :Reproduceable,
                     SUGGESTED_FIX = :SuggestFix,
-                    REPORTED_BY_ID = :ReportBy,
+                    REPORTED_BY_NAME = :ReportBy,
                     REPORT_DATE = :ReportByDate,
                     FAREA_ID = :FunctionalArea,
                     ASSIGNED_TO_ID = :AssignedTo,
@@ -105,7 +108,7 @@ class Bugs:
 
     def SearchBugs(self, cur):
         sql = '''
-        SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_ID, REPORT_DATE, RESOLVED_BY_ID
+        SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_NAME, REPORT_DATE, RESOLVED_BY_ID
         FROM bug_reports
         WHERE 1=1
         '''
@@ -117,11 +120,11 @@ class Bugs:
             sql = sql + ' AND BUG_ID = :bugID'
             bindVars['bugID'] = self.Params['BugID']
 
-        if self.Params['Pgm'] != "":
+        if self.Params['Pgm'] != "" and self.Params['Pgm'] != 'PleaseSelect':
             sql = sql + ' AND PRGM_NAME = :Pgm'
             bindVars['Pgm'] = self.Params['Pgm']
 
-        if self.Params['ReportType'] != "":
+        if self.Params['ReportType'] != "" and self.Params['Pgm'] != 'PleaseSelect':
             sql = sql + ' AND REPORT_TYPE = :rptType'
             bindVars['rptType'] = self.Params['ReportType']
 
@@ -150,7 +153,7 @@ class Bugs:
             bindVars['Resolution'] = self.Params['Resolution']
 
         if self.Params['ReportedBy'] != "":
-            sql = sql + ' AND REPORTED_BY_ID = :ReportedBy'
+            sql = sql + ' AND REPORTED_BY_NAME = :ReportedBy'
             bindVars['ReportedBy'] = self.Params['ReportedBy']
 
         if self.Params['ReportDate'] != "":
@@ -186,7 +189,7 @@ class Bugs:
 
     def PopulateBugEditor(self, cur):
         sql = '''
-        SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_ID, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED
+        SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED
         FROM bug_reports
         where bug_id = :bugID
         '''
@@ -222,5 +225,31 @@ class Bugs:
                 'TestedDate' : str(row[21]),
                 'Deferred' : row[22],
             })
+
+        self.sendData['Result'] = 'Success'
+
+    def PopulateDropdown(self, cur):
+        self.sendData['DropdownVals'] = {}
+        sql = '''
+        SELECT PRGM_NAME, PRGM_RELEASE, PRGM_VERSION
+        FROM PROGRAM
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        self.sendData['DropdownVals']['Programs'] = {}
+
+        for row in allRows:
+            if row[0] not in self.sendData['DropdownVals']['Programs']:
+                self.sendData['DropdownVals']['Programs'][row[0]] = {}
+
+            if row[1] not in self.sendData['DropdownVals']['Programs'][row[0]]:
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]] = {}
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Rel'] = row[1]
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'] = []
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
+            else:
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
 
         self.sendData['Result'] = 'Success'

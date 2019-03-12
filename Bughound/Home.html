@@ -3,12 +3,6 @@
 <html>
 	<head>
 		<title>Bug Hound</title>
-		
-		<script src='./Home.js'></script>
-		<link rel='stylesheet' type='text/css' href='./Home.css'>
-
-		<script src='./Employees.js'></script>
-		<script src='./Bugs.js'></script>
 
 		<script src='../ReusableJavascript/Ajax.js'></script>
 		<script src='../ReusableJavascript/Cookies.js'></script>
@@ -16,6 +10,12 @@
 		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
 
 		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
+
+		<script src='./Home.js'></script>
+		<link rel='stylesheet' type='text/css' href='./Home.css'>
+
+		<script src='./Employees.js'></script>
+		<script src='./Bugs.js'></script>
 	
 	</head>
 	
@@ -40,8 +40,23 @@
 					<div class="form-style-2-heading">Search for Bugs</div>
 					<label>
 						<span>Bug ID: </span><input type="text" class="small-input-field" id="bugID" value="" />
-						<span>Program: </span><input type="text" class="small-input-field" id="prg" value="" />
-						<span>Report Type: </span><input type="text" class="small-input-field" id="rptType" value="" />
+					</label>
+					<label>
+						<span>Program: </span>
+						<select id="prg" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>
+
+						<span>Report Type</span>
+						<select id="rptType" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+							<option value="1">Coding Error</option>
+							<option value="2">Design Issue</option>
+							<option value="3">Suggestion</option>
+							<option value="3">Documentation</option>
+							<option value="3">Hardware</option>
+							<option value="3">Query</option>
+						</select>
 					</label>
 					
 					<label>
@@ -57,18 +72,12 @@
 					</label>
 				
 					<label>
-						<span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" />
-
 						<span>Status</span>
 						<select id="status" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
 							<option value="1">Open</option>
 							<option value="2">Closed</option>
 						</select>
-					</label>
-						
-					<label>
-						<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
 
 						<span>Resolution</span>
 						<select id="resolution" class="select-field">
@@ -83,6 +92,12 @@
 							<option value="8">Need More Info</option>
 							<option value="9">Disagree With Suggestion</option>
 						</select>
+					</label>
+						
+					<label>
+						<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
+
+						<span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" />
 					</label>
 
 					<label>
@@ -102,13 +117,24 @@
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Add New Bug</div>
 					<label>
-						<span>Program: </span><input type="text" class="small-input-field" id="addPrg" value="" />
-						<span>Release: </span><input type="text" class="small-input-field" id="addRel" value="" />
-						<span>Version: </span><input type="text" class="small-input-field" id="addVer" value="" />
+						<span>Program: </span><span class="required">*</span>
+						<select id="addPrg" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>
+					</label>
+					<label>
+						<span>Release: </span><span class="required">*</span>
+						<select id="addRel" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>
+						<span>Version: </span><span class="required">*</span>
+						<select id="addVer" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>
 					</label>
 
 					<label>
-						<span>Report Type</span>
+						<span>Report Type</span><span class="required">*</span>
 						<select id="addRptType" class="select-field">
 							<option value="PleaseSelect">Please Select</option>
 							<option value="1">Coding Error</option>
@@ -119,7 +145,7 @@
 							<option value="3">Query</option>
 						</select>
 
-						<span>Severity</span>
+						<span>Severity</span><span class="required">*</span>
 						<select id="addSeverity" class="select-field">
 							<option value="PleaseSelect">Please Select</option>
 							<option value="1">Fatal</option>
@@ -128,14 +154,14 @@
 						</select>
 					</label>
 					
-					<label><span>Problem Summary: </span><textarea class="textarea-field" id="addProbSumm" cols="30" rows="10"></textarea></label>
-					<label><span>Can You Reproduce The Problem(Y/N): </span><input maxlength="1" type="text" class="small-input-field" id="addReproduce" value="" /></label>
-					<label><span>Problem And How To Reproduce: </span><textarea class="textarea-field" id="addReproduceSteps" cols="30" rows="10"></textarea></label>
+					<label><span>Problem Summary: </span><span class="required">*</span><textarea class="textarea-field" id="addProbSumm" cols="30" rows="10"></textarea></label>
+					<label><span>Can You Reproduce The Problem(Y/N): </span><span class="required">*</span><input maxlength="1" type="text" class="small-input-field" id="addReproduce" value="" /></label>
+					<label><span>Problem And How To Reproduce: </span><span class="required">*</span><textarea class="textarea-field" id="addReproduceSteps" cols="30" rows="10"></textarea></label>
 					<label><span>Suggested Fix: </span><textarea class="textarea-field" id="addSuggFix" cols="30" rows="10"></textarea></label>
 
 					<label>
-						<span>Reported By: </span><input type="text" class="small-input-field" id="addReportBy" value="" />
-						<span>Date: </span><input type="text" class="small-input-field datepicker" id="addReportDate" value="" />
+						<span>Reported By: </span><input disabled type="text" class="small-input-field" id="addReportBy" value="" />
+						<span>Date: </span><input disabled type="text" class="small-input-field datepicker" id="addReportDate" value="" />
 					</label>
 
 					<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
