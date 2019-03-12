@@ -98,7 +98,8 @@ function DeleteBug(bugID){
 function AddBug(){
     var params = {
         'Method' : 'Add',
-        'Program' : $('#addPrg').val(),
+        'ProgramID' : $('#addPrg').val(),
+        'Program' : $('#addPrg option:selected').text(),
         'Release' : $('#addRel').val(),
         'Version' : $('#addVer').val(),
         'ReportType' : $('#addRptType').val(),
@@ -284,13 +285,27 @@ function PopulateBugEditor(bugID){
             var Employees = AJAX_Response['DropdownVals']['Employees'];
             $.each(Employees, function (i, Emp){
                 $('#resolBy').append($('<option>', {
-                    value: Emp['Name'],
+                    value: Emp['ID'],
                     text: Emp['Name']
                 }));
 
                 $('#resolTestedBy').append($('<option>', {
-                    value: Emp['Name'],
+                    value: Emp['ID'],
                     text: Emp['Name']
+                }));
+
+                $('#assigned').append($('<option>', {
+                    value: Emp['ID'],
+                    text: Emp['Name']
+                }));
+            })
+
+            // populate func areas
+            var FuncAreas = AJAX_Response['DropdownVals']['FuncAreas'];
+            $.each(FuncAreas, function (i, Func){
+                $('#funcArea').append($('<option>', {
+                    value: Func['ID'],
+                    text: Func['Name']
                 }));
             })
         }

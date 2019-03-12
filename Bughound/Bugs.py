@@ -43,9 +43,9 @@ class Bugs:
     def AddBug(self, cur):
         sql = '''
             insert into bug_reports
-                (PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
+                (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
             values 
-                (:Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, TO_DATE(:ReportDate, 'MM/DD/YYYY'))
+                (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, TO_DATE(:ReportDate, 'MM/DD/YYYY'))
         '''
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
@@ -58,6 +58,11 @@ class Bugs:
         self.sendData['Result'] = 'Success'
     
     def UpdateBug(self, cur):
+        # loop through values, change PleaseSelect to Null
+        for param in self.Params:
+            if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
+                self.Params[param] = None
+                
         sql = '''
             update bug_reports
                 set 
@@ -226,7 +231,7 @@ class Bugs:
     def PopulateDropdown(self, cur):
         self.sendData['DropdownVals'] = {}
         sql = '''
-        SELECT PRGM_NAME, PRGM_RELEASE, PRGM_VERSION
+        SELECT PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, PRGM_ID
         FROM PROGRAM
         '''
 
@@ -244,6 +249,7 @@ class Bugs:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Rel'] = row[1]
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'] = []
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['PrgmID'] = (row[3])
             else:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
 
@@ -259,5 +265,29 @@ class Bugs:
 
         for row in allRows:
             self.sendData['DropdownVals']['Employees'].append({'ID': row[0], 'Name': row[1]})
+
+        self.sendData['DropdownVals']['FuncAreas'] = []
+        sql = '''
+        SELECT FAREA_ID, FAREA_NAME
+        FROM FUNCTIONAL_AREA
+            INNER JOIN (
+                SELECT PRGM_ID
+                FROM BUG_REPORTS
+                WHERE BUG_ID LIKE :bugID
+            ) GetPrgID
+            ON GetPrgID.PRGM_ID = FUNCTIONAL_AREA.PRGM_ID
+        ORDER BY FAREA_NAME ASC
+        '''
+
+        if 'BugID' not in self.Params:
+            self.Params['BugID'] = '%%'
+            
+        cur.execute(sql, bugID=self.Params['BugID'])
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        for row in allRows:
+            self.sendData['DropdownVals']['FuncAreas'].append({'ID': row[0], 'Name': row[1]})
 
         self.sendData['Result'] = 'Success'

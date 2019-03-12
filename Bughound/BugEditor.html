@@ -3,15 +3,15 @@
     <head>
 		<title>Bug Hound</title>
 
+		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
+		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
+		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
+
 		<script src='./Bugs.js'></script>
 
 		<link rel='stylesheet' type='text/css' href='./Home.css'>
-		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
-
 		<script src='../ReusableJavascript/Ajax.js'></script>
 		<script src='../ReusableJavascript/Cookies.js'></script>
-		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
-		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
 	
     </head>
     
@@ -69,8 +69,15 @@
 						<hr><br>
 
 						<label>
-							<span>Functional Area: </span><input type="text" class="small-input-field" id="funcArea" value="" />
-							<span>Assigned To: </span><input type="text" class="small-input-field" id="assigned" value="" />
+							<span>Functional Area: </span>
+							<select id="funcArea" class="select-field">
+									<option value="PleaseSelect">PleaseSelect</option>
+								</select>	
+
+							<span>Assigned To: </span>
+							<select id="assigned" class="select-field">
+								<option value="PleaseSelect">PleaseSelect</option>
+							</select>	
 						</label>
 
 						<label><span>Comments: </span><textarea class="textarea-field" id="comments" cols="30" rows="10"></textarea></label>
@@ -78,7 +85,7 @@
 						<label>
 							<span>Status</span>
 							<select id="status" class="select-field">
-									<option value="PleaseSelect">PleaseSelect</option>
+								<option value="PleaseSelect">PleaseSelect</option>
 								<option value="1">Open</option>
 								<option value="2">Closed</option>
 							</select>
