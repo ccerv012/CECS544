@@ -101,9 +101,17 @@
 					</label>
 
 					<label>
-						<span>Reported By: </span><input type="text" class="small-input-field" id="reportBy" value="" />
+						<span>Reported By: </span>
+						<select id="reportBy" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>	
 						<span>Date: </span><input type="text" class="small-input-field datepicker" id="reportDate" value="" />
-						<span>Resolved By: </span><input type="text" class="small-input-field" id="resolBy" value="" />
+					</label>
+					<label>
+						<span>Resolved By: </span>
+						<select id="resolBy" class="select-field">
+							<option value="PleaseSelect">Please Select</option>
+						</select>
 					</label>
 							
 					<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>

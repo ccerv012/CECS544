@@ -62,16 +62,11 @@ class Bugs:
             update bug_reports
                 set 
                     BUG_ID = :BugID,
-                    PRGM_NAME = :Prg,
-                    PRGM_RELEASE = :Rel,
-                    PRGM_VERSION = :Ver,
                     REPORT_TYPE = :ReportType,
                     SEVERITY = :Severity,
                     PROB_SUMMARY = :ProblemSumm,
                     REPRODUCIBILITY = :Reproduceable,
                     SUGGESTED_FIX = :SuggestFix,
-                    REPORTED_BY_NAME = :ReportBy,
-                    REPORT_DATE = :ReportByDate,
                     FAREA_ID = :FunctionalArea,
                     ASSIGNED_TO_ID = :AssignedTo,
                     COMMENTS = :Comments,
@@ -152,7 +147,7 @@ class Bugs:
             sql = sql + ' AND RESOLUTION = :Resolution'
             bindVars['Resolution'] = self.Params['Resolution']
 
-        if self.Params['ReportedBy'] != "":
+        if self.Params['ReportedBy'] != "" and self.Params['ReportedBy'] != 'PleaseSelect':
             sql = sql + ' AND REPORTED_BY_NAME = :ReportedBy'
             bindVars['ReportedBy'] = self.Params['ReportedBy']
 
@@ -160,7 +155,7 @@ class Bugs:
             sql = sql + ' AND REPORT_DATE = :ReportDate'
             bindVars['ReportDate'] = self.Params['ReportDate']
 
-        if self.Params['ResolvedBy'] != "":
+        if self.Params['ResolvedBy'] != "" and self.Params['ResolvedBy'] != 'PleaseSelect':
             sql = sql + ' AND RESOLVED_BY_ID = :ResolvedBy'
             bindVars['ResolvedBy'] = self.Params['ResolvedBy']
 
@@ -226,7 +221,7 @@ class Bugs:
                 'Deferred' : row[22],
             })
 
-        self.sendData['Result'] = 'Success'
+        self.PopulateDropdown(cur)
 
     def PopulateDropdown(self, cur):
         self.sendData['DropdownVals'] = {}
@@ -251,5 +246,18 @@ class Bugs:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
             else:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
+
+        self.sendData['DropdownVals']['Employees'] = []
+        sql = '''
+        SELECT EMP_ID, EMP_NAME
+        FROM EMPLOYEE
+        ORDER BY EMP_NAME ASC
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        for row in allRows:
+            self.sendData['DropdownVals']['Employees'].append({'ID': row[0], 'Name': row[1]})
 
         self.sendData['Result'] = 'Success'

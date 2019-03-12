@@ -190,6 +190,20 @@ function showBugSection(){
                     text: Prg
                 }));
             })
+
+            //populate the employee fields
+            var Employees = AJAX_Response['DropdownVals']['Employees'];
+            $.each(Employees, function (i, Emp){
+                $('#reportBy').append($('<option>', {
+                    value: Emp['Name'],
+                    text: Emp['Name']
+                }));
+
+                $('#resolBy').append($('<option>', {
+                    value: Emp['Name'],
+                    text: Emp['Name']
+                }));
+            })
         }
 
         // add the jquery date picker to all the date fields
@@ -281,17 +295,17 @@ function SaveBug(){
     var params = {
         'Method' : 'Update',
         'BugID' : $('#bugID').val(),
-        'Prg' : $('#prg').val(),
-        'Rel' : $('#rel').val(),
-        'Ver' : $('#ver').val(),
+        // 'Prg' : $('#prg').val(),
+        // 'Rel' : $('#rel').val(),
+        // 'Ver' : $('#ver').val(),
         'ReportType' : $('#rptType').val(),
         'Severity' : $('#severity').val(),
         'ProblemSumm' : $('#probSumm').val(),
         'Reproduceable' : $('#reproduce').val(),
         'ReproduceSteps' : $('#reproducSteps').val(), //???
         'SuggestFix' : $('#suggFix').val(),
-        'ReportBy' : $('#reportBy').val(),
-        'ReportByDate' : $('#reportDate').val(),
+        // 'ReportBy' : $('#reportBy').val(),
+        // 'ReportByDate' : $('#reportDate').val(),
         'FunctionalArea' : $('#funcArea').val(),
         'AssignedTo' : $('#assigned').val(),
         'Comments' : $('#comments').val(),
