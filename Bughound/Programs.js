@@ -90,7 +90,12 @@ function DeleteProgram() {
             $('#program-id-to-delete').val('');
 
             // let the user know it was successful
-            alert('You have successfully deleted a program');
+            alert('You have successfully deleted a program (id: ' + AJAX_Response['Data'] + ')');
+
+        } else if (AJAX_Response['Result'] == 'Does Not Exist' ||
+                   AJAX_Response['Result'] == 'Could Not Delete') {
+                     
+          alert(AJAX_Response['Error'])
         }
     })
 
