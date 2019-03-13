@@ -240,6 +240,7 @@ function OpenBugReport(bugID){
 }
 
 function LoadBugReport(){
+    EnableLoadingGraphic();
     if (document.cookie.indexOf("bugID")>=0){
         // save the bugID to a variable that we will send to the search function
         var bugID = getCookie("bugID"); 
@@ -294,6 +295,15 @@ function PopulateBugEditor(bugID){
             $('#resolTestedBy').val(AJAX_Response['Data'][0]['TestedBy']);
             $('#resolTestDate').val(AJAX_Response['Data'][0]['TestedDate']);
             $('#defer').val(AJAX_Response['Data'][0]['Deferred']);
+
+            //populate the attachments that have already been added
+            if (AJAX_Response['Attachments'].length > 0 ){
+                $('#uploadedFiles').append('<b>Current Attachments</b><br>');
+
+                for (var i=0; i < AJAX_Response['Attachments'].length;i++){
+                    $('#uploadedFiles').append('<a href=".\\' + AJAX_Response['Attachments'][i]['FileLocation'] + AJAX_Response['Attachments'][i]['FileName'] + '" target="_blank">' + AJAX_Response['Attachments'][i]['FileName'] + '</a><br>');
+                }
+            }
 
             //populate the employee fields
             var Employees = AJAX_Response['DropdownVals']['Employees'];

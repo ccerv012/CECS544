@@ -45,13 +45,14 @@ class Bugs:
     def TransferFile(self, fileInfo, bugID, cur):
         fileName = os.path.basename(fileInfo.filename)
         filePath = 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments\%s\\' % bugID 
+        serverFilePath = 'Attachments\%s\\' % bugID'
 
         # transfer the file from the client to the server
         clientFile = open(filePath + fileName, 'wb')
         clientFile.write(fileInfo.file.read())
         clientFile.close()
 
-        self.AddAttachment(cur, fileName, filePath, bugID)
+        self.AddAttachment(cur, fileName, serverFilePath, bugID)
 
     def UploadFile(self, bugID, cur):
         try:
@@ -290,7 +291,28 @@ class Bugs:
                 'Deferred' : row[22],
             })
 
+        self.GetAttachments(cur)
+
         self.PopulateDropdown(cur)
+
+    def GetAttachments(self, cur):
+        sql='''
+            select attach_name, attach_location
+            from attachments
+            where bug_id = :bugID
+        '''
+
+        cur.execute(sql, bugID=self.Params['BugID'])
+        allRows = cur.fetchall() 
+
+        # loop through the query results
+        self.sendData['Attachments'] = []
+        for row in allRows:
+            # save the data to our strucutre we are sending back via AJAX
+            self.sendData['Attachments'].append({
+                'FileName' : row[0],
+                'FileLocation' : row[1]
+            })        
 
     def PopulateDropdown(self, cur):
         self.sendData['DropdownVals'] = {}
