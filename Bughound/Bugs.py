@@ -45,7 +45,7 @@ class Bugs:
     def TransferFile(self, fileInfo, bugID, cur):
         fileName = os.path.basename(fileInfo.filename)
         filePath = 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments\%s\\' % bugID 
-        serverFilePath = 'Attachments\%s\\' % bugID'
+        serverFilePath = 'Attachments\%s\\' % bugID
 
         # transfer the file from the client to the server
         clientFile = open(filePath + fileName, 'wb')
@@ -123,6 +123,8 @@ class Bugs:
         self.sendData['Result'] = 'Success'
     
     def UpdateBug(self, cur):
+        self.FileCount = self.Params['fileCount']
+
         # loop through values, change PleaseSelect to Null
         for param in self.Params:
             if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
@@ -154,9 +156,13 @@ class Bugs:
 
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
+        del self.Params['fileCount']
 
         cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
+
+        if self.FileCount > 0:
+            self.UploadFile(self.Params['BugID'], cur)
 
         self.sendData['Result'] = 'Success'
     

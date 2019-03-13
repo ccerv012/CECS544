@@ -370,21 +370,33 @@ function SaveBug(){
         'ResolvedDate' : $('#resolDate').val(),
         'ResolvedTestedBy' : $('#resolTestedBy').val(),
         'ResolvedTestDate' : $('#resolTestDate').val(),
-        'Defer' : $('#defer').val()        
+        'Defer' : $('#defer').val(),
+        'fileCount' : uploadList.length     
     }
 
     // data needs to be formatted before it can be sent via ajax
     var formData = new FormData()
     formData.append('params', JSON.stringify(params));
 
+    for (var i=0;i<uploadList.length;i++){
+        formData.append("fileItem", uploadList[i]);
+    }
+
     // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
+   $.ajax({
+       url: './Bugs',
+       type: 'POST',
+       data: formData,
+       processData: false,
+       contentType: false
+   })
 
     // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
+    .done(function(json) {
+        if (json['Result'] == 'Success'){
             // let the user know it was successful
             alert('You have successfully saved your changes');
+            window.close();
         }
     })
 
