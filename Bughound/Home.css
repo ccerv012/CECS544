@@ -153,3 +153,52 @@ body{
 	background: #EA7B00;
 	color: #fff;
 }
+
+/* CSS for Drag and Drop Zone */
+#dragandrophandler{
+	border:2px dotted #0B85A1;
+	width:100%;
+	height:100px;
+	color:#92AAB0;
+	text-align:center;
+	vertical-align:middle;
+	padding:10px 10px 10 10px;
+	margin-bottom:10px;
+	font-size:200%;
+}
+
+.fileListHeader{
+	display:inline-block;
+	vertical-align:top;
+	font-weight:bold;
+}
+
+.filename{
+	display:inline-block;
+	vertical-align:top;
+	width:300px;
+}
+
+.filesize{
+	display:inline-block;
+	vertical-align:top;
+	color:#30693D;
+	width:100px;
+	margin-left:10px;
+	margin-right:5px;
+}
+.abort{
+	background-color:#A8352F;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;display:inline-block;
+	color:#fff;
+	font-family:arial;font-size:13px;font-weight:normal;
+	padding:4px 15px;
+	cursor:pointer;
+	vertical-align:top
+}
+
+.hide{
+	visibility: hidden;
+}

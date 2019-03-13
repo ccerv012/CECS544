@@ -90,7 +90,7 @@ function DeleteBug(bugID){
     
         // the AJAX call was not issued succesfully
         .fail(function(load){
-            alert("The webpage is unable to load, please contact the system admin")
+            alert("The webpage is unable to load, please contact the system admin");
         })
     }
 }
@@ -109,18 +109,29 @@ function AddBug(){
         'SuggestedFix' : $('#addSuggFix').val(),
         'ReportBy' : $('#addReportBy').val(),
         'ReportDate' : $('#addReportDate').val(),
+        'fileCount' : uploadList.length
     }
 
     // data needs to be formatted before it can be sent via ajax
     var formData = new FormData()
     formData.append('params', JSON.stringify(params));
 
+    for (var i=0;i<uploadList.length;i++){
+        formData.append("fileItem", uploadList[i]);
+    }
+
     // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
+   $.ajax({
+       url: './Bugs',
+       type: 'POST',
+       data: formData,
+       processData: false,
+       contentType: false
+   })
 
     // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
+    .done(function(json) {
+        if (json['Result'] == 'Success'){
             // clear the values the user entered
             $('#addPrg').val('');
             $('#addRel').val('');
@@ -134,15 +145,18 @@ function AddBug(){
             $('#addReportBy').val('');
             $('#addReportDate').val('');
 
+            uploadList = [];
+            rowCount = 0;
+            $('files').empty();
+
             // let the user know it was successful
             alert('You have successfully created a new bug');
         }
     })
 
-    // the AJAX call was not issued succesfully
-	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
-	})
+    .fail(function(json){
+        alert("The webpage is unable to load, please contact the system admin");
+    })
 }
 
 var BUG_DROP_DOWN_VALUES = '';
@@ -182,12 +196,12 @@ function showBugSection(){
             var Prgs = Object.keys(AJAX_Response['DropdownVals']['Programs']);
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
-                    value: Prg,
+                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
 
                 $('#addPrg').append($('<option>', {
-                    value: Prg,
+                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
             })
@@ -380,7 +394,7 @@ $(document).on('change', '#addPrg', function () {
     $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
+    selectedPrg = $('#addPrg option:selected').text();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
@@ -399,8 +413,8 @@ $(document).on('change', '#addRel', function () {
     $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
-    selectedRel = $('#addRel').val();
+    selectedPrg = $('#addPrg option:selected').text();
+    selectedRel = $('#addRel option:selected').text();
 
     // populate the two corresponding drop downs
     Versions = BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][selectedRel]['Ver'];
