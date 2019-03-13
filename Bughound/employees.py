@@ -15,7 +15,9 @@ class employees:
         self.dispatch = {
             'Search' : self.search_employees,
             'Add': self.add_employee,
-            'Delete': self.delete_employee
+            'Delete': self.delete_employee,
+            'Populate' : self.populate_employees,
+            'Update' : self.update_employee
         }
     
     def POST(self, params):
@@ -53,7 +55,8 @@ class employees:
     def update_employee(self, cur):
         sql = '''
         UPDATE EMPLOYEE
-            SET 
+            SET
+            emp_username = :username,
             emp_name = :name, 
             emp_password = :password,
             emp_role = :role
@@ -61,8 +64,10 @@ class employees:
             emp_id = :id
         '''
 
-        cur.execute(sql)
+        cur.execute(sql, username=self.Params['emp_username'], name=self.Params['emp_name'], password=self.Params['emp_password'], role=self.Params['emp_role'], id=self.Params['emp_id'])
         self.CECS544_DB.conn.commit()
+
+        self.sendData['Result'] = 'Success'
     
     def delete_employee(self, cur):
         sql = '''
@@ -101,3 +106,25 @@ class employees:
             })
 
         self.sendData['Result'] = 'Success'
+
+    def populate_employees(self, cur):
+        sql = '''
+        select EMP_ID, EMP_USERNAME, EMP_NAME, EMP_ROLE, EMP_PASSWORD
+        from EMPLOYEE 
+        WHERE EMP_ID=:emp_id
+        '''
+
+        cur.execute(sql,emp_id=self.Params['emp_id'])
+        allRows = cur.fetchall()
+
+        for row in allRows:
+            self.sendData['Data'].append({
+                'ID': row[0],
+                'Username' : row[1],
+                'Name' : row[2],
+                'Role' : row[3],
+                'Password' : row[4]
+            })
+
+        self.sendData['Result'] = 'Success'
+    

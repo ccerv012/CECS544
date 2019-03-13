@@ -15,6 +15,7 @@ function CheckLoginStatus(){
 
 		// set up the accordion on each page
 		$( ".bugAccordion" ).accordion({heightStyle: "content"});
+		$( ".emp_accordion" ).accordion({heightStyle: "content"});
 
 		EnableLoadingGraphic();
 		

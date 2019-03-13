@@ -180,15 +180,16 @@
 			</div>
 		</div>
 		
-		<div id="employees">
+		<div id="employees" class='emp_accordion'>
+			<h3>Add</h3>
 			<div id="Employee_Add">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Add A New Employee</div>
-						<label><span>Employee Username: </span><input type="text" class="input-field" id="emp_username" value="" /></label>
-						<label><span>Employee Name: </span><input type="text" class="input-field" id="emp_name" value="" /></label>
-						<label><span>Employee Password: </span><input type="password" class="input-field" id="emp_password" value="" /></label>
+						<label><span>Employee Username: </span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
+						<label><span>Employee Name: </span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
+						<label><span>Employee Password: </span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
 						<label><span>Employee Role</span>
-							<select id="emp_role" class="select-field">
+							<select id="add_emp_role" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -199,6 +200,7 @@
 				</div>
 			</div>
 
+			<h3>Search</h3>
 			<div id="Employee_Search">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Search for Employees</div>
@@ -214,11 +216,11 @@
 							</select>
 						</label>
 						<label><span> </span><button id="employeeSearch" onclick="search_employees()">Search</button></label>
+
+						<div id="employeeSearchResults"></div>
 				</div>
 			</div>
-
-			<div id="employeeSearchResults"></div>
-					
+									
 		</div>
 
 		<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
