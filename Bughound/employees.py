@@ -91,6 +91,18 @@ class employees:
         if self.Params['Employee_ID'] != "":
             sql = sql + ' AND EMP_ID = :Employee_ID'
             bindVars['Employee_ID'] = self.Params['Employee_ID']
+        
+        if self.Params['Employee_Username'] != "":
+            sql = sql + ' AND EMP_USERNAME = :Employee_Username'
+            bindVars['Employee_Username'] = self.Params['Employee_Username']
+
+        if self.Params['Employee_Name'] != "":
+            sql = sql + ' AND EMP_NAME = :Employee_Name'
+            bindVars['Employee_Name'] = self.Params['Employee_Name']
+
+        if self.Params['Employee_Role'] != "PleaseSelect":
+            sql = sql + ' AND EMP_ROLE = :Employee_Role'
+            bindVars['Employee_Role'] = self.Params['Employee_Role']
 
         cur.execute(sql, bindVars) # execute the sql statement
         allRows = cur.fetchall() # get the results on the query

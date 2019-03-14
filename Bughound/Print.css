@@ -1,0 +1,24 @@
+@media print {
+
+    input, textarea, select{
+        outline: none !important;
+        border: none !important;
+        -webkit-appearance: none;
+        box-shadow: none !important;
+    }
+
+    :-webkit-autofill { color: #fff !important; }
+
+    .topnav, #dragandrophandler, #BugSearchBtn, .show {
+        display: none !important;
+    }
+
+    .hide{
+        visibility: visible;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+}

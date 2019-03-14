@@ -11,6 +11,7 @@ sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound')
 from employees import employees
 from Bugs import Bugs
 from Programs import Programs
+from functionalAreas import functionalAreas
 
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
 from Login import Login
@@ -89,6 +90,7 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.response_header.headers': [('Content-Type', 'text/json')],
 			},
 			'/Bughound/Programs':{
+			'/Bughound/functionalAreas':{
 				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
 				'tools.response_headers.on': True,
 				'tools.response_header.headers': [('Content-Type', 'text/json')],
@@ -120,6 +122,7 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 		webapp.Bughound.employees = employees()
 		webapp.Bughound.Bugs = Bugs()
 		webapp.Bughound.Programs = Programs()
+		webapp.Bughound.functionalAreas = functionalAreas()
 
 		cherrypy.engine.start()
 		cherrypy.engine.block()

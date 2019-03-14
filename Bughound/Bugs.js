@@ -32,9 +32,11 @@ function SearchBugs(){
             $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
 
             // add a header row to the table
-            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Functional Area</th><th>Assigned</th><th>Status</th><th>Priority</th><th>Resolution</th><th>Reported By</th><th>Report Date</th><th>Resolved By</th><th>Delete</th></thead>');
+
+            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Reported By</th><th>Report Date</th><th>Delete</th></thead>');
 
             // loop through the search results and add them to the results table
+
             var tr;
             for (var i = 0; i < AJAX_Response['Data'].length; i++) {
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
@@ -42,14 +44,14 @@ function SearchBugs(){
                 tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Severity + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportedBy + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportedDate + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
                 tr.append('<td><button onclick="DeleteBug(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
                 $('#BugResultsTable').append(tr); // add the row you just built to the table
             }
@@ -142,12 +144,10 @@ function AddBug(){
             $('#addReproduce').val('');
             //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
             $('#addSuggFix').val('');
-            $('#addReportBy').val('');
-            $('#addReportDate').val('');
 
             uploadList = [];
             rowCount = 0;
-            $('files').empty();
+            $('#files').empty();
 
             // let the user know it was successful
             alert('You have successfully created a new bug');
@@ -393,17 +393,47 @@ function SaveBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        if (json['Result'] == 'Success'){
-            // let the user know it was successful
-            alert('You have successfully saved your changes');
-            window.close();
-        }
+        // let the user know it was successful
+        alert('You have successfully saved your changes');
+        window.close();
     })
 
     // the AJAX call was not issued succesfully
 	.fail(function(load){
 		alert("The webpage is unable to load, please contact the system admin")
 	})
+}
+
+function CancelBug(){
+    // clear the values the user entered
+    $('#addPrg').val('PleaseSelect');
+    $('#addRel').val('PleaseSelect');
+    $('#addVer').val('PleaseSelect');
+    $('#addRptType').val('PleaseSelect');
+    $('#addSeverity').val('PleaseSelect');
+    $('#addProbSumm').val('');
+    $('#addReproduce').val('');
+    //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+    $('#addSuggFix').val('');
+
+    uploadList = [];
+    rowCount = 0;
+    $('#files').empty();
+}
+
+function ResetSearchBugs(){
+    $('#bugID').val('');
+    $('#prg').val('PleaseSelect');
+    $('#rptType').val('PleaseSelect');
+    $('#severity').val('PleaseSelect');
+    $('#funcArea').val('');
+    $('#status').val('PleaseSelect');
+    $('#resolution').val('PleaseSelect');
+    $('#priority').val('');
+    $('#assigned').val('');
+    $('#reportBy').val('PleaseSelect');
+    $('#reportDate').val('');
+    $('#resolBy').val('PleaseSelect');
 }
 
 $(document).on('change', '#addPrg', function () {

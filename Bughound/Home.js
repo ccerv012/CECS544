@@ -13,11 +13,13 @@ function CheckLoginStatus(){
 		$('#bugs').hide();
 		$('#employees').hide();
 		$('#programs').hide();
+		$('#functionalAreas').hide();
 
 		// set up the accordion on each page
 		$( ".bugAccordion" ).accordion({heightStyle: "content"});
 		$( ".emp_accordion" ).accordion({heightStyle: "content"});
 		$( ".programAccordion" ).accordion({heightStyle: "content"});
+		$('.fareaAccordion').accordion({heightStyle: "content"});
 
 		EnableLoadingGraphic();
 
