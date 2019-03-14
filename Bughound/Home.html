@@ -247,7 +247,7 @@
 					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1"/></label>
 					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0"/></label>
 
-					<label><span> </span><button id="ProgramAddBtn" onclick="AddProgram()">Add Program</button></label>
+					<label><span> </span><button id="ProgramAddBtn" onclick="addProgram()">Add Program</button></label>
 				</div>
 			</div> <!-- END programAdd div-->
 
@@ -256,11 +256,14 @@
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Search for a Program</div>
 
-					<label><span>Program Name: <input type="text" class="input-field" id="program-name-to-add" value="" /></label>
-					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1" /></label>
-					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0" /></label>
+					<label><span>Program Name: <input type="text" class="input-field" id="program-name-to-search" value="" /></label>
+					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-search" value="" /></label>
+					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-search" value="" /></label>
 
-					<label><span> </span><button id="ProgramSearchBtn" onclick="SearchPrograms()">Search</button></label>
+					<label>
+						<span> </span><button id="ProgramSearchResetBtn" onclick="resetProgramSearch()">Reset</button>
+						<span> </span><button id="ProgramSearchBtn" onclick="searchPrograms()">Search</button>
+					</label>
 
 					<div id="program-search-results"></div>
 				</div>

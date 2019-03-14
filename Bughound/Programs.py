@@ -63,8 +63,41 @@ class Programs:
 
         self.sendData['Result']='Success'
 
-    # TODO: check if exists
-    # TODO: as long as ID exists, make it so you can change just one field and the others persist
+    def search_program(self, cur):
+        sql = '''
+            select *
+            from PROGRAM
+            WHERE 1=1
+        '''
+
+        bind_vars = {}
+
+        if self.Params['Program_Name'] != "":
+            sql = sql + ' AND PRGM_NAME = :Program_Name'
+            bind_vars['Program_Name'] = self.Params['Program_Name']
+        if self.Params['Program_Version'] != "":
+            sql = sql + ' AND PRGM_VERSION = :Program_Version'
+            bind_vars['Program_Version'] = self.Params['Program_Version']
+        if self.Params['Program_Release'] != "":
+            sql = sql + ' AND PRGM_RELEASE = :Program_Release'
+            bind_vars['Program_Release'] = self.Params['Program_Release']
+
+        cur.execute(sql, bind_vars) # execute the sql statement
+        allRows = cur.fetchall() # get the results on the query
+
+        # loop through the query results
+        for row in allRows:
+            # save the data to our strucutre we are sending back via AJAX
+            self.sendData['Data'].append({
+                'Prgm_ID': row[0],
+                'Prgm_Name': row[1],
+                'Version': row[2],
+                'Release': row[3],
+            })
+
+        self.sendData['Result'] = 'Success'
+
+
     def update_program(self, cur):
         sql = '''
         UPDATE PROGRAM
@@ -117,8 +150,6 @@ class Programs:
                 self.sendData['Error'] = 'Error: ID ' + str(self.Params['Program_ID']) \
                                         + ' exists, but it could not be deleted.'
 
-    def search_program(self, cur):
-        pass
 
     def populate_program(self, cur):
         pass

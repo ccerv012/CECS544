@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>Bug Hound</title>
+
+		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
+		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
+		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
+
+		<script src='./Programs.js'></script>
+
+		<link rel='stylesheet' type='text/css' href='./Home.css'>
+		<script src='../ReusableJavascript/Ajax.js'></script>
+		<script src='../ReusableJavascript/Cookies.js'></script>
+
+    </head>
+
+		<body onload="loadPrograms()">
+
+			<div class="topnav">
+				<a href="#home">Home</a>
+                <a href="#" >Bugs</a>
+                <a class="active" href="#" >Employees</a>
+                <a href="#" >Functional Area</a>
+				<!-- add each new section here -->
+			</div>
+
+        <div id="Employee_Edit">
+            <div class="form-style-2">
+                <div class="form-style-2-heading">Edit Employee Information</div>
+                    <label><span>Employee ID: </span><input disabled type="text" class="input-field" id="emp_id" value="" /></label>
+                    <label><span>Employee Username: </span><input type="text" class="input-field" id="emp_username" value="" /></label>
+                    <label><span>Employee Name: </span><input type="text" class="input-field" id="emp_name" value="" /></label>
+                    <label><span>Employee Password: </span><input type="password" class="input-field" id="emp_password" value="" /></label>
+                    <label><span>Employee Role</span>
+                        <select id="emp_role" class="select-field">
+                            <option value="PleaseSelect">Please Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label><span> </span><button id="employeeUpdateBtn" onclick="update_employee()">Update Employee</button></label>
+            </div>
+        </div>
+    </body>
+</html>

@@ -164,11 +164,15 @@ function showBugSection(){
     // show/hide the sections we want the user to see
     $('#bugs').show();
     $('#employees').hide();
+    $('#programs').hide();
+    $('#functionalAreas').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').addClass('active');
     $('#Employees').removeClass('active');
+    $('#Programs').removeClass('active');
+    $('#FunctionalArea').removeClass('active');
 
     // populate the Add Date
     $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
