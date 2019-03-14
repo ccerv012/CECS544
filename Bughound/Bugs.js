@@ -428,7 +428,7 @@ function SaveBug(){
 function CancelBug(){
     // clear the values the user entered
     $('#addPrg').val('PleaseSelect');
-    $('#addRel').val('PleaseSelect');
+    $('#addRelVer').val('PleaseSelect');
     $('#addRptType').val('PleaseSelect');
     $('#addSeverity').val('PleaseSelect');
     $('#addProbSumm').val('');
