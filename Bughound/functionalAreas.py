@@ -46,25 +46,43 @@ class functionalAreas:
 
 
     def addFuntionalArea(self, cur):
+        # need to figure out which prg id to add it to
         sql = '''
-        INSERT INTO FUNCTIONAL_AREA
-            (farea_name, prgm_id)
-        VALUES
-            (:name, :prgm_id)
+        select prgm_id
+        from program
+        where prgm_name = :Program
+        and prgm_release = :ProgramRel
+        and prgm_version = :ProgramVer
         '''
-        try:
-            cur.execute(sql, name=self.Params['FunctionalArea_Name'], prgm_id=self.Params['Program'])
-            self.CECS544_DB.conn.commit()
 
-        except cx_Oracle.IntegrityError as e:
-            self.sendData['Result']='PK Violation'
-            raise ValueError()
+        cur.execute(sql, Program=self.Params['Program'], ProgramRel=self.Params['ProgramRel'], ProgramVer=self.Params['ProgramVer'])
+        allRows = cur.fetchall()
 
-        self.sendData['Result'] = 'Success'
+        if cur.rowcount > 0:
+
+            prgID = allRows[0][0]
+
+            sql = '''
+            INSERT INTO FUNCTIONAL_AREA
+                (farea_name, prgm_id)
+            VALUES
+                (:name, :prgm_id)
+            '''
+            try:
+                cur.execute(sql, name=self.Params['FunctionalArea_Name'], prgm_id=prgID)
+                self.CECS544_DB.conn.commit()
+
+            except cx_Oracle.IntegrityError as e:
+                self.sendData['Result']='PK Violation'
+                raise ValueError()
+
+            self.sendData['Result'] = 'Success'
+        else:
+            self.sendData['Result'] = 'Invalid Program'
 
     def searchFunctionalArea(self,cur):
         sql = '''
-        select FAREA_ID, FAREA_NAME, functional_area.prgm_id,program.prgm_name
+        select FAREA_ID, FAREA_NAME, functional_area.prgm_id,program.prgm_name, program.prgm_release, program.prgm_version
         from FUNCTIONAL_AREA
         inner join PROGRAM
         on program.prgm_id=functional_area.prgm_id
@@ -73,10 +91,10 @@ class functionalAreas:
 
         bindVars = {}
         if self.Params['Program'] != "PleaseSelect":
-            sql = sql + ' AND functional_area.prgm_id = :Program'
+            sql = sql + ' AND program.prgm_name = :Program'
             bindVars['Program'] = self.Params['Program']
 
-        sql = sql + " ORDER BY program.prgm_name, FAREA_NAME"
+        sql = sql + " ORDER BY program.prgm_name, program.prgm_release, program.prgm_version, FAREA_NAME"
 
         cur.execute(sql, bindVars)
         allRows=cur.fetchall()
@@ -88,14 +106,17 @@ class functionalAreas:
                 'FuntionalAreaName': row[1],
                 'Program_ID': row[2],
                 'Program_Name' : row[3],
+                'Program_Rel' : row[4],
+                'Program_Ver' : row[5],
             })
 
         self.sendData['Result'] = 'Success'
 
     def prgmDropDown(self, cur):
         sql = '''
-            SELECT PRGM_ID, PRGM_NAME
+            SELECT PRGM_NAME
             FROM PROGRAM
+            GROUP BY PRGM_NAME
             '''
         cur.execute(sql)
 
@@ -104,8 +125,7 @@ class functionalAreas:
         for row in allRows:
             # save the data to our strucutre we are sending back via AJAX
             self.sendData['Data'].append({
-                'ID': row[0],
-                'Name': row[1]
+                'Name': row[0]
             })
 
         self.sendData['Result'] = 'Success'

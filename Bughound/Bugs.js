@@ -100,10 +100,7 @@ function DeleteBug(bugID){
 function AddBug(){
     var params = {
         'Method' : 'Add',
-        'ProgramID' : $('#addPrg').val(),
-        'Program' : $('#addPrg option:selected').text(),
-        'Release' : $('#addRel').val(),
-        'Version' : $('#addVer').val(),
+        'ProgramID' : $('#addRelVer').val(),
         'ReportType' : $('#addRptType').val(),
         'Severity' : $('#addSeverity').val(),
         'ProblemSummary' : $('#addProbSumm').val(),
@@ -201,13 +198,12 @@ function showBugSection(){
 
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
-                  // TODO: hard coding the 1 doesn't work if release is not 1
-                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
+                    value: Prg,
                     text: Prg
                 }));
 
                 $('#addPrg').append($('<option>', {
-                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
+                    value: Prg,
                     text: Prg
                 }));
             })
@@ -414,7 +410,6 @@ function CancelBug(){
     // clear the values the user entered
     $('#addPrg').val('PleaseSelect');
     $('#addRel').val('PleaseSelect');
-    $('#addVer').val('PleaseSelect');
     $('#addRptType').val('PleaseSelect');
     $('#addSeverity').val('PleaseSelect');
     $('#addProbSumm').val('');
@@ -445,41 +440,19 @@ function ResetSearchBugs(){
 $(document).on('change', '#addPrg', function () {
 
     // clear the choices from the Release and Version dropdowns
-    $('#addRel').empty();
-    $('#addVer').empty();
+    $('#addRelVer').empty();
 
-    $('#addRel').append('<option value="PleaseSelect">Please Select</option>');
-    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
+    $('#addRelVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg option:selected').text();
+    selectedPrg = $('#addPrg').val();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
     $.each(Releases, function (i, Rel){
-        $('#addRel').append($('<option>', {
-            value: Rel,
-            text: Rel
-        }));
-    })
-
-});
-
-$(document).on('change', '#addRel', function () {
-    // clear the choices from the Release and Version dropdowns
-    $('#addVer').empty();
-    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
-
-    // get the program the user selected
-    selectedPrg = $('#addPrg option:selected').text();
-    selectedRel = $('#addRel option:selected').text();
-
-    // populate the two corresponding drop downs
-    Versions = BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][selectedRel]['Ver'];
-    $.each(Versions, function (i, Ver){
-        $('#addVer').append($('<option>', {
-            value: Ver,
-            text: Ver
+        $('#addRelVer').append($('<option>', {
+            value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
+            text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
         }));
     })
 

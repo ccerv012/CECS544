@@ -91,9 +91,9 @@ class Bugs:
         sql = '''
             insert into bug_reports
 
-                (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, BUG_STATUS)
+                (PRGM_ID, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, BUG_STATUS)
             values
-                (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate, 1)
+                (:ProgramID, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate, 1)
 
         '''
         # delete the method key so you can pass all params without specifying each one
@@ -183,6 +183,8 @@ class Bugs:
         sql = '''
         SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_NAME, REPORT_DATE, RESOLVED_BY_ID
         FROM bug_reports
+            inner join program
+            on program.prgm_id = bug_reports.prgm_id
         WHERE 1=1
         '''
 
@@ -194,8 +196,8 @@ class Bugs:
             bindVars['bugID'] = self.Params['BugID']
 
         if self.Params['Pgm'] != "" and self.Params['Pgm'] != 'PleaseSelect':
-            sql = sql + ' AND PRGM_ID = :Pgm'
-            bindVars['Pgm'] = int(self.Params['Pgm'])
+            sql = sql + ' AND PRGM_NAME = :Pgm'
+            bindVars['Pgm'] = self.Params['Pgm']
 
         if self.Params['ReportType'] != "" and self.Params['ReportType'] != 'PleaseSelect':
             sql = sql + ' AND REPORT_TYPE = :rptType'
@@ -264,6 +266,8 @@ class Bugs:
         sql = '''
         SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED
         FROM bug_reports
+            inner join program
+            on program.prgm_id = bug_reports.prgm_id
         where bug_id = :bugID
         '''
 
@@ -336,16 +340,18 @@ class Bugs:
 
         for row in allRows:
             if row[0] not in self.sendData['DropdownVals']['Programs']:
-                self.sendData['DropdownVals']['Programs'][row[0]] = {}
-
-            if row[1] not in self.sendData['DropdownVals']['Programs'][row[0]]:
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]] = {}
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Rel'] = row[1]
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'] = []
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['PrgmID'] = (row[3])
+                self.sendData['DropdownVals']['Programs'][row[0]] = []
+                self.sendData['DropdownVals']['Programs'][row[0]].append({
+                    'Rel': row[1],
+                    'Ver': row[2],
+                    'ID' : row[3]
+                })
             else:
-                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
+                self.sendData['DropdownVals']['Programs'][row[0]].append({
+                    'Rel': row[1],
+                    'Ver': row[2],
+                    'ID' : row[3]
+                })
 
         self.sendData['DropdownVals']['Employees'] = []
         sql = '''

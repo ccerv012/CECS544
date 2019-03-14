@@ -119,7 +119,7 @@
 					</label>
 
 					<label>
-							<span> </span><button id="BugSearchBtn" onclick="ResetSearchBugs()">Reset</button>
+							<span> </span><button onclick="ResetSearchBugs()">Reset</button>
 						<span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button>
 					</label>
 
@@ -139,12 +139,8 @@
 						</select>
 					</label>
 					<label>
-						<span>Release: </span><span class="required">*</span>
-						<select id="addRel" class="select-field">
-							<option value="PleaseSelect">Please Select</option>
-						</select>
-						<span>Version: </span><span class="required">*</span>
-						<select id="addVer" class="select-field">
+						<span>Release & Version: </span><span class="required">*</span>
+						<select id="addRelVer" class="select-field">
 							<option value="PleaseSelect">Please Select</option>
 						</select>
 					</label>
@@ -184,7 +180,7 @@
 					</label>
 
 					<label>
-						<span> </span><button id="BugAddBtn" onclick="CancelBug()">Cancel</button>
+						<span> </span><button onclick="CancelBug()">Cancel</button>
 						<span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button>
 					</label>
 				</div>
@@ -192,25 +188,6 @@
 		</div>
 
 		<div id="employees" class='emp_accordion'>
-			<h3>Add</h3>
-			<div id="Employee_Add">
-				<div class="form-style-2">
-					<div class="form-style-2-heading">Add A New Employee</div>
-						<label><span>Employee Username: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
-						<label><span>Employee Name: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
-						<label><span>Employee Password: </span><span class="required">*</span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
-						<label><span>Employee Role</span><span class="required">*</span>
-							<select id="add_emp_role" class="select-field">
-								<option value="PleaseSelect">Please Select</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-						</label>
-						<label><span> </span><button id="employeeAddBtn" onclick="add_employee()">Add Employee</button></label>
-				</div>
-			</div>
-
 			<h3>Search</h3>
 			<div id="Employee_Search">
 				<div class="form-style-2">
@@ -226,9 +203,34 @@
 								<option value="3">3</option>
 							</select>
 						</label>
-						<label><span> </span><button id="employeeSearch" onclick="search_employees()">Search</button></label>
+						<label>
+								<button onclick="ResetEmpSearch()">Reset</button>
+							<button id="employeeSearch" onclick="search_employees()">Search</button>
+						</label>
 
 						<div id="employeeSearchResults"></div>
+				</div>
+			</div>
+
+			<h3>Add</h3>
+			<div id="Employee_Add">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add A New Employee</div>
+						<label><span>Employee Username: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
+						<label><span>Employee Name: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
+						<label><span>Employee Password: </span><span class="required">*</span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
+						<label><span>Employee Role</span><span class="required">*</span>
+							<select id="add_emp_role" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</label>
+						<label>
+							<button onclick="ResetEmpAdd()">Reset</button>
+							<button id="employeeAddBtn" onclick="add_employee()">Add Employee</button>
+						</label>
 				</div>
 			</div>
 
@@ -237,19 +239,6 @@
 		<!-- PROGRAM SECTION -->
 
 		<div id="programs" class="programAccordion">
-
-			<h3>Add</h3>
-			<div id="programAdd">
-				<div class="form-style-2">
-					<div class="form-style-2-heading">Add a Program</div>
-
-					<label><span>Program Name: </span><span class="required">*</span><input type="text" class="input-field" id="program-name-to-add" value="" /></label>
-					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1"/></label>
-					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0"/></label>
-
-					<label><span> </span><button id="ProgramAddBtn" onclick="addProgram()">Add Program</button></label>
-				</div>
-			</div> <!-- END programAdd div-->
 
 			<h3>Search</h3>
 			<div id="programSearch">
@@ -267,7 +256,22 @@
 
 					<div id="program-search-results"></div>
 				</div>
+
+			
 			</div> <!-- END programSearch div-->
+
+			<h3>Add</h3>
+			<div id="programAdd">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add a Program</div>
+
+					<label><span>Program Name: </span><span class="required">*</span><input type="text" class="input-field" id="program-name-to-add" value="" /></label>
+					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1"/></label>
+					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0"/></label>
+
+					<label><span> </span><button id="ProgramAddBtn" onclick="addProgram()">Add Program</button></label>
+				</div>
+			</div> <!-- END programAdd div-->
 
 		</div> <!-- END programs div-->
 
@@ -284,7 +288,10 @@
 							</select>
 						</label>
 
-						<label><span> </span><button id="searchFuncAreas" onclick="searchFuncArea()">Search</button></label>
+						<label>
+							<button onclick="ClearSearchFuncArea()">Reset</button>
+							<button id="searchFuncAreas" onclick="searchFuncArea()">Search</button>
+						</label>
 
 				</div>
 				<div id="functionalSearchResults"></div>
@@ -299,8 +306,13 @@
 								<option value="PleaseSelect">Please Select</option>
 							</select>
 						</label>
+						<label><span>Program Release</span><span class="required">*</span><input type="number" class="input-field" id="add_prg_rel" value="" /></label>
+						<label><span>Program Version</span><span class="required">*</span><input type="number" class="input-field" id="add_prg_ver" value="" /></label>
 						<label><span>Functional Area: </span><span class="required">*</span><input type="text" class="input-field" id="add_farea_name" value="" /></label>
-						<label><span> </span><button id="addFuncAreas" onclick="addFuncArea()">Add to Program</button></label>
+						<label>
+							<button onclick="resetFuncArea()">Reset</button>
+							<button id="addFuncAreas" onclick="addFuncArea()">Add to Program</button>
+						</label>
 
 				</div>
 			</div>

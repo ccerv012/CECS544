@@ -14,6 +14,21 @@ function showEmployeesSection(){
   $('#Programs').removeClass('active');
 }
 
+function ResetEmpSearch(){
+    $('#emp_id').val('');
+    $('#emp_username').val('');
+    $('#emp_name').val('');
+    $('#emp_role').val('PleaseSelect');
+}
+
+function ResetEmpAdd(){
+    $('#add_emp_id').val('');
+    $('#add_emp_username').val('');
+    $('#add_emp_password').val('');
+    $('#add_emp_name').val('');
+    $('#add_emp_role').val('PleaseSelect');
+}
+
 function add_employee(){
     var params = {
         'Method' : 'Add',
