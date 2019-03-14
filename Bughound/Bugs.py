@@ -7,6 +7,16 @@ import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
 from DB_Connection import db_CECS544
 
+def dateFormatter(data):
+    if data==None:
+        return ''
+    else:
+        try:
+            data.date()
+            return ('%d/%d/%d' % (data.month, data.day, data.year))
+        except:
+            return(str(data))
+
 class Bugs:
     # allow the cherrypy server to serve these files
     exposed = True
@@ -19,7 +29,8 @@ class Bugs:
             'Update': self.UpdateBug,
             'Delete': self.DeleteBug,
             'PopulateBug': self.PopulateBugEditor,
-            'PopulateDropdown': self.PopulateDropdown
+            'PopulateDropdown': self.PopulateDropdown,
+            'Export' : self.ExportBugData
         }
 
     def POST(self, params, fileItem=None):
@@ -91,9 +102,9 @@ class Bugs:
         sql = '''
             insert into bug_reports
 
-                (PRGM_ID, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, BUG_STATUS)
+                (PRGM_ID, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, BUG_STATUS, REPRODUCIBILITY_STEPS)
             values
-                (:ProgramID, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate, 1)
+                (:ProgramID, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate, 1, :ReproduceSteps)
 
         '''
         # delete the method key so you can pass all params without specifying each one
@@ -125,48 +136,52 @@ class Bugs:
         self.sendData['Result'] = 'Success'
 
     def UpdateBug(self, cur):
-        self.FileCount = self.Params['fileCount']
+        if cherrypy.session.get('Employee_Info')['Permission'] > 1:
+            self.FileCount = self.Params['fileCount']
 
-        # loop through values, change PleaseSelect to Null
-        for param in self.Params:
-            if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
-                self.Params[param] = None
+            # loop through values, change PleaseSelect to Null
+            for param in self.Params:
+                if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
+                    self.Params[param] = None
 
-        sql = '''
-            update bug_reports
-                set
-                    BUG_ID = :BugID,
-                    REPORT_TYPE = :ReportType,
-                    SEVERITY = :Severity,
-                    PROB_SUMMARY = :ProblemSumm,
-                    REPRODUCIBILITY = :Reproduceable,
-                    SUGGESTED_FIX = :SuggestFix,
-                    FAREA_ID = :FunctionalArea,
-                    ASSIGNED_TO_ID = :AssignedTo,
-                    COMMENTS = :Comments,
-                    BUG_STATUS = :Status,
-                    BUG_PRIORITY = :Priority,
-                    RESOLUTION = :Resolution,
-                    RESOLUTION_VERSION = :ResolutionVer,
-                    RESOLVED_BY_ID = :ResolvedBy,
-                    RESOLUTION_DATE = TO_DATE(:ResolvedDate, 'MM/DD/YYYY'),
-                    TESTED_BY_ID = :ResolvedTestedBy,
-                    TESTED_BY_DATE = TO_DATE(:ResolvedTestDate, 'MM/DD/YYYY'),
-                    TREAT_DEFERRED = :Defer
-                where bug_id = :BugID
-        '''
+            sql = '''
+                update bug_reports
+                    set
+                        BUG_ID = :BugID,
+                        REPORT_TYPE = :ReportType,
+                        SEVERITY = :Severity,
+                        PROB_SUMMARY = :ProblemSumm,
+                        REPRODUCIBILITY = :Reproduceable,
+                        REPRODUCIBILITY_STEPS = :ReproduceableSteps,
+                        SUGGESTED_FIX = :SuggestFix,
+                        FAREA_ID = :FunctionalArea,
+                        ASSIGNED_TO_ID = :AssignedTo,
+                        COMMENTS = :Comments,
+                        BUG_STATUS = :Status,
+                        BUG_PRIORITY = :Priority,
+                        RESOLUTION = :Resolution,
+                        RESOLUTION_VERSION = :ResolutionVer,
+                        RESOLVED_BY_ID = :ResolvedBy,
+                        RESOLUTION_DATE = TO_DATE(:ResolvedDate, 'MM/DD/YYYY'),
+                        TESTED_BY_ID = :ResolvedTestedBy,
+                        TESTED_BY_DATE = TO_DATE(:ResolvedTestDate, 'MM/DD/YYYY'),
+                        TREAT_DEFERRED = :Defer
+                    where bug_id = :BugID
+            '''
 
-        # delete the method key so you can pass all params without specifying each one
-        del self.Params['Method']
-        del self.Params['fileCount']
+            # delete the method key so you can pass all params without specifying each one
+            del self.Params['Method']
+            del self.Params['fileCount']
 
-        cur.execute(sql, self.Params)
-        self.CECS544_DB.conn.commit()
+            cur.execute(sql, self.Params)
+            self.CECS544_DB.conn.commit()
 
-        if self.FileCount > 0:
-            self.UploadFile(self.Params['BugID'], cur)
+            if self.FileCount > 0:
+                self.UploadFile(self.Params['BugID'], cur)
 
-        self.sendData['Result'] = 'Success'
+            self.sendData['Result'] = 'Success'
+        else:
+            self.sendData['Result'] = 'Access Denied'
 
     def DeleteBug(self, cur):
         sql = '''
@@ -232,7 +247,7 @@ class Bugs:
             bindVars['ReportedBy'] = self.Params['ReportedBy']
 
         if self.Params['ReportDate'] != "":
-            sql = sql + ' AND REPORT_DATE = :ReportDate'
+            sql = sql + ' AND REPORT_DATE = TO_DATE(:ReportDate, "MM/DD/YYYY")'
             bindVars['ReportDate'] = self.Params['ReportDate']
 
         if self.Params['ResolvedBy'] != "" and self.Params['ResolvedBy'] != 'PleaseSelect':
@@ -264,7 +279,7 @@ class Bugs:
 
     def PopulateBugEditor(self, cur):
         sql = '''
-        SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED
+        SELECT BUG_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, FAREA_ID, ASSIGNED_TO_ID, COMMENTS, BUG_STATUS, BUG_PRIORITY, RESOLUTION, RESOLUTION_VERSION, RESOLVED_BY_ID, RESOLUTION_DATE, TESTED_BY_ID, TESTED_BY_DATE, TREAT_DEFERRED, REPRODUCIBILITY_STEPS
         FROM bug_reports
             inner join program
             on program.prgm_id = bug_reports.prgm_id
@@ -288,7 +303,7 @@ class Bugs:
                 'Reproducable' : row[7],
                 'SuggFix' : row[8],
                 'ReportBy' : row[9],
-                'ReportDate' : str(row[10]),
+                'ReportDate' : dateFormatter(row[10]),
                 'FuncArea' : row[11],
                 'Assigned' : row[12],
                 'Comments' : row[13],
@@ -297,10 +312,11 @@ class Bugs:
                 'Resolution' : row[16],
                 'ResolutionVer' : row[17],
                 'ResolvedBy' : row[18],
-                'ResolvedDate' : str(row[19]),
+                'ResolvedDate' : dateFormatter(row[19]),
                 'TestedBy' : row[20],
-                'TestedDate' : str(row[21]),
+                'TestedDate' : dateFormatter(row[21]),
                 'Deferred' : row[22],
+                'ReproducSteps' : row[23]
             })
 
         self.GetAttachments(cur)
@@ -391,3 +407,52 @@ class Bugs:
             self.sendData['DropdownVals']['FuncAreas'].append({'ID': row[0], 'Name': row[1]})
 
         self.sendData['Result'] = 'Success'
+
+    def ExportBugData(self, cur):
+        sql = '''
+        SELECT bug_id, prgm_name, prgm_release, prgm_version, attach_id, report_type, severity, prob_summary, reproducibility, reproducibility_steps, suggested_fix, reported_by_name, report_date, farea_id, assigned_to_id, comments, bug_status, bug_priority, resolution, resolution_version, resolved_by_id, resolution_date, tested_by_id, tested_by_date, treat_deferred
+        FROM bug_reports
+            inner join program
+                on program.prgm_id = bug_reports.prgm_id
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        jsonExport = []
+        for row in allRows:
+            jsonExport.append({
+                'BugID': row[0],
+                'PrgName': row[1],
+                'PrgRel': row[2],
+                'PrgVer': row[3],
+                'AttachID': row[4],
+                'ReportType': row[5],
+                'Severity': row[6],
+                'ProbSummary': row[7],
+                'Reproduceable': row[8],
+                'ReproduceableSteps': row[9],
+                'SuggestedFix': row[10],
+                'ReportedBy': row[11],
+                'ReportDate': dateFormatter(row[12]),
+                'FunctionalArea': row[13],
+                'AssignedTo': row[14],
+                'Comments': row[15],
+                'Status': row[16],
+                'Priority': row[17],
+                'Resolution': row[18],
+                'ResolutionVersion': row[19],
+                'ResolvedBy': row[20],
+                'ResolutionDate': dateFormatter(row[21]),
+                'TestBy': row[22],
+                'TestByDate': dateFormatter(row[23]),
+                'TreatDeferred': row[24]
+            })
+            
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        file = open("BugExport.txt", "w")
+        file.write(json.dumps(jsonExport))
+        file.close()
+        
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\BugExport.txt'

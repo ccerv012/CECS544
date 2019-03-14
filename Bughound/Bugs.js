@@ -103,55 +103,61 @@ function AddBug(){
         'ProgramID' : $('#addRelVer').val(),
         'ReportType' : $('#addRptType').val(),
         'Severity' : $('#addSeverity').val(),
-        'ProblemSummary' : $('#addProbSumm').val(),
-        'Reproduce' : $('#addReproduce').val(),
-        'SuggestedFix' : $('#addSuggFix').val(),
+        'ProblemSummary' : $('#addProbSumm').val().trim(),
+        'Reproduce' : $('#addReproduce').val().trim(),
+        'ReproduceSteps' : $('#addReproduceSteps').val().trim(),
+        'SuggestedFix' : $('#addSuggFix').val().trim(),
         'ReportBy' : $('#addReportBy').val(),
         'ReportDate' : $('#addReportDate').val(),
         'fileCount' : uploadList.length
     }
 
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
+    if (params['ProgramID']!='PleaseSelect' && params['ReportType']!='PleaseSelect' && params['Severity']!='PleaseSelect' && params['ProblemSummary']!='' && params['Reproduce']!='' && params['ReproduceSteps']!=''){
+        // data needs to be formatted before it can be sent via ajax
+        var formData = new FormData()
+        formData.append('params', JSON.stringify(params));
 
-    for (var i=0;i<uploadList.length;i++){
-        formData.append("fileItem", uploadList[i]);
+        for (var i=0;i<uploadList.length;i++){
+            formData.append("fileItem", uploadList[i]);
+        }
+
+        // make the ajax call
+        $.ajax({
+            url: './Bugs',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false
+        })
+
+        // wait for the ajax call to finish then execute...
+        .done(function(json) {
+            // clear the values the user entered
+            $('#addPrg').val('PleaseSelect');
+            $('#addRelVer').val('PleaseSelect');
+            $('#addRptType').val('PleaseSelect');
+            $('#addSeverity').val('PleaseSelect');
+            $('#addProbSumm').val('');
+            $('#addReproduce').val('');
+            $('#addReproduceSteps').val('');
+            $('#addSuggFix').val('');
+
+            uploadList = [];
+            rowCount = 0;
+            $('#files').empty();
+
+            // let the user know it was successful
+            alert('You have successfully created a new bug');
+        })
+
+        .fail(function(json){
+            alert("The webpage is unable to load, please contact the system admin");
+        })
     }
+    else
+        alert('Please fill out all required fields');
 
-    // make the ajax call
-   $.ajax({
-       url: './Bugs',
-       type: 'POST',
-       data: formData,
-       processData: false,
-       contentType: false
-   })
 
-    // wait for the ajax call to finish then execute...
-    .done(function(json) {
-        // clear the values the user entered
-        $('#addPrg').val('');
-        $('#addRel').val('');
-        $('#addVer').val('');
-        $('#addRptType').val('');
-        $('#addSeverity').val('');
-        $('#addProbSumm').val('');
-        $('#addReproduce').val('');
-        //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
-        $('#addSuggFix').val('');
-
-        uploadList = [];
-        rowCount = 0;
-        $('#files').empty();
-
-        // let the user know it was successful
-        alert('You have successfully created a new bug');
-    })
-
-    .fail(function(json){
-        alert("The webpage is unable to load, please contact the system admin");
-    })
 }
 
 var BUG_DROP_DOWN_VALUES = '';
@@ -273,6 +279,34 @@ function PopulateBugEditor(bugID){
     // wait for the ajax call to finish then execute...
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result'] == 'Success') {
+             //populate the employee fields
+             var Employees = AJAX_Response['DropdownVals']['Employees'];
+             $.each(Employees, function (i, Emp){
+                 $('#resolBy').append($('<option>', {
+                     value: Emp['ID'],
+                     text: Emp['Name']
+                 }));
+
+                 $('#resolTestedBy').append($('<option>', {
+                     value: Emp['ID'],
+                     text: Emp['Name']
+                 }));
+
+                 $('#assigned').append($('<option>', {
+                     value: Emp['ID'],
+                     text: Emp['Name']
+                 }));
+             })
+
+             // populate func areas
+             var FuncAreas = AJAX_Response['DropdownVals']['FuncAreas'];
+             $.each(FuncAreas, function (i, Func){
+                 $('#funcArea').append($('<option>', {
+                     value: Func['ID'],
+                     text: Func['Name']
+                 }));
+             })
+
             // populate the form with the values that are currently in the database
             // we can hardcode [0] because only 1 row will ever be returned since we are searching
             // by the bug ID.  We could change our sendData variable in python but this way
@@ -285,7 +319,7 @@ function PopulateBugEditor(bugID){
             $('#severity').val(AJAX_Response['Data'][0]['Severity']);
             $('#probSumm').val(AJAX_Response['Data'][0]['ProbSumm']);
             $('#reproduce').val(AJAX_Response['Data'][0]['Reproducable']);
-            //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+            $('#reproduceSteps').val(AJAX_Response['Data'][0]['ReproducSteps']); //???
             $('#suggFix').val(AJAX_Response['Data'][0]['SuggFix']);
             $('#reportBy').val(AJAX_Response['Data'][0]['ReportBy']);
             $('#reportDate').val(AJAX_Response['Data'][0]['ReportDate']);
@@ -311,33 +345,6 @@ function PopulateBugEditor(bugID){
                 }
             }
 
-            //populate the employee fields
-            var Employees = AJAX_Response['DropdownVals']['Employees'];
-            $.each(Employees, function (i, Emp){
-                $('#resolBy').append($('<option>', {
-                    value: Emp['ID'],
-                    text: Emp['Name']
-                }));
-
-                $('#resolTestedBy').append($('<option>', {
-                    value: Emp['ID'],
-                    text: Emp['Name']
-                }));
-
-                $('#assigned').append($('<option>', {
-                    value: Emp['ID'],
-                    text: Emp['Name']
-                }));
-            })
-
-            // populate func areas
-            var FuncAreas = AJAX_Response['DropdownVals']['FuncAreas'];
-            $.each(FuncAreas, function (i, Func){
-                $('#funcArea').append($('<option>', {
-                    value: Func['ID'],
-                    text: Func['Name']
-                }));
-            })
         }
 
         // add the jquery date picker to all the date fields
@@ -361,7 +368,7 @@ function SaveBug(){
         'Severity' : $('#severity').val(),
         'ProblemSumm' : $('#probSumm').val(),
         'Reproduceable' : $('#reproduce').val(),
-        'ReproduceSteps' : $('#reproducSteps').val(), //???
+        'ReproduceableSteps' : $('#reproduceSteps').val(),
         'SuggestFix' : $('#suggFix').val(),
         // 'ReportBy' : $('#reportBy').val(),
         // 'ReportByDate' : $('#reportDate').val(),
@@ -399,14 +406,20 @@ function SaveBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        // let the user know it was successful
-        alert('You have successfully saved your changes');
-        window.close();
+        if (json['Result'] == 'Success'){
+            // let the user know it was successful
+            alert('You have successfully saved your changes');
+            window.close();
+        }
+        else if (json['Result'] == 'Access Denied'){
+            alert('You do not have access to modify this report');
+            window.close();
+        }
     })
 
     // the AJAX call was not issued succesfully
 	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
+		alert("The webpage is unable to load, please contact the system admin");
 	})
 }
 
@@ -418,7 +431,7 @@ function CancelBug(){
     $('#addSeverity').val('PleaseSelect');
     $('#addProbSumm').val('');
     $('#addReproduce').val('');
-    //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+    $('#addReproduceSteps').val('');
     $('#addSuggFix').val('');
 
     uploadList = [];
@@ -461,3 +474,28 @@ $(document).on('change', '#addPrg', function () {
     })
 
 });
+
+function exportBugInfo(){
+    var params = {
+        'Method': 'Export'
+    }
+
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './Bugs');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){
+        if (AJAX_Response['Result']=='Success'){
+            window.open(AJAX_Response['FileName']);
+        }
+    })
+
+    // the AJAX call was not issued succesfully
+	.fail(function(load){
+		alert("The webpage is unable to load, please contact the system admin")
+	})
+}
