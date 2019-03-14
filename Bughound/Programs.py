@@ -152,16 +152,21 @@ class Programs:
 
 
     def populate_program(self, cur):
-        pass
-
-    def ID_exists(self, program_id):
         sql = '''
-            SELECT * FROM PROGRAM
-            WHERE
-                PRGM_ID = :Program_ID
+        select PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE
+        from PROGRAM
+        WHERE PRGM_ID = :Program_ID
         '''
 
-        cur.execute(sql, Program_ID=self.Params['Program_ID'])
-        rs = cur.fetchall()
+        cur.execute(sql,Program_ID=self.Params['Program_ID'])
+        allRows = cur.fetchall()
 
-        return rs
+        for row in allRows:
+            self.sendData['Data'].append({
+                'Prgm_ID': row[0],
+                'Prgm_Name' : row[1],
+                'Version' : row[2],
+                'Release' : row[3]
+            })
+
+        self.sendData['Result'] = 'Success'

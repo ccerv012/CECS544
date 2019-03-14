@@ -97,9 +97,6 @@ function searchPrograms() {
 
           // loop through the search results and add them to the results table
 
-          console.log("Search success!\n");
-          console.log("Data: " + AJAX_Response['Data']);
-
           var tr;
           for (var i = 0; i < AJAX_Response['Data'].length; i++) {
               tr = $('<tr/>'); // this is jquery short hand for adding a new row object
@@ -117,13 +114,67 @@ function searchPrograms() {
     })
 }
 
+function openProgramEditor(programID){
+	// set a cookie so the next page can read the cookie and know which program to open
+	setCookie('program_id_cookie', programID, .5);
+
+	// redirect to the program editor
+	window.open('./Program_Editor.html');
+}
+
+function loadPrograms(){
+    if (document.cookie.indexOf("program_id_cookie")>=0){
+
+        // save the program id to a variable that we will send to the search function
+        var program_id = getCookie("program_id_cookie");
+
+        // delete the cookie so if a user opens another page the bugID variable is reset
+        setCookie('program_id_cookie', program_id, 0);
+
+        populateProgramEditor(program_id);
+    }
+}
+
+function populateProgramEditor(program_id){
+    var params = {
+        'Method': 'Populate',
+        'Program_ID': program_id
+    }
+
+    // data needs to be formatted before it can be sent via ajax
+    var formData = new FormData()
+    formData.append('params', JSON.stringify(params));
+
+    // make the ajax call
+    var AJAX_Call = getData(formData, './Programs');
+
+    // wait for the ajax call to finish then execute...
+    $.when(AJAX_Call).then(function (AJAX_Response){
+        if (AJAX_Response['Result'] == 'Success') {
+            // populate the form with the values that are currently in the database
+            // we can hardcode [0] because only 1 row will ever be returned since we are searching
+            // by the program ID.  We could change our sendData variable in python but this way
+            // everything stays consistent
+            $('#program-id-to-update').val(AJAX_Response['Data'][0]['Prgm_ID']);
+            $('#program-name-to-update').val(AJAX_Response['Data'][0]['Prgm_Name']);
+            $('#version-to-update').val(AJAX_Response['Data'][0]['Version']);
+            $('#release-to-update').val(AJAX_Response['Data'][0]['Release']);
+        }
+    })
+
+    // the AJAX call was not issued succesfully
+	.fail(function(load){
+		alert("The webpage is unable to load, please contact the system admin")
+	})
+}
+
 function updateProgram() {
     var params = {
         'Method' : 'Update',
         'Program_ID' : $('#program-id-to-update').val(),
         'Program_Name' : $('#program-name-to-update').val(),
-        'Program_Version' : $('#program-version-to-update').val(),
-        'Program_Release' : $('#program-release-to-update').val(),
+        'Program_Version' : $('#version-to-update').val(),
+        'Program_Release' : $('#release-to-update').val(),
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -136,14 +187,10 @@ function updateProgram() {
     // wait for the ajax call to finish then execute...
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result'] == 'Success'){
-            // clear the values the user entered
-            $('#program-id-to-update').val('');
-            $('#program-name-to-update').val('');
-            $('#program-version-to-update').val('');
-            $('#program-release-to-update').val('');
 
             // let the user know it was successful
-            alert('You have successfully updated a program');
+            alert('You have successfully saved your changes.');
+            window.close();
         }
     })
 
@@ -186,14 +233,6 @@ function deleteProgram() {
     .fail(function(load){
       alert("Failed to delete program.")
     })
-}
-
-function openProgramEditor(programID){
-	// set a cookie so the next page can read the cookie and know which program to open
-	setCookie('programID', programID, .5);
-
-	// redirect to the program editor
-	window.open('./Program_Editor.html');
 }
 
 function resetProgramSearch() {
