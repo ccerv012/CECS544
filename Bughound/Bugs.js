@@ -142,12 +142,10 @@ function AddBug(){
             $('#addReproduce').val('');
             //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
             $('#addSuggFix').val('');
-            $('#addReportBy').val('');
-            $('#addReportDate').val('');
 
             uploadList = [];
             rowCount = 0;
-            $('files').empty();
+            $('#files').empty();
 
             // let the user know it was successful
             alert('You have successfully created a new bug');
@@ -393,17 +391,47 @@ function SaveBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        if (json['Result'] == 'Success'){
-            // let the user know it was successful
-            alert('You have successfully saved your changes');
-            window.close();
-        }
+        // let the user know it was successful
+        alert('You have successfully saved your changes');
+        window.close();
     })
 
     // the AJAX call was not issued succesfully
 	.fail(function(load){
 		alert("The webpage is unable to load, please contact the system admin")
 	})
+}
+
+function CancelBug(){
+    // clear the values the user entered
+    $('#addPrg').val('PleaseSelect');
+    $('#addRel').val('PleaseSelect');
+    $('#addVer').val('PleaseSelect');
+    $('#addRptType').val('PleaseSelect');
+    $('#addSeverity').val('PleaseSelect');
+    $('#addProbSumm').val('');
+    $('#addReproduce').val('');
+    //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+    $('#addSuggFix').val('');
+
+    uploadList = [];
+    rowCount = 0;
+    $('#files').empty();
+}
+
+function ResetSearchBugs(){
+    $('#bugID').val('');
+    $('#prg').val('PleaseSelect');
+    $('#rptType').val('PleaseSelect');
+    $('#severity').val('PleaseSelect');
+    $('#funcArea').val('');
+    $('#status').val('PleaseSelect');
+    $('#resolution').val('PleaseSelect');
+    $('#priority').val('');
+    $('#assigned').val('');
+    $('#reportBy').val('PleaseSelect');
+    $('#reportDate').val('');
+    $('#resolBy').val('PleaseSelect');
 }
 
 $(document).on('change', '#addPrg', function () {

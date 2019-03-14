@@ -114,7 +114,10 @@
 						</select>
 					</label>
 							
-					<label><span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button></label>
+					<label>
+							<span> </span><button id="BugSearchBtn" onclick="ResetSearchBugs()">Reset</button>
+						<span> </span><button id="BugSearchBtn" onclick="SearchBugs()">Search</button>
+					</label>
 				</div>
 
 				<div id="bugSearchResults"></div>
@@ -175,7 +178,10 @@
 						<span>Date: </span><input disabled type="text" class="small-input-field datepicker" id="addReportDate" value="" />
 					</label>
 
-					<label><span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button></label>
+					<label>
+						<span> </span><button id="BugAddBtn" onclick="CancelBug()">Cancel</button>
+						<span> </span><button id="BugAddBtn" onclick="AddBug()">Add Bug</button>
+					</label>
 				</div>
 			</div>
 		</div>

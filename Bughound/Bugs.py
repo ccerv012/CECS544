@@ -90,9 +90,9 @@ class Bugs:
 
         sql = '''
             insert into bug_reports
-                (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
+                (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE, BUG_STATUS)
             values 
-                (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate)
+                (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate, 1)
         '''
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
@@ -147,9 +147,9 @@ class Bugs:
                     RESOLUTION = :Resolution,
                     RESOLUTION_VERSION = :ResolutionVer,
                     RESOLVED_BY_ID = :ResolvedBy,
-                    RESOLUTION_DATE = :ResolvedDate,
+                    RESOLUTION_DATE = TO_DATE(:ResolvedDate, 'MM/DD/YYYY'),
                     TESTED_BY_ID = :ResolvedTestedBy,
-                    TESTED_BY_DATE = :ResolvedTestDate,
+                    TESTED_BY_DATE = TO_DATE(:ResolvedTestDate, 'MM/DD/YYYY'),
                     TREAT_DEFERRED = :Defer
                 where bug_id = :BugID
         '''
@@ -211,7 +211,7 @@ class Bugs:
             sql = sql + ' AND ASSIGNED_TO_ID = :Assigned'
             bindVars['Assigned'] = self.Params['Assigned']
 
-        if self.Params['Status'] != "" and self.Params['Status'] != 'PleaseSelect':
+        if self.Params['Status'] != 'PleaseSelect':
             sql = sql + ' AND BUG_STATUS = :Status'
             bindVars['Status'] = self.Params['Status']
 
