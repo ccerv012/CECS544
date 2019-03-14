@@ -120,35 +120,15 @@ class Programs:
 
     def delete_program(self, cur):
         sql = '''
-        SELECT * FROM PROGRAM
-        WHERE
-            PRGM_ID = :Program_ID
-        '''
-
-        cur.execute(sql, Program_ID=self.Params['Program_ID'])
-        rs = cur.fetchall()
-        # rowcount can be -1 if count is indeterminate for whatever reason
-        if cur.rowcount <= 0:
-            self.sendData['Result'] = 'Does Not Exist'
-            self.sendData['Error'] = 'Program ID ' + str(self.Params['Program_ID']) \
-                                        + ' does not exist'
-        else:
-            sql = '''
             DELETE FROM PROGRAM
             WHERE
                 PRGM_ID = :Program_ID
-            '''
+        '''
 
-            cur.execute(sql, Program_ID=self.Params['Program_ID'])
-            self.CECS544_DB.conn.commit()
+        cur.execute(sql, Program_ID=self.Params['Program_ID'])
+        self.CECS544_DB.conn.commit()
 
-            if cur.rowcount > 0:
-                self.sendData['Data'].append(self.Params['Program_ID'])
-                self.sendData['Result'] = 'Success'
-            else:
-                self.sendData['Result'] = 'Could Not Delete'
-                self.sendData['Error'] = 'Error: ID ' + str(self.Params['Program_ID']) \
-                                        + ' exists, but it could not be deleted.'
+        self.sendData['Result'] = 'Success'
 
 
     def populate_program(self, cur):

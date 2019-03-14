@@ -104,7 +104,7 @@ function searchPrograms() {
               tr.append('<td>' + AJAX_Response['Data'][i].Prgm_Name + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Version + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Release + '</td>'); // populate the new row, cell by cell
-              tr.append('<td><button onclick="deleteProgram(\'' + AJAX_Response['Data'][i].Prgm_ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
+              tr.append('<td><button onclick="deleteProgram(\'' + AJAX_Response['Data'][i].Prgm_ID + '\', \'' + AJAX_Response['Data'][i].Prgm_Name + '\')">Delete</button></td>'); // populate the new row, cell by cell
               $('#program-results-table').append(tr); // add the row you just built to the table
           }
       }
@@ -200,39 +200,36 @@ function updateProgram() {
     })
 }
 
-function deleteProgram() {
-    var params = {
-        'Method' : 'Delete',
-        'Program_ID' : $('#program-id-to-delete').val(),
-    }
-
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
-
-    // make the ajax call
-    var AJAX_Call = getData(formData, './Programs');
-
-    // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
-            // clear the values the user entered
-            $('#program-id-to-delete').val('');
-
-            // let the user know it was successful
-            alert('You have successfully deleted a program (id: ' + AJAX_Response['Data'] + ')');
-
-        } else if (AJAX_Response['Result'] == 'Does Not Exist' ||
-                   AJAX_Response['Result'] == 'Could Not Delete') {
-
-          alert(AJAX_Response['Error'])
+function deleteProgram(program_id, program_name) {
+    //prompt user to confirm deletion
+    if (confirm("Are you sure you want to delete '" + program_name + "' (ID #" + program_id + ")?")){
+        var params = {
+            'Method' : 'Delete',
+            'Program_ID' : program_id
         }
-    })
+        // data needs to be formatted before it can be sent via ajax
+        var formData = new FormData()
+        formData.append('params', JSON.stringify(params));
 
-    // the AJAX call was not issued succesfully
-    .fail(function(load){
-      alert("Failed to delete program.")
-    })
+        // make the ajax call
+        var AJAX_Call = getData(formData, './Programs');
+
+        // wait for the ajax call to finish then execute...
+        $.when(AJAX_Call).then(function (AJAX_Response){
+            if (AJAX_Response['Result'] == 'Success'){
+                // re-run the search to show the user its been deleted
+                searchPrograms();
+
+                // let the user know it was successful
+                alert('You have successfully deleted program #' + program_id);
+            }
+        })
+
+        // the AJAX call was not issued succesfully
+        .fail(function(load){
+            alert("The webpage is unable to load, please contact the system admin");
+        })
+    }
 }
 
 function resetProgramSearch() {
