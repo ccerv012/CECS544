@@ -201,7 +201,6 @@ function showBugSection(){
 
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
-                  // TODO: hard coding the 1 doesn't work if release is not 1
                     value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
