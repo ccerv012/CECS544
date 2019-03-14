@@ -32,7 +32,7 @@ function SearchBugs(){
             $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
 
             // add a header row to the table
-            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Functional Area</th><th>Assigned</th><th>Status</th><th>Priority</th><th>Resolution</th><th>Reported By</th><th>Report Date</th><th>Resolved By</th><th>Delete</th></thead>');
+            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Reported By</th><th>Report Date</th><th>Delete</th></thead>');
         
             // loop through the search results and add them to the results table 
             var tr;
@@ -42,14 +42,14 @@ function SearchBugs(){
                 tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].Severity + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportedBy + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].ReportedDate + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
+                // tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
                 tr.append('<td><button onclick="DeleteBug(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
                 $('#BugResultsTable').append(tr); // add the row you just built to the table
             }

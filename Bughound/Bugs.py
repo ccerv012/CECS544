@@ -192,10 +192,10 @@ class Bugs:
             bindVars['bugID'] = self.Params['BugID']
 
         if self.Params['Pgm'] != "" and self.Params['Pgm'] != 'PleaseSelect':
-            sql = sql + ' AND PRGM_NAME = :Pgm'
-            bindVars['Pgm'] = self.Params['Pgm']
+            sql = sql + ' AND PRGM_ID = :Pgm'
+            bindVars['Pgm'] = int(self.Params['Pgm'])
 
-        if self.Params['ReportType'] != "" and self.Params['Pgm'] != 'PleaseSelect':
+        if self.Params['ReportType'] != "" and self.Params['ReportType'] != 'PleaseSelect':
             sql = sql + ' AND REPORT_TYPE = :rptType'
             bindVars['rptType'] = self.Params['ReportType']
 
