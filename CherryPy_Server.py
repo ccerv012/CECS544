@@ -90,6 +90,10 @@ class CSULBWinService(win32serviceutil.ServiceFramework):
 				'tools.response_header.headers': [('Content-Type', 'text/json')],
 			},
 			'/Bughound/Programs':{
+				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+				'tools.response_headers.on': True,
+				'tools.response_header.headers': [('Content-Type', 'text/json')],
+			},
 			'/Bughound/functionalAreas':{
 				'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
 				'tools.response_headers.on': True,

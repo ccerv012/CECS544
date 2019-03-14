@@ -1,5 +1,6 @@
 import cherrypy
 import json
+import cx_Oracle
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -13,9 +14,11 @@ class Programs:
 
     def __init__(self):
         self.dispatch = {
+            'Search' : self.search_program,
             'Add': self.add_program,
-            'Update': self.update_program,
-            'Delete': self.delete_program
+            'Delete': self.delete_program,
+            'Populate' : self.populate_program,
+            'Update' : self.update_program,
         }
 
     def POST(self, params):
@@ -32,29 +35,31 @@ class Programs:
         # load the params into a python dictionary so we can use them
         self.Params = json.loads(params)
 
-        # call the method specified in the AJAX call
-        self.dispatch[self.Params['Method']](cur)
+        try:
+            # call the method specified in the AJAX call
+            self.dispatch[self.Params['Method']](cur)
 
-        return json.dumps(self.sendData)
+            return json.dumps(self.sendData)
+        except ValueError as err:
+            return json.dumps(self.sendData)
 
-    # TODO: check if exists
-    # TODO: disallow duplicates
     def add_program(self, cur):
-        # check if it exists first
-        #sql =
-
         sql = '''
         INSERT INTO PROGRAM
-            (PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE)
+            (PRGM_NAME, PRGM_VERSION, PRGM_RELEASE)
         VALUES
-            (:Program_ID, :Program_Name, :Program_Version, :Program_Release)
+            (:Program_Name, :Program_Version, :Program_Release)
         '''
 
-        cur.execute(sql, Program_ID=self.Params['Program_ID'], \
-            Program_Name=self.Params['Program_Name'], \
-            Program_Version=self.Params['Program_Version'], \
-            Program_Release=self.Params['Program_Release'])
-        self.CECS544_DB.conn.commit()
+        try:
+            cur.execute(sql, Program_Name=self.Params['Program_Name'], \
+                        Program_Version=self.Params['Program_Version'], \
+                        Program_Release=self.Params['Program_Release'])
+            self.CECS544_DB.conn.commit()
+
+        except cx_Oracle.IntegrityError as e:
+            self.sendData['Result']='PK Violation'
+            raise ValueError()
 
         self.sendData['Result']='Success'
 
@@ -111,6 +116,12 @@ class Programs:
                 self.sendData['Result'] = 'Could Not Delete'
                 self.sendData['Error'] = 'Error: ID ' + str(self.Params['Program_ID']) \
                                         + ' exists, but it could not be deleted.'
+
+    def search_program(self, cur):
+        pass
+
+    def populate_program(self, cur):
+        pass
 
     def ID_exists(self, program_id):
         sql = '''

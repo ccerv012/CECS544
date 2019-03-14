@@ -2,12 +2,14 @@ function showFuncAreaSection(){
     $('#employees').hide();
     $('#bugs').hide();
     $('#functionalAreas').show();
+    $('#programs').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').removeClass('active');
     $('#Employees').removeClass('active');
     $('#FunctionalArea').addClass('active');
+    $('#Programs').removeClass('active');
 
     var params = {
         'Method' : 'DropDown',
@@ -108,9 +110,9 @@ function searchFuncArea(){
             // add a header row to the table
             $('#FunctionalResultsTable').append('<thead><th>Program Name</th><th>Functional Area</th><th>Delete</th></thead>');
 
-            // loop through the search results and add them to the results table 
+            // loop through the search results and add them to the results table
             var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) { 
+            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
                 tr.append('<td onclick="openfunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')" class="link">' + AJAX_Response['Data'][i].Program_Name + '</td>'); // populate the new row, cell by cell
                 tr.append('<td>' + AJAX_Response['Data'][i].FuntionalAreaName + '</td>'); // populate the new row, cell by cell
@@ -164,7 +166,7 @@ function openfunctionalArea(farea_id){
 function loadFuncArea(){
     if (document.cookie.indexOf("farea_id")>=0){
         // save the farea_id to a variable that we will send to the search function
-        var farea_id = getCookie("farea_id"); 
+        var farea_id = getCookie("farea_id");
         // delete the cookie so if a user opens another page the bugID variable is reset
         setCookie('farea_id', farea_id, 0);
 

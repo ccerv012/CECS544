@@ -238,64 +238,33 @@
 
 		<div id="programs" class="programAccordion">
 
-			<h3>Add Program</h3>
+			<h3>Add</h3>
 			<div id="programAdd">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Add a Program</div>
-					<label>
-						<span>Program ID: </span><input type="text" class="small-input-field" id="program-id-to-add" value="" />
-					</label>
 
-					<label>
-						<span>Program Name: </span><input type="text" class="small-input-field" id="program-name-to-add" value="" />
-					</label>
+					<label><span>Program Name: </span><span class="required">*</span><input type="text" class="input-field" id="program-name-to-add" value="" /></label>
+					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1"/></label>
+					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0"/></label>
 
-					<label>
-						<span>Program Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="" />
-					</label>
-
-					<label>
-						<span>Program Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="" />
-					</label>
-
-					<label><span> </span><button id="ProgramAddBtn" onclick="AddProgram()">Add</button></label>
+					<label><span> </span><button id="ProgramAddBtn" onclick="AddProgram()">Add Program</button></label>
 				</div>
 			</div> <!-- END programAdd div-->
 
-			<h3>Update Program</h3>
-			<div id="programUpdate">
+			<h3>Search</h3>
+			<div id="programSearch">
 				<div class="form-style-2">
-					<div class="form-style-2-heading">Update a Program</div>
-					<label>
-						<span>Program ID: </span><input type="text" class="small-input-field" id="program-id-to-update" value="" />
-					</label>
+					<div class="form-style-2-heading">Search for a Program</div>
 
-					<label>
-						<span>Program Name: </span><input type="text" class="small-input-field" id="program-name-to-update" value="" />
-					</label>
+					<label><span>Program Name: <input type="text" class="input-field" id="program-name-to-add" value="" /></label>
+					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1" /></label>
+					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0" /></label>
 
-					<label>
-						<span>Program Version: </span><input type="number" class="small-input-field" id="program-version-to-update" value="" />
-					</label>
+					<label><span> </span><button id="ProgramSearchBtn" onclick="SearchPrograms()">Search</button></label>
 
-					<label>
-						<span>Program Release: </span><input type="number" class="small-input-field" id="program-release-to-update" value="" />
-					</label>
-
-					<label><span> </span><button id="ProgramUpdateBtn" onclick="UpdateProgram()">Update</button></label>
+					<div id="program-search-results"></div>
 				</div>
-			</div> <!-- END programUpdate div-->
-
-			<h3>Delete Program</h3>
-			<div id="programDelete">
-				<div class="form-style-2">
-					<div class="form-style-2-heading">Delete a Program</div>
-					<label>
-						<span>Program ID: </span><input type="text" class="small-input-field" id="program-id-to-delete" value="" />
-					</label>
-					<label><span> </span><button id="ProgramDeleteBtn" onclick="DeleteProgram()">Delete</button></label>
-				</div>
-			</div> <!-- END programDelete div-->
+			</div> <!-- END programSearch div-->
 
 		</div> <!-- END programs div-->
 

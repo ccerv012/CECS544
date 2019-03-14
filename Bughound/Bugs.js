@@ -194,8 +194,10 @@ function showBugSection(){
 
             // populate the program dropdown menus on the search and add form
             var Prgs = Object.keys(AJAX_Response['DropdownVals']['Programs']);
+
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
+                  // TODO: hard coding the 1 doesn't work if release is not 1
                     value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
