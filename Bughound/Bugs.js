@@ -100,10 +100,7 @@ function DeleteBug(bugID){
 function AddBug(){
     var params = {
         'Method' : 'Add',
-        'ProgramID' : $('#addPrg').val(),
-        'Program' : $('#addPrg option:selected').text(),
-        'Release' : $('#addRel').val(),
-        'Version' : $('#addVer').val(),
+        'ProgramID' : $('#addRelVer').val(),
         'ReportType' : $('#addRptType').val(),
         'Severity' : $('#addSeverity').val(),
         'ProblemSummary' : $('#addProbSumm').val(),
@@ -133,25 +130,23 @@ function AddBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        if (json['Result'] == 'Success'){
-            // clear the values the user entered
-            $('#addPrg').val('');
-            $('#addRel').val('');
-            $('#addVer').val('');
-            $('#addRptType').val('');
-            $('#addSeverity').val('');
-            $('#addProbSumm').val('');
-            $('#addReproduce').val('');
-            //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
-            $('#addSuggFix').val('');
+        // clear the values the user entered
+        $('#addPrg').val('');
+        $('#addRel').val('');
+        $('#addVer').val('');
+        $('#addRptType').val('');
+        $('#addSeverity').val('');
+        $('#addProbSumm').val('');
+        $('#addReproduce').val('');
+        //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+        $('#addSuggFix').val('');
 
-            uploadList = [];
-            rowCount = 0;
-            $('#files').empty();
+        uploadList = [];
+        rowCount = 0;
+        $('#files').empty();
 
-            // let the user know it was successful
-            alert('You have successfully created a new bug');
-        }
+        // let the user know it was successful
+        alert('You have successfully created a new bug');
     })
 
     .fail(function(json){
@@ -201,12 +196,12 @@ function showBugSection(){
 
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
-                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
+                    value: Prg,
                     text: Prg
                 }));
 
                 $('#addPrg').append($('<option>', {
-                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
+                    value: Prg,
                     text: Prg
                 }));
             })
@@ -245,15 +240,21 @@ function OpenBugReport(bugID){
 }
 
 function LoadBugReport(){
-    EnableLoadingGraphic();
-    if (document.cookie.indexOf("bugID")>=0){
-        // save the bugID to a variable that we will send to the search function
-        var bugID = getCookie("bugID");
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('bugID', bugID, 0);
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
 
-        PopulateBugEditor(bugID);
+        EnableLoadingGraphic();
+        if (document.cookie.indexOf("bugID")>=0){
+            // save the bugID to a variable that we will send to the search function
+            var bugID = getCookie("bugID");
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('bugID', bugID, 0);
+
+            PopulateBugEditor(bugID);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function PopulateBugEditor(bugID){
@@ -413,7 +414,6 @@ function CancelBug(){
     // clear the values the user entered
     $('#addPrg').val('PleaseSelect');
     $('#addRel').val('PleaseSelect');
-    $('#addVer').val('PleaseSelect');
     $('#addRptType').val('PleaseSelect');
     $('#addSeverity').val('PleaseSelect');
     $('#addProbSumm').val('');
@@ -444,41 +444,19 @@ function ResetSearchBugs(){
 $(document).on('change', '#addPrg', function () {
 
     // clear the choices from the Release and Version dropdowns
-    $('#addRel').empty();
-    $('#addVer').empty();
+    $('#addRelVer').empty();
 
-    $('#addRel').append('<option value="PleaseSelect">Please Select</option>');
-    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
+    $('#addRelVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg option:selected').text();
+    selectedPrg = $('#addPrg').val();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
     $.each(Releases, function (i, Rel){
-        $('#addRel').append($('<option>', {
-            value: Rel,
-            text: Rel
-        }));
-    })
-
-});
-
-$(document).on('change', '#addRel', function () {
-    // clear the choices from the Release and Version dropdowns
-    $('#addVer').empty();
-    $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
-
-    // get the program the user selected
-    selectedPrg = $('#addPrg option:selected').text();
-    selectedRel = $('#addRel option:selected').text();
-
-    // populate the two corresponding drop downs
-    Versions = BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][selectedRel]['Ver'];
-    $.each(Versions, function (i, Ver){
-        $('#addVer').append($('<option>', {
-            value: Ver,
-            text: Ver
+        $('#addRelVer').append($('<option>', {
+            value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
+            text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
         }));
     })
 

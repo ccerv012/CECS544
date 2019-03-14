@@ -114,6 +114,12 @@ function searchPrograms() {
     })
 }
 
+function ResetAddProgram(){
+    $('#program-name-to-add').val('');
+    $('#program-release-to-add').val('');
+    $('#program-version-to-add').val('');
+}
+
 function openProgramEditor(programID){
 	// set a cookie so the next page can read the cookie and know which program to open
 	setCookie('program_id_cookie', programID, .5);
@@ -123,16 +129,22 @@ function openProgramEditor(programID){
 }
 
 function loadPrograms(){
-    if (document.cookie.indexOf("program_id_cookie")>=0){
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
+        
+        if (document.cookie.indexOf("program_id_cookie")>=0){
 
-        // save the program id to a variable that we will send to the search function
-        var program_id = getCookie("program_id_cookie");
+            // save the program id to a variable that we will send to the search function
+            var program_id = getCookie("program_id_cookie");
 
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('program_id_cookie', program_id, 0);
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('program_id_cookie', program_id, 0);
 
-        populateProgramEditor(program_id);
+            populateProgramEditor(program_id);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function populateProgramEditor(program_id){

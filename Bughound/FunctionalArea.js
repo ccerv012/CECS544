@@ -49,10 +49,12 @@ function addFuncArea(){
     var params = {
         'Method' : 'Add',
         'FunctionalArea_Name' : $('#add_farea_name').val(),
-        'Program' : $('#add_to_prgm_id').val()
+        'Program' : $('#add_to_prgm_id').val(),
+        'ProgramRel' : $('#add_prg_rel').val(),
+        'ProgramVer' : $('#add_prg_ver').val()
     }
 
-    if (params['FunctionalArea_Name']!='' && params['Program']!='PleaseSelect'){
+    if (params['FunctionalArea_Name']!='' && params['Program']!='PleaseSelect' && params['ProgramRel']!='' && params['ProgramVer']!=''){
         // data needs to be formatted before it can be sent via ajax
         var formData = new FormData()
         formData.append('params', JSON.stringify(params));
@@ -66,12 +68,16 @@ function addFuncArea(){
                 // clear the values the user entered
                 $('#add_farea_name').val('');
                 $('#add_to_prgm_id').val('PleaseSelect');
+                $('#add_prg_rel').val('');
+                $('#add_prg_ver').val('');
 
                 // let the user know it was successful
                 alert('You have successfully added a new functional area to the selected program');
             }
             else if (AJAX_Response['Result']=='PK Violation')
                 alert('This record already exists. Add Failed.');
+            else if (AJAX_Response['Result'] == 'Invalid Program')
+                alert('That program, rel, and version does not exist, please try again');
         })
 
         // the AJAX call was not issued succesfully
@@ -108,19 +114,32 @@ function searchFuncArea(){
             $('#functionalSearchResults').append('<table id="FunctionalResultsTable" class="ResultsTable">');
 
             // add a header row to the table
-            $('#FunctionalResultsTable').append('<thead><th>Program Name</th><th>Functional Area</th><th>Delete</th></thead>');
+            $('#FunctionalResultsTable').append('<thead><th>Program Name</th><th>Program Rel</th><th>Program Ver</th><th>Functional Area</th><th>Delete</th></thead>');
 
             // loop through the search results and add them to the results table
             var tr;
             for (var i = 0; i < AJAX_Response['Data'].length; i++) {
                 tr = $('<tr/>'); // this is jquery short hand for adding a new row object
                 tr.append('<td onclick="openfunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')" class="link">' + AJAX_Response['Data'][i].Program_Name + '</td>'); // populate the new row, cell by cell
+                tr.append('<td>' + AJAX_Response['Data'][i].Program_Rel + '</td>');
+                tr.append('<td>' + AJAX_Response['Data'][i].Program_Ver + '</td>');
                 tr.append('<td>' + AJAX_Response['Data'][i].FuntionalAreaName + '</td>'); // populate the new row, cell by cell
                 tr.append('<td><button onclick="deletefunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
                 $('#FunctionalResultsTable').append(tr); // add the row you just built to the table
             }
         }
     })
+}
+
+function ClearSearchFuncArea(){
+    $('#prgm_id').val('PleaseSelect');
+}
+
+function resetFuncArea(){
+    $('#add_to_prgm_id').val('PleaseSelect');
+    $('#add_prg_rel').val('');
+    $('#add_prg_ver').val('');
+    $('#add_farea_name').val('');
 }
 
 function deletefunctionalArea(farea_id){
@@ -164,14 +183,20 @@ function openfunctionalArea(farea_id){
 }
 
 function loadFuncArea(){
-    if (document.cookie.indexOf("farea_id")>=0){
-        // save the farea_id to a variable that we will send to the search function
-        var farea_id = getCookie("farea_id");
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('farea_id', farea_id, 0);
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
+        
+        if (document.cookie.indexOf("farea_id")>=0){
+            // save the farea_id to a variable that we will send to the search function
+            var farea_id = getCookie("farea_id");
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('farea_id', farea_id, 0);
 
-        populate_farea_editor(farea_id);
+            populate_farea_editor(farea_id);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function populate_farea_editor(farea_id){

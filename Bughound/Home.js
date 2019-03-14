@@ -10,7 +10,7 @@ function CheckLoginStatus(){
 		// SessionInfo();
 
 		// hide the sections we dont want the user to know about yet
-		$('#bugs').hide();
+		$('#bugs').show();
 		$('#employees').hide();
 		$('#programs').hide();
 		$('#functionalAreas').hide();
@@ -22,7 +22,7 @@ function CheckLoginStatus(){
 		$('.fareaAccordion').accordion({heightStyle: "content"});
 
 		EnableLoadingGraphic();
-
+		SessionInfo();
 	}
 	else
 		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
@@ -35,12 +35,9 @@ function SessionInfo(){
 
 	// listen for the AJAX response
 	$.when(AJAX_Call).then(function (AJAX_Response){
-		str = ''
-		str += 'Employee ID: ' + AJAX_Response['Employee_ID'] + '<br>'; // because the data is a dictionary, access it by the dictionary name and the key
-		str += 'Name: ' + AJAX_Response['Name'] + '<br>';
-		str += 'Username: ' + AJAX_Response['Username'] + '<br>';
-		str += 'Permission: ' + AJAX_Response['Permission'] + '<br>';
-		$('#sessionInfo').html(str);
+		if (AJAX_Response['Permission'] != 3){
+			$(".restricted").css("display", "None");
+		}
 	})
 
 	// the AJAX call was not issued succesfully
