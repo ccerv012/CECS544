@@ -12,10 +12,12 @@ function CheckLoginStatus(){
 		// hide the sections we dont want the user to know about yet
 		$('#bugs').hide();
 		$('#employees').hide();
+		$('#functionalAreas').hide();
 
 		// set up the accordion on each page
 		$( ".bugAccordion" ).accordion({heightStyle: "content"});
 		$( ".emp_accordion" ).accordion({heightStyle: "content"});
+		$('.fareaAccordion').accordion({heightStyle: "content"});
 
 		EnableLoadingGraphic();
 		

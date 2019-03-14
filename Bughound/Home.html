@@ -16,6 +16,7 @@
 
 		<script src='./Employees.js'></script>
 		<script src='./Bugs.js'></script>
+		<script src='./FunctionalArea.js'></script>
 	
 	</head>
 	
@@ -25,6 +26,7 @@
 			<a id='Home' class="active" href="#home">Home</a>
 			<a id='Bugs' href="#" onclick="showBugSection()">Bugs</a>
 			<a id='Employees' href="#" onclick="showEmployeesSection()">Employees</a>
+			<a id='FunctionalArea' href="#" onclick="showFuncAreaSection()">Functional Area</a>
 			<!-- add each new section here -->
 		</div>
 
@@ -182,10 +184,10 @@
 			<div id="Employee_Add">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Add A New Employee</div>
-						<label><span>Employee Username: </span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
-						<label><span>Employee Name: </span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
-						<label><span>Employee Password: </span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
-						<label><span>Employee Role</span>
+						<label><span>Employee Username: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
+						<label><span>Employee Name: </span><span class="required">*</span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
+						<label><span>Employee Password: </span><span class="required">*</span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
+						<label><span>Employee Role</span><span class="required">*</span>
 							<select id="add_emp_role" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
 								<option value="1">1</option>
@@ -218,6 +220,40 @@
 				</div>
 			</div>
 									
+		</div>
+
+		<div id="functionalAreas" class="fareaAccordion">
+			<h3>Search</h3>
+			<div id="functionalAreaSearch">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Search for Functional Areas</div>
+						<label><span>Program Name</span>
+							<select id="prgm_id" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+							</select>
+						</label>
+
+						<label><span> </span><button id="searchFuncAreas" onclick="searchFuncArea()">Search</button></label>
+
+				</div>
+				<div id="functionalSearchResults"></div>
+			</div>
+
+			<h3>Add</h3>
+			<div id="functionalAreaAdd">
+				<div class="form-style-2">
+					<div class="form-style-2-heading">Add Functional Area to a Program</div>
+						<label><span>Program Name</span><span class="required">*</span>
+							<select id="add_to_prgm_id" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+							</select>
+						</label>
+						<label><span>Functional Area: </span><span class="required">*</span><input type="text" class="input-field" id="add_farea_name" value="" /></label>
+						<label><span> </span><button id="addFuncAreas" onclick="addFuncArea()">Add to Program</button></label>
+
+				</div>
+			</div>
+
 		</div>
 
 		<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">

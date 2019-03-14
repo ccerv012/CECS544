@@ -1,10 +1,12 @@
 function showEmployeesSection(){
     $('#employees').show();
     $('#bugs').hide();
+    $('#functionalAreas').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').removeClass('active');
+    $('#FunctionalArea').removeClass('active');
     $('#Employees').addClass('active');
 }
 
@@ -17,37 +19,45 @@ function add_employee(){
         'Employee_Role' : $('#add_emp_role').val()
     }
 
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
+    if (params['Employee_Name']!='' && params['Employee_Username']!='' && params['Employee_Password']!='' && params['Employee_Role']!='PleaseSelect'){
+         // data needs to be formatted before it can be sent via ajax
+        var formData = new FormData()
+        formData.append('params', JSON.stringify(params));
 
-    // make the ajax call
-    var AJAX_Call = getData(formData, './employees');
+        // make the ajax call
+        var AJAX_Call = getData(formData, './employees');
 
-    // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
-            // clear the values the user entered
-            $('#add_emp_name').val('');
-            $('#add_emp_username').val('');
-            $('#add_emp_password').val('');
-            $('#add_emp_role').val('');
+        // wait for the ajax call to finish then execute...
+        $.when(AJAX_Call).then(function (AJAX_Response){
+            if (AJAX_Response['Result'] == 'Success'){
+                // clear the values the user entered
+                $('#add_emp_name').val('');
+                $('#add_emp_username').val('');
+                $('#add_emp_password').val('');
+                $('#add_emp_role').val('');
 
-            // let the user know it was successful
-            alert('You have successfully added a new employee');
-        }
-    })
+                // let the user know it was successful
+                alert('You have successfully added a new employee');
+            }
+        })
 
-    // the AJAX call was not issued succesfully
-	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
-	})
+        // the AJAX call was not issued succesfully
+        .fail(function(load){
+            alert("The webpage is unable to load, please contact the system admin")
+        })
+    }
+
+    else
+        alert("Please fill out all required fields");
 }
 
 function search_employees(){
     var params = {
         'Method' : 'Search',
-        'Employee_ID' : $('#emp_id').val()
+        'Employee_ID' : $('#emp_id').val(),
+        'Employee_Username' : $('#emp_username').val(),
+        'Employee_Name' : $('#emp_name').val(),
+        'Employee_Role' : $('#emp_role').val()
     }
 
     // data needs to be formatted before it can be sent via ajax
@@ -132,7 +142,7 @@ function open_employee(emp_id){
 
 function load_employees(){
     if (document.cookie.indexOf("emp_id")>=0){
-        // save the bugID to a variable that we will send to the search function
+        // save the empid to a variable that we will send to the search function
         var emp_id = getCookie("emp_id"); 
         // delete the cookie so if a user opens another page the bugID variable is reset
         setCookie('emp_id', emp_id, 0);
@@ -197,6 +207,7 @@ function update_employee(){
         if (AJAX_Response['Result'] == 'Success'){
             // let the user know it was successful
             alert('You have successfully saved your changes');
+            window.close();
         }
     })
 
