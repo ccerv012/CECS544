@@ -103,55 +103,61 @@ function AddBug(){
         'ProgramID' : $('#addRelVer').val(),
         'ReportType' : $('#addRptType').val(),
         'Severity' : $('#addSeverity').val(),
-        'ProblemSummary' : $('#addProbSumm').val(),
-        'Reproduce' : $('#addReproduce').val(),
-        'ReproduceSteps' : $('#addReproduceSteps').val(),
-        'SuggestedFix' : $('#addSuggFix').val(),
+        'ProblemSummary' : $('#addProbSumm').val().trim(),
+        'Reproduce' : $('#addReproduce').val().trim(),
+        'ReproduceSteps' : $('#addReproduceSteps').val().trim(),
+        'SuggestedFix' : $('#addSuggFix').val().trim(),
         'ReportBy' : $('#addReportBy').val(),
         'ReportDate' : $('#addReportDate').val(),
         'fileCount' : uploadList.length
     }
 
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
+    if (params['ProgramID']!='PleaseSelect' && params['ReportType']!='PleaseSelect' && params['Severity']!='PleaseSelect' && params['ProblemSummary']!='' && params['Reproduce']!='' && params['ReproduceSteps']!=''){
+        // data needs to be formatted before it can be sent via ajax
+        var formData = new FormData()
+        formData.append('params', JSON.stringify(params));
 
-    for (var i=0;i<uploadList.length;i++){
-        formData.append("fileItem", uploadList[i]);
+        for (var i=0;i<uploadList.length;i++){
+            formData.append("fileItem", uploadList[i]);
+        }
+
+        // make the ajax call
+        $.ajax({
+            url: './Bugs',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false
+        })
+
+        // wait for the ajax call to finish then execute...
+        .done(function(json) {
+            // clear the values the user entered
+            $('#addPrg').val('PleaseSelect');
+            $('#addRelVer').val('PleaseSelect');
+            $('#addRptType').val('PleaseSelect');
+            $('#addSeverity').val('PleaseSelect');
+            $('#addProbSumm').val('');
+            $('#addReproduce').val('');
+            $('#addReproduceSteps').val('');
+            $('#addSuggFix').val('');
+
+            uploadList = [];
+            rowCount = 0;
+            $('#files').empty();
+
+            // let the user know it was successful
+            alert('You have successfully created a new bug');
+        })
+
+        .fail(function(json){
+            alert("The webpage is unable to load, please contact the system admin");
+        })
     }
+    else    
+        alert('Please fill out all required fields');
 
-    // make the ajax call
-   $.ajax({
-       url: './Bugs',
-       type: 'POST',
-       data: formData,
-       processData: false,
-       contentType: false
-   })
-
-    // wait for the ajax call to finish then execute...
-    .done(function(json) {
-        // clear the values the user entered
-        $('#addPrg').val('PleaseSelect');
-        $('#addRelVer').val('PleaseSelect');
-        $('#addRptType').val('PleaseSelect');
-        $('#addSeverity').val('PleaseSelect');
-        $('#addProbSumm').val('');
-        $('#addReproduce').val();
-        $('#addReproduceSteps').val('');
-        $('#addSuggFix').val('');
-
-        uploadList = [];
-        rowCount = 0;
-        $('#files').empty();
-
-        // let the user know it was successful
-        alert('You have successfully created a new bug');
-    })
-
-    .fail(function(json){
-        alert("The webpage is unable to load, please contact the system admin");
-    })
+    
 }
 
 var BUG_DROP_DOWN_VALUES = '';
