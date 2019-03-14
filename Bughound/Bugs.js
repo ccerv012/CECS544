@@ -137,6 +137,7 @@ function AddBug(){
         $('#addRptType').val('PleaseSelect');
         $('#addSeverity').val('PleaseSelect');
         $('#addProbSumm').val('');
+        $('#addReproduce').val();
         $('#addReproduceSteps').val('');
         $('#addSuggFix').val('');
 

@@ -410,12 +410,10 @@ class Bugs:
 
     def ExportBugData(self, cur):
         sql = '''
-        SELECT bug_id, prgm_name, prgm_release, prgm_version, attach_id, report_type, severity, prob_summary, reproducibility, reproducibility_steps, suggested_fix, reported_by_name, report_date, farea_name, assigned_to_id, comments, bug_status, bug_priority, resolution, resolution_version, resolved_by_id, resolution_date, tested_by_id, tested_by_date, treat_deferred
+        SELECT bug_id, prgm_name, prgm_release, prgm_version, attach_id, report_type, severity, prob_summary, reproducibility, reproducibility_steps, suggested_fix, reported_by_name, report_date, farea_id, assigned_to_id, comments, bug_status, bug_priority, resolution, resolution_version, resolved_by_id, resolution_date, tested_by_id, tested_by_date, treat_deferred
         FROM bug_reports
             inner join program
                 on program.prgm_id = bug_reports.prgm_id
-            inner join functional_area
-                on functional_area.farea_id = bug_reports.farea_id
         '''
 
         cur.execute(sql)
