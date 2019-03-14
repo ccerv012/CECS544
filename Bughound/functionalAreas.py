@@ -1,5 +1,6 @@
 import cherrypy
 import json
+import cx_Oracle
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -35,10 +36,14 @@ class functionalAreas:
         # load the params into a python dictionary so we can use them
         self.Params = json.loads(params)
 
-        # call the method specified in the AJAX call
-        self.dispatch[self.Params['Method']](cur)
+        try:
+            # call the method specified in the AJAX call
+            self.dispatch[self.Params['Method']](cur)
 
-        return json.dumps(self.sendData)
+            return json.dumps(self.sendData)
+        except ValueError as err:
+            return json.dumps(self.sendData)
+
 
     def addFuntionalArea(self, cur):
         sql = '''
@@ -47,9 +52,13 @@ class functionalAreas:
         VALUES
             (:name, :prgm_id)
         '''
+        try:
+            cur.execute(sql, name=self.Params['FunctionalArea_Name'], prgm_id=self.Params['Program'])
+            self.CECS544_DB.conn.commit()
 
-        cur.execute(sql, name=self.Params['FunctionalArea_Name'], prgm_id=self.Params['Program'])
-        self.CECS544_DB.conn.commit()
+        except cx_Oracle.IntegrityError as e:
+            self.sendData['Result']='PK Violation'
+            raise ValueError()
 
         self.sendData['Result'] = 'Success'
 

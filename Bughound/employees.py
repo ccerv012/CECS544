@@ -1,5 +1,6 @@
 import cherrypy
 import json
+import cx_Oracle
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -34,10 +35,13 @@ class employees:
         # load the params into a python dictionary so we can use them
         self.Params = json.loads(params)
 
-        # call the method specified in the AJAX call
-        self.dispatch[self.Params['Method']](cur)
+        try:
+            # call the method specified in the AJAX call
+            self.dispatch[self.Params['Method']](cur)
 
-        return json.dumps(self.sendData)
+            return json.dumps(self.sendData)
+        except:
+            return json.dumps(self.sendData)
 
     def add_employee(self, cur):
         sql = '''
@@ -47,8 +51,13 @@ class employees:
             (:Employee_Name, :Employee_Username, :Employee_Password, :Employee_Role)
         '''
 
-        cur.execute(sql, Employee_Name=self.Params['Employee_Name'], Employee_Username=self.Params['Employee_Username'], Employee_Password=self.Params['Employee_Password'], Employee_Role=self.Params['Employee_Role'])
-        self.CECS544_DB.conn.commit()
+        try:
+            cur.execute(sql, Employee_Name=self.Params['Employee_Name'], Employee_Username=self.Params['Employee_Username'], Employee_Password=self.Params['Employee_Password'], Employee_Role=self.Params['Employee_Role'])
+            self.CECS544_DB.conn.commit()
+        
+        except cx_Oracle.IntegrityError as e:
+            self.sendData['Result']='PK Violation'
+            raise ValueError()
 
         self.sendData['Result']='Success'
 

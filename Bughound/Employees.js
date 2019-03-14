@@ -39,6 +39,8 @@ function add_employee(){
                 // let the user know it was successful
                 alert('You have successfully added a new employee');
             }
+            else if (AJAX_Response['Result']=='PK Violation')
+                alert('This record already exists. Add Failed.');
         })
 
         // the AJAX call was not issued succesfully
