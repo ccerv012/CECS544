@@ -162,16 +162,22 @@ function open_employee(emp_id){
 }
 
 function load_employees(){
-    if (document.cookie.indexOf("emp_id")>=0){
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
+        
+        if (document.cookie.indexOf("emp_id")>=0){
 
-        // save the empid to a variable that we will send to the search function
-        var emp_id = getCookie("emp_id");
+            // save the empid to a variable that we will send to the search function
+            var emp_id = getCookie("emp_id");
 
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('emp_id', emp_id, 0);
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('emp_id', emp_id, 0);
 
-        populate_emp_editor(emp_id);
+            populate_emp_editor(emp_id);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function populate_emp_editor(emp_id){

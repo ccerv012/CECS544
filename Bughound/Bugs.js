@@ -130,25 +130,23 @@ function AddBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        if (json['Result'] == 'Success'){
-            // clear the values the user entered
-            $('#addPrg').val('');
-            $('#addRel').val('');
-            $('#addVer').val('');
-            $('#addRptType').val('');
-            $('#addSeverity').val('');
-            $('#addProbSumm').val('');
-            $('#addReproduce').val('');
-            //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
-            $('#addSuggFix').val('');
+        // clear the values the user entered
+        $('#addPrg').val('');
+        $('#addRel').val('');
+        $('#addVer').val('');
+        $('#addRptType').val('');
+        $('#addSeverity').val('');
+        $('#addProbSumm').val('');
+        $('#addReproduce').val('');
+        //$('#reproducSteps').val(AJAX_Response['Data'][0]['']); //???
+        $('#addSuggFix').val('');
 
-            uploadList = [];
-            rowCount = 0;
-            $('#files').empty();
+        uploadList = [];
+        rowCount = 0;
+        $('#files').empty();
 
-            // let the user know it was successful
-            alert('You have successfully created a new bug');
-        }
+        // let the user know it was successful
+        alert('You have successfully created a new bug');
     })
 
     .fail(function(json){
@@ -242,15 +240,21 @@ function OpenBugReport(bugID){
 }
 
 function LoadBugReport(){
-    EnableLoadingGraphic();
-    if (document.cookie.indexOf("bugID")>=0){
-        // save the bugID to a variable that we will send to the search function
-        var bugID = getCookie("bugID");
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('bugID', bugID, 0);
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
+        
+        EnableLoadingGraphic();
+        if (document.cookie.indexOf("bugID")>=0){
+            // save the bugID to a variable that we will send to the search function
+            var bugID = getCookie("bugID");
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('bugID', bugID, 0);
 
-        PopulateBugEditor(bugID);
+            PopulateBugEditor(bugID);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function PopulateBugEditor(bugID){

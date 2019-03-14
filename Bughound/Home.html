@@ -25,10 +25,10 @@
 
 		<div class="topnav">
 			<a id='Home' class="active" href="#home">Home</a>
-			<a id='Bugs' href="#" onclick="showBugSection()">Bugs</a>
-			<a id='Employees' href="#" onclick="showEmployeesSection()">Employees</a>
-			<a id='Programs' href="#" onclick="showProgramsSection()">Programs</a>
-			<a id='FunctionalArea' href="#" onclick="showFuncAreaSection()">Functional Area</a>
+			<a id='Bugs' class='restricted' href="#" onclick="showBugSection()">Bugs</a>
+			<a id='Employees' class='restricted' href="#" onclick="showEmployeesSection()">Employees</a>
+			<a id='Programs' class='restricted' href="#" onclick="showProgramsSection()">Programs</a>
+			<a id='FunctionalArea' class='restricted' href="#" onclick="showFuncAreaSection()">Functional Area</a>
 			<!-- add each new section here -->
 		</div>
 
@@ -269,7 +269,10 @@
 					<label><span>Release: </span><input type="number" class="small-input-field" id="program-release-to-add" value="1" min="1"/></label>
 					<label><span>Version: </span><input type="number" class="small-input-field" id="program-version-to-add" value="0" min="0"/></label>
 
-					<label><span> </span><button id="ProgramAddBtn" onclick="addProgram()">Add Program</button></label>
+					<label>
+						<button  onclick="ResetAddProgram()">Reset</button>
+						<button id="ProgramAddBtn" onclick="addProgram()">Add Program</button>
+					</label>
 				</div>
 			</div> <!-- END programAdd div-->
 

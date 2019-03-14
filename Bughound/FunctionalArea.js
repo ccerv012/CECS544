@@ -183,14 +183,20 @@ function openfunctionalArea(farea_id){
 }
 
 function loadFuncArea(){
-    if (document.cookie.indexOf("farea_id")>=0){
-        // save the farea_id to a variable that we will send to the search function
-        var farea_id = getCookie("farea_id");
-        // delete the cookie so if a user opens another page the bugID variable is reset
-        setCookie('farea_id', farea_id, 0);
+    if (document.cookie.indexOf("EmployeeName")>=0){
+        var EmployeeName = getCookie("EmployeeName");
+        
+        if (document.cookie.indexOf("farea_id")>=0){
+            // save the farea_id to a variable that we will send to the search function
+            var farea_id = getCookie("farea_id");
+            // delete the cookie so if a user opens another page the bugID variable is reset
+            setCookie('farea_id', farea_id, 0);
 
-        populate_farea_editor(farea_id);
+            populate_farea_editor(farea_id);
+        }
     }
+    else
+		window.location.replace('http://localhost:8081/ReusableJavascript/Login.html');
 }
 
 function populate_farea_editor(farea_id){
