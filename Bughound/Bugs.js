@@ -164,13 +164,11 @@ function showBugSection(){
     // show/hide the sections we want the user to see
     $('#bugs').show();
     $('#employees').hide();
-    $('#programs').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
     $('#Bugs').addClass('active');
     $('#Employees').removeClass('active');
-    $('#Programs').removeClass('active');
 
     // populate the Add Date
     $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
@@ -372,12 +370,8 @@ function SaveBug(){
         'ResolvedDate' : $('#resolDate').val(),
         'ResolvedTestedBy' : $('#resolTestedBy').val(),
         'ResolvedTestDate' : $('#resolTestDate').val(),
-<<<<<<< HEAD
-        'Defer' : $('#defer').val()
-=======
         'Defer' : $('#defer').val(),
-        'fileCount' : uploadList.length     
->>>>>>> 1fdeb272e30799ae5f218ddfdb0decd63b70bf6d
+        'fileCount' : uploadList.length
     }
 
     // data needs to be formatted before it can be sent via ajax

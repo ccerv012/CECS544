@@ -40,6 +40,9 @@ class Programs:
     # TODO: check if exists
     # TODO: disallow duplicates
     def add_program(self, cur):
+        # check if it exists first
+        #sql =
+
         sql = '''
         INSERT INTO PROGRAM
             (PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE)
@@ -77,7 +80,6 @@ class Programs:
 
         self.sendData['Result']='Success'
 
-    # TODO: check if valid
     def delete_program(self, cur):
         sql = '''
         SELECT * FROM PROGRAM
@@ -109,3 +111,15 @@ class Programs:
                 self.sendData['Result'] = 'Could Not Delete'
                 self.sendData['Error'] = 'Error: ID ' + str(self.Params['Program_ID']) \
                                         + ' exists, but it could not be deleted.'
+
+    def ID_exists(self, program_id):
+        sql = '''
+            SELECT * FROM PROGRAM
+            WHERE
+                PRGM_ID = :Program_ID
+        '''
+
+        cur.execute(sql, Program_ID=self.Params['Program_ID'])
+        rs = cur.fetchall()
+
+        return rs

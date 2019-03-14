@@ -1,5 +1,4 @@
 function showEmployeesSection(){
-<<<<<<< HEAD
   // show/hide the sections we want the user to see
   $('#bugs').hide();
   $('#employees').show();
@@ -10,15 +9,6 @@ function showEmployeesSection(){
   $('#Bugs').removeClass('active');
   $('#Employees').addClass('active');
   $('#Programs').removeClass('active');
-=======
-    $('#employees').show();
-    $('#bugs').hide();
-
-    // change the active flag on the navigation bar
-    $('#Home').removeClass('active');
-    $('#Bugs').removeClass('active');
-    $('#Employees').addClass('active');
->>>>>>> 1fdeb272e30799ae5f218ddfdb0decd63b70bf6d
 }
 
 function add_employee(){
@@ -146,7 +136,7 @@ function open_employee(emp_id){
 function load_employees(){
     if (document.cookie.indexOf("emp_id")>=0){
         // save the bugID to a variable that we will send to the search function
-        var emp_id = getCookie("emp_id"); 
+        var emp_id = getCookie("emp_id");
         // delete the cookie so if a user opens another page the bugID variable is reset
         setCookie('emp_id', emp_id, 0);
 
@@ -178,7 +168,7 @@ function populate_emp_editor(emp_id){
             $('#emp_username').val(AJAX_Response['Data'][0]['Username']);
             $('#emp_name').val(AJAX_Response['Data'][0]['Name']);
             $('#emp_password').val(AJAX_Response['Data'][0]['Password']);
-            $('#emp_role').val(AJAX_Response['Data'][0]['Role']);    
+            $('#emp_role').val(AJAX_Response['Data'][0]['Role']);
         }
     })
 

@@ -21,7 +21,7 @@ class Bugs:
             'PopulateBug': self.PopulateBugEditor,
             'PopulateDropdown': self.PopulateDropdown
         }
-    
+
     def POST(self, params, fileItem=None):
         # create a connection to the database
         try:
@@ -44,7 +44,7 @@ class Bugs:
 
     def TransferFile(self, fileInfo, bugID, cur):
         fileName = os.path.basename(fileInfo.filename)
-        filePath = 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments\%s\\' % bugID 
+        filePath = 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments\%s\\' % bugID
         serverFilePath = 'Attachments\%s\\' % bugID
 
         # transfer the file from the client to the server
@@ -68,7 +68,7 @@ class Bugs:
                     self.TransferFile(files, bugID, cur)
         except Exception as e:
             self.sendData['Result'] = 'Failed'
-            self.sendData['Error'] = '%s' % e 
+            self.sendData['Error'] = '%s' % e
             raise ValueError()
 
     def AddAttachment(self, cur, fileName, filePath, bugID):
@@ -91,7 +91,7 @@ class Bugs:
         sql = '''
             insert into bug_reports
                 (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
-            values 
+            values
                 (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate)
         '''
         # delete the method key so you can pass all params without specifying each one
@@ -121,7 +121,7 @@ class Bugs:
             self.UploadFile(bugID, cur)
 
         self.sendData['Result'] = 'Success'
-    
+
     def UpdateBug(self, cur):
         self.FileCount = self.Params['fileCount']
 
@@ -129,10 +129,10 @@ class Bugs:
         for param in self.Params:
             if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
                 self.Params[param] = None
-                
+
         sql = '''
             update bug_reports
-                set 
+                set
                     BUG_ID = :BugID,
                     REPORT_TYPE = :ReportType,
                     SEVERITY = :Severity,
@@ -165,7 +165,7 @@ class Bugs:
             self.UploadFile(self.Params['BugID'], cur)
 
         self.sendData['Result'] = 'Success'
-    
+
     def DeleteBug(self, cur):
         sql = '''
         DELETE FROM BUG_REPORTS
@@ -309,7 +309,7 @@ class Bugs:
         '''
 
         cur.execute(sql, bugID=self.Params['BugID'])
-        allRows = cur.fetchall() 
+        allRows = cur.fetchall()
 
         # loop through the query results
         self.sendData['Attachments'] = []
@@ -318,7 +318,7 @@ class Bugs:
             self.sendData['Attachments'].append({
                 'FileName' : row[0],
                 'FileLocation' : row[1]
-            })        
+            })
 
     def PopulateDropdown(self, cur):
         self.sendData['DropdownVals'] = {}
@@ -373,7 +373,7 @@ class Bugs:
 
         if 'BugID' not in self.Params:
             self.Params['BugID'] = '%%'
-            
+
         cur.execute(sql, bugID=self.Params['BugID'])
 
         cur.execute(sql)
