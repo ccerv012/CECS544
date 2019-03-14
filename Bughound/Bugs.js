@@ -90,7 +90,7 @@ function DeleteBug(bugID){
 
         // the AJAX call was not issued succesfully
         .fail(function(load){
-            alert("The webpage is unable to load, please contact the system admin")
+            alert("The webpage is unable to load, please contact the system admin");
         })
     }
 }
@@ -98,7 +98,8 @@ function DeleteBug(bugID){
 function AddBug(){
     var params = {
         'Method' : 'Add',
-        'Program' : $('#addPrg').val(),
+        'ProgramID' : $('#addPrg').val(),
+        'Program' : $('#addPrg option:selected').text(),
         'Release' : $('#addRel').val(),
         'Version' : $('#addVer').val(),
         'ReportType' : $('#addRptType').val(),
@@ -108,18 +109,29 @@ function AddBug(){
         'SuggestedFix' : $('#addSuggFix').val(),
         'ReportBy' : $('#addReportBy').val(),
         'ReportDate' : $('#addReportDate').val(),
+        'fileCount' : uploadList.length
     }
 
     // data needs to be formatted before it can be sent via ajax
     var formData = new FormData()
     formData.append('params', JSON.stringify(params));
 
+    for (var i=0;i<uploadList.length;i++){
+        formData.append("fileItem", uploadList[i]);
+    }
+
     // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
+   $.ajax({
+       url: './Bugs',
+       type: 'POST',
+       data: formData,
+       processData: false,
+       contentType: false
+   })
 
     // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
+    .done(function(json) {
+        if (json['Result'] == 'Success'){
             // clear the values the user entered
             $('#addPrg').val('');
             $('#addRel').val('');
@@ -133,15 +145,18 @@ function AddBug(){
             $('#addReportBy').val('');
             $('#addReportDate').val('');
 
+            uploadList = [];
+            rowCount = 0;
+            $('files').empty();
+
             // let the user know it was successful
             alert('You have successfully created a new bug');
         }
     })
 
-    // the AJAX call was not issued succesfully
-	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
-	})
+    .fail(function(json){
+        alert("The webpage is unable to load, please contact the system admin");
+    })
 }
 
 var BUG_DROP_DOWN_VALUES = '';
@@ -183,12 +198,12 @@ function showBugSection(){
             var Prgs = Object.keys(AJAX_Response['DropdownVals']['Programs']);
             $.each(Prgs, function (i, Prg){
                 $('#prg').append($('<option>', {
-                    value: Prg,
+                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
 
                 $('#addPrg').append($('<option>', {
-                    value: Prg,
+                    value: AJAX_Response['DropdownVals']['Programs'][Prg][1]['PrgmID'],
                     text: Prg
                 }));
             })
@@ -227,6 +242,7 @@ function OpenBugReport(bugID){
 }
 
 function LoadBugReport(){
+    EnableLoadingGraphic();
     if (document.cookie.indexOf("bugID")>=0){
         // save the bugID to a variable that we will send to the search function
         var bugID = getCookie("bugID");
@@ -282,17 +298,40 @@ function PopulateBugEditor(bugID){
             $('#resolTestDate').val(AJAX_Response['Data'][0]['TestedDate']);
             $('#defer').val(AJAX_Response['Data'][0]['Deferred']);
 
+            //populate the attachments that have already been added
+            if (AJAX_Response['Attachments'].length > 0 ){
+                $('#uploadedFiles').append('<b>Current Attachments</b><br>');
+
+                for (var i=0; i < AJAX_Response['Attachments'].length;i++){
+                    $('#uploadedFiles').append('<a href=".\\' + AJAX_Response['Attachments'][i]['FileLocation'] + AJAX_Response['Attachments'][i]['FileName'] + '" target="_blank">' + AJAX_Response['Attachments'][i]['FileName'] + '</a><br>');
+                }
+            }
+
             //populate the employee fields
             var Employees = AJAX_Response['DropdownVals']['Employees'];
             $.each(Employees, function (i, Emp){
                 $('#resolBy').append($('<option>', {
-                    value: Emp['Name'],
+                    value: Emp['ID'],
                     text: Emp['Name']
                 }));
 
                 $('#resolTestedBy').append($('<option>', {
-                    value: Emp['Name'],
+                    value: Emp['ID'],
                     text: Emp['Name']
+                }));
+
+                $('#assigned').append($('<option>', {
+                    value: Emp['ID'],
+                    text: Emp['Name']
+                }));
+            })
+
+            // populate func areas
+            var FuncAreas = AJAX_Response['DropdownVals']['FuncAreas'];
+            $.each(FuncAreas, function (i, Func){
+                $('#funcArea').append($('<option>', {
+                    value: Func['ID'],
+                    text: Func['Name']
                 }));
             })
         }
@@ -333,21 +372,37 @@ function SaveBug(){
         'ResolvedDate' : $('#resolDate').val(),
         'ResolvedTestedBy' : $('#resolTestedBy').val(),
         'ResolvedTestDate' : $('#resolTestDate').val(),
+<<<<<<< HEAD
         'Defer' : $('#defer').val()
+=======
+        'Defer' : $('#defer').val(),
+        'fileCount' : uploadList.length     
+>>>>>>> 1fdeb272e30799ae5f218ddfdb0decd63b70bf6d
     }
 
     // data needs to be formatted before it can be sent via ajax
     var formData = new FormData()
     formData.append('params', JSON.stringify(params));
 
+    for (var i=0;i<uploadList.length;i++){
+        formData.append("fileItem", uploadList[i]);
+    }
+
     // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
+   $.ajax({
+       url: './Bugs',
+       type: 'POST',
+       data: formData,
+       processData: false,
+       contentType: false
+   })
 
     // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result'] == 'Success'){
+    .done(function(json) {
+        if (json['Result'] == 'Success'){
             // let the user know it was successful
             alert('You have successfully saved your changes');
+            window.close();
         }
     })
 
@@ -367,7 +422,7 @@ $(document).on('change', '#addPrg', function () {
     $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
+    selectedPrg = $('#addPrg option:selected').text();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
@@ -386,8 +441,8 @@ $(document).on('change', '#addRel', function () {
     $('#addVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
-    selectedRel = $('#addRel').val();
+    selectedPrg = $('#addPrg option:selected').text();
+    selectedRel = $('#addRel option:selected').text();
 
     // populate the two corresponding drop downs
     Versions = BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][selectedRel]['Ver'];

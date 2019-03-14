@@ -1,5 +1,7 @@
 import cherrypy
 import json
+import os
+from datetime import datetime
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -9,7 +11,6 @@ class Bugs:
     # allow the cherrypy server to serve these files
     exposed = True
     @cherrypy.tools.accept(media='text/html')
-
 
     def __init__(self):
         self.dispatch = {
@@ -21,7 +22,7 @@ class Bugs:
             'PopulateDropdown': self.PopulateDropdown
         }
     
-    def POST(self, params):
+    def POST(self, params, fileItem=None):
         # create a connection to the database
         try:
             self.CECS544_DB = db_CECS544()
@@ -34,30 +35,101 @@ class Bugs:
 
         # load the params into a python dictionary so we can use them
         self.Params = json.loads(params)
+        self.FileItem = fileItem
 
         # call the method specified in the AJAX call
         self.dispatch[self.Params['Method']](cur)
 
         return json.dumps(self.sendData)
 
+    def TransferFile(self, fileInfo, bugID, cur):
+        fileName = os.path.basename(fileInfo.filename)
+        filePath = 'c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments\%s\\' % bugID 
+        serverFilePath = 'Attachments\%s\\' % bugID
+
+        # transfer the file from the client to the server
+        clientFile = open(filePath + fileName, 'wb')
+        clientFile.write(fileInfo.file.read())
+        clientFile.close()
+
+        self.AddAttachment(cur, fileName, serverFilePath, bugID)
+
+    def UploadFile(self, bugID, cur):
+        try:
+            # check if a folder exists already for that BugID, if not, create it
+            os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Attachments')
+            if not(os.path.isdir('%s' % bugID)):
+                os.mkdir('%s' % bugID)
+
+            if self.FileCount == 1:
+                self.TransferFile(self.FileItem, bugID, cur)
+            elif self.FileCount > 1:
+                for files in self.FileItem:
+                    self.TransferFile(files, bugID, cur)
+        except Exception as e:
+            self.sendData['Result'] = 'Failed'
+            self.sendData['Error'] = '%s' % e 
+            raise ValueError()
+
+    def AddAttachment(self, cur, fileName, filePath, bugID):
+        sql='''
+            insert into attachments
+                (attach_name, attach_location, bug_id)
+            values
+                (:attachName, :attachLocation, :bugID)
+        '''
+
+        cur.execute(sql, attachName=fileName, attachLocation=filePath, bugID=bugID)
+        self.CECS544_DB.conn.commit()
+
     def AddBug(self, cur):
+        #  insert record into the database
+        self.Params['ReportDate'] = datetime.now()
+        self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
+        self.FileCount = self.Params['fileCount']
+
         sql = '''
             insert into bug_reports
-                (PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
+                (PRGM_ID, PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, REPORT_TYPE, SEVERITY, PROB_SUMMARY, REPRODUCIBILITY, SUGGESTED_FIX, REPORTED_BY_NAME, REPORT_DATE)
             values 
-                (:Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, TO_DATE(:ReportDate, 'MM/DD/YYYY'))
+                (:ProgramID, :Program, :Release, :Version, :ReportType, :Severity, :ProblemSummary, :Reproduce, :SuggestedFix, :ReportBy, :ReportDate)
         '''
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
-        self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
-
+        del self.Params['fileCount']
 
         cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
 
+        #  retrieve the bug_id that just got entered
+        sql='''
+        select bug_id
+        from bug_reports
+            inner join(
+                select max(report_date) maxReportDate
+                from bug_reports
+            ) maxDate
+            on bug_reports.report_date = maxDate.maxReportDate
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        bugID = allRows[0][0]
+
+        if self.FileCount > 0:
+            self.UploadFile(bugID, cur)
+
         self.sendData['Result'] = 'Success'
     
     def UpdateBug(self, cur):
+        self.FileCount = self.Params['fileCount']
+
+        # loop through values, change PleaseSelect to Null
+        for param in self.Params:
+            if self.Params[param] == 'PleaseSelect' or self.Params[param] == 'None':
+                self.Params[param] = None
+                
         sql = '''
             update bug_reports
                 set 
@@ -84,9 +156,13 @@ class Bugs:
 
         # delete the method key so you can pass all params without specifying each one
         del self.Params['Method']
+        del self.Params['fileCount']
 
         cur.execute(sql, self.Params)
         self.CECS544_DB.conn.commit()
+
+        if self.FileCount > 0:
+            self.UploadFile(self.Params['BugID'], cur)
 
         self.sendData['Result'] = 'Success'
     
@@ -221,12 +297,33 @@ class Bugs:
                 'Deferred' : row[22],
             })
 
+        self.GetAttachments(cur)
+
         self.PopulateDropdown(cur)
+
+    def GetAttachments(self, cur):
+        sql='''
+            select attach_name, attach_location
+            from attachments
+            where bug_id = :bugID
+        '''
+
+        cur.execute(sql, bugID=self.Params['BugID'])
+        allRows = cur.fetchall() 
+
+        # loop through the query results
+        self.sendData['Attachments'] = []
+        for row in allRows:
+            # save the data to our strucutre we are sending back via AJAX
+            self.sendData['Attachments'].append({
+                'FileName' : row[0],
+                'FileLocation' : row[1]
+            })        
 
     def PopulateDropdown(self, cur):
         self.sendData['DropdownVals'] = {}
         sql = '''
-        SELECT PRGM_NAME, PRGM_RELEASE, PRGM_VERSION
+        SELECT PRGM_NAME, PRGM_RELEASE, PRGM_VERSION, PRGM_ID
         FROM PROGRAM
         '''
 
@@ -244,6 +341,7 @@ class Bugs:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Rel'] = row[1]
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'] = []
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
+                self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['PrgmID'] = (row[3])
             else:
                 self.sendData['DropdownVals']['Programs'][row[0]][row[1]]['Ver'].append(row[2])
 
@@ -259,5 +357,29 @@ class Bugs:
 
         for row in allRows:
             self.sendData['DropdownVals']['Employees'].append({'ID': row[0], 'Name': row[1]})
+
+        self.sendData['DropdownVals']['FuncAreas'] = []
+        sql = '''
+        SELECT FAREA_ID, FAREA_NAME
+        FROM FUNCTIONAL_AREA
+            INNER JOIN (
+                SELECT PRGM_ID
+                FROM BUG_REPORTS
+                WHERE BUG_ID LIKE :bugID
+            ) GetPrgID
+            ON GetPrgID.PRGM_ID = FUNCTIONAL_AREA.PRGM_ID
+        ORDER BY FAREA_NAME ASC
+        '''
+
+        if 'BugID' not in self.Params:
+            self.Params['BugID'] = '%%'
+            
+        cur.execute(sql, bugID=self.Params['BugID'])
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        for row in allRows:
+            self.sendData['DropdownVals']['FuncAreas'].append({'ID': row[0], 'Name': row[1]})
 
         self.sendData['Result'] = 'Success'

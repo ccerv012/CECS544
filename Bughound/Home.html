@@ -4,12 +4,12 @@
 	<head>
 		<title>Bug Hound</title>
 
-		<script src='../ReusableJavascript/Ajax.js'></script>
-		<script src='../ReusableJavascript/Cookies.js'></script>
 		<script src='../ReusableJavascript/jquery-3.3.1.min.js'></script>
 		<script src='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.js'></script>
-
 		<link rel='stylesheet' type='text/css' href='../ReusableJavascript/jquery-ui-1.12.1.custom/jquery-ui.min.css'>
+
+		<script src='../ReusableJavascript/Ajax.js'></script>
+		<script src='../ReusableJavascript/Cookies.js'></script>
 
 		<script src='./Home.js'></script>
 		<link rel='stylesheet' type='text/css' href='./Home.css'>
@@ -168,6 +168,9 @@
 					<label><span>Problem And How To Reproduce: </span><span class="required">*</span><textarea class="textarea-field" id="addReproduceSteps" cols="30" rows="10"></textarea></label>
 					<label><span>Suggested Fix: </span><textarea class="textarea-field" id="addSuggFix" cols="30" rows="10"></textarea></label>
 
+					<div id="dragandrophandler">Drag & Drop Files here</div>
+					<div id="files"></div>
+
 					<label>
 						<span>Reported By: </span><input disabled type="text" class="small-input-field" id="addReportBy" value="" />
 						<span>Date: </span><input disabled type="text" class="small-input-field datepicker" id="addReportDate" value="" />
@@ -177,20 +180,26 @@
 				</div>
 			</div>
 		</div>
+<<<<<<< HEAD
 
 		<!-- END BUG SECTION -->
 
 		<!-- EMPLOYEE SECTION -->
 
 		<div id="employees">
+=======
+		
+		<div id="employees" class='emp_accordion'>
+			<h3>Add</h3>
+>>>>>>> 1fdeb272e30799ae5f218ddfdb0decd63b70bf6d
 			<div id="Employee_Add">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Add A New Employee</div>
-						<label><span>Employee Username: </span><input type="text" class="input-field" id="emp_username" value="" /></label>
-						<label><span>Employee Name: </span><input type="text" class="input-field" id="emp_name" value="" /></label>
-						<label><span>Employee Password: </span><input type="password" class="input-field" id="emp_password" value="" /></label>
+						<label><span>Employee Username: </span><input type="text" class="input-field" id="add_emp_username" value="" /></label>
+						<label><span>Employee Name: </span><input type="text" class="input-field" id="add_emp_name" value="" /></label>
+						<label><span>Employee Password: </span><input type="password" class="input-field" id="add_emp_password" value="" /></label>
 						<label><span>Employee Role</span>
-							<select id="emp_role" class="select-field">
+							<select id="add_emp_role" class="select-field">
 								<option value="PleaseSelect">Please Select</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -201,6 +210,7 @@
 				</div>
 			</div>
 
+			<h3>Search</h3>
 			<div id="Employee_Search">
 				<div class="form-style-2">
 					<div class="form-style-2-heading">Search for Employees</div>
@@ -216,11 +226,17 @@
 							</select>
 						</label>
 						<label><span> </span><button id="employeeSearch" onclick="search_employees()">Search</button></label>
+
+						<div id="employeeSearchResults"></div>
 				</div>
 			</div>
+<<<<<<< HEAD
 
 			<div id="employeeSearchResults"></div>
 
+=======
+									
+>>>>>>> 1fdeb272e30799ae5f218ddfdb0decd63b70bf6d
 		</div>
 
 		<!-- END EMPLOYEE SECTION -->
