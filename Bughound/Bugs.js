@@ -357,6 +357,7 @@ function PopulateBugEditor(bugID){
 	})
 }
 
+var myJSON;
 function SaveBug(){
     var params = {
         'Method' : 'Update',
@@ -406,12 +407,13 @@ function SaveBug(){
 
     // wait for the ajax call to finish then execute...
     .done(function(json) {
-        if (json['Result'] == 'Success'){
+        myJSON = JSON.parse(json);
+        if (myJSON.Result == 'Success'){
             // let the user know it was successful
             alert('You have successfully saved your changes');
             window.close();
         }
-        else if (json['Result'] == 'Access Denied'){
+        else if (myJSON.Result == 'Access Denied'){
             alert('You do not have access to modify this report');
             window.close();
         }
@@ -426,7 +428,7 @@ function SaveBug(){
 function CancelBug(){
     // clear the values the user entered
     $('#addPrg').val('PleaseSelect');
-    $('#addRel').val('PleaseSelect');
+    $('#addRelVer').val('PleaseSelect');
     $('#addRptType').val('PleaseSelect');
     $('#addSeverity').val('PleaseSelect');
     $('#addProbSumm').val('');

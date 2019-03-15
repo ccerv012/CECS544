@@ -72,9 +72,9 @@ function searchPrograms() {
   var params = {
       'Method' : 'Search',
       'Program_Name' : $('#program-name-to-search').val(),
-      'Program_Version' : $('#program-version-to-search').val(),
       'Program_Release' : $('#program-release-to-search').val(),
-  }
+      'Program_Version' : $('#program-version-to-search').val(),
+    }
 
   // data needs to be formatted before it can be sent via ajax
   var formData = new FormData()
@@ -93,7 +93,7 @@ function searchPrograms() {
           $('#program-search-results').append('<table id="program-results-table" class="ResultsTable">');
 
           // add a header row to the table
-          $('#program-results-table').append('<thead><th>Program ID</th><th>Program Name</th><th>Version</th><th>Release</th><th>Delete</th></thead>');
+          $('#program-results-table').append('<thead><th>Program ID</th><th>Program Name</th><th>Release</th><th>Version</th><th>Delete</th></thead>');
 
           // loop through the search results and add them to the results table
 
@@ -102,8 +102,8 @@ function searchPrograms() {
               tr = $('<tr/>'); // this is jquery short hand for adding a new row object
               tr.append('<td onclick="openProgramEditor(\'' + AJAX_Response['Data'][i].Prgm_ID + '\')" class="link">' + AJAX_Response['Data'][i].Prgm_ID + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Prgm_Name + '</td>'); // populate the new row, cell by cell
-              tr.append('<td>' + AJAX_Response['Data'][i].Version + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Release + '</td>'); // populate the new row, cell by cell
+              tr.append('<td>' + AJAX_Response['Data'][i].Version + '</td>'); // populate the new row, cell by cell
               tr.append('<td><button onclick="deleteProgram(\'' + AJAX_Response['Data'][i].Prgm_ID + '\', \'' + AJAX_Response['Data'][i].Prgm_Name + '\')">Delete</button></td>'); // populate the new row, cell by cell
               $('#program-results-table').append(tr); // add the row you just built to the table
           }
