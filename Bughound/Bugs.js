@@ -3,6 +3,7 @@ function SearchBugs(){
         'Method': 'Search',
         'BugID': $('#bugID').val(),
         'Pgm': $('#prg').val(),
+        'PgmID': $('#prgRelVer').val(),
         'ReportType': $('#rptType').val(),
         'Severity': $('#severity').val(),
         'FunctionalArea': $('#funcArea').val(),
@@ -28,33 +29,37 @@ function SearchBugs(){
             // clear any existing search results
             $('#bugSearchResults').empty();
 
-            //  creeate a table to dsiplay the results
-            $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
+            if (AJAX_Response['Data'].length > 0){
+                //  creeate a table to dsiplay the results
+                $('#bugSearchResults').append('<table id="BugResultsTable" class="ResultsTable">');
 
-            // add a header row to the table
+                // add a header row to the table
 
-            $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Reported By</th><th>Report Date</th><th>Delete</th></thead>');
+                $('#BugResultsTable').append('<thead><th>Bug ID</th><th>Program</th><th>Report Type</th><th>Severity</th><th>Reported By</th><th>Report Date</th></thead>');
 
-            // loop through the search results and add them to the results table
+                // loop through the search results and add them to the results table
 
-            var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
-                tr = $('<tr/>'); // this is jquery short hand for adding a new row object
-                tr.append('<td onclick="OpenBugReport(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Severity + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].ReportedBy + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].ReportedDate + '</td>'); // populate the new row, cell by cell
-                // tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
-                tr.append('<td><button onclick="DeleteBug(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
-                $('#BugResultsTable').append(tr); // add the row you just built to the table
+                var tr;
+                for (var i = 0; i < AJAX_Response['Data'].length; i++) {
+                    tr = $('<tr/>'); // this is jquery short hand for adding a new row object
+                    tr.append('<td onclick="OpenBugReport(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Program + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].ReportType + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Severity + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].FuncArea + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].Assigned + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].Status + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].Priority + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].Resolution + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].ReportedBy + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].ReportedDate + '</td>'); // populate the new row, cell by cell
+                    // tr.append('<td>' + AJAX_Response['Data'][i].ResolvedBy + '</td>'); // populate the new row, cell by cell
+                    //tr.append('<td><button onclick="DeleteBug(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
+                    $('#BugResultsTable').append(tr); // add the row you just built to the table
+                }
             }
+            else
+                $('#bugSearchResults').html('No Results Found! Please change your search criteria and try again');  
         }
     })
 
@@ -444,6 +449,7 @@ function CancelBug(){
 function ResetSearchBugs(){
     $('#bugID').val('');
     $('#prg').val('PleaseSelect');
+    $('#prgRelVer').val('PleaseSelect');
     $('#rptType').val('PleaseSelect');
     $('#severity').val('PleaseSelect');
     $('#funcArea').val('');
@@ -470,6 +476,27 @@ $(document).on('change', '#addPrg', function () {
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
     $.each(Releases, function (i, Rel){
         $('#addRelVer').append($('<option>', {
+            value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
+            text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
+        }));
+    })
+
+});
+
+$(document).on('change', '#prg', function () {
+
+    // clear the choices from the Release and Version dropdowns
+    $('#prgRelVer').empty();
+
+    $('#prgRelVer').append('<option value="PleaseSelect">Please Select</option>');
+
+    // get the program the user selected
+    selectedPrg = $('#addPrg').val();
+
+    // populate the two corresponding drop downs
+    Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
+    $.each(Releases, function (i, Rel){
+        $('#prgRelVer').append($('<option>', {
             value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
             text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
         }));
