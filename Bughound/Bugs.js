@@ -3,6 +3,7 @@ function SearchBugs(){
         'Method': 'Search',
         'BugID': $('#bugID').val(),
         'Pgm': $('#prg').val(),
+        'PgmID': $('#prgRelVer').val(),
         'ReportType': $('#rptType').val(),
         'Severity': $('#severity').val(),
         'FunctionalArea': $('#funcArea').val(),
@@ -444,6 +445,7 @@ function CancelBug(){
 function ResetSearchBugs(){
     $('#bugID').val('');
     $('#prg').val('PleaseSelect');
+    $('#prgRelVer').val('PleaseSelect');
     $('#rptType').val('PleaseSelect');
     $('#severity').val('PleaseSelect');
     $('#funcArea').val('');
@@ -470,6 +472,27 @@ $(document).on('change', '#addPrg', function () {
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
     $.each(Releases, function (i, Rel){
         $('#addRelVer').append($('<option>', {
+            value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
+            text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
+        }));
+    })
+
+});
+
+$(document).on('change', '#prg', function () {
+
+    // clear the choices from the Release and Version dropdowns
+    $('#prgRelVer').empty();
+
+    $('#prgRelVer').append('<option value="PleaseSelect">Please Select</option>');
+
+    // get the program the user selected
+    selectedPrg = $('#addPrg').val();
+
+    // populate the two corresponding drop downs
+    Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
+    $.each(Releases, function (i, Rel){
+        $('#prgRelVer').append($('<option>', {
             value: BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['ID'],
             text: 'Release:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Rel'] + ' Version:' + BUG_DROP_DOWN_VALUES['Programs'][selectedPrg][i]['Ver']
         }));
