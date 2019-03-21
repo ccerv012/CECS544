@@ -215,7 +215,7 @@ class Bugs:
             bindVars['Pgm'] = self.Params['Pgm']
 
         if self.Params['PgmID'] != "" and self.Params['PgmID'] != 'PleaseSelect':
-            sql = sql + ' AND PRGM_ID = :PgmID'
+            sql = sql + ' AND program.PRGM_ID = :PgmID'
             bindVars['PgmID'] = self.Params['PgmID']
 
         if self.Params['ReportType'] != "" and self.Params['ReportType'] != 'PleaseSelect':

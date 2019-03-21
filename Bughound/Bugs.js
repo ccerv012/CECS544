@@ -493,7 +493,7 @@ $(document).on('change', '#prg', function () {
     $('#prgRelVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
+    selectedPrg = $('#prg').val();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);
