@@ -30,7 +30,7 @@ class Bugs:
             'Delete': self.DeleteBug,
             'PopulateBug': self.PopulateBugEditor,
             'PopulateDropdown': self.PopulateDropdown,
-            'Export' : self.ExportBugData
+            'ASCII' : self.ExportBugData_ASCII
         }
 
     def POST(self, params, fileItem=None):
@@ -412,7 +412,7 @@ class Bugs:
 
         self.sendData['Result'] = 'Success'
 
-    def ExportBugData(self, cur):
+    def ExportBugData_ASCII(self, cur):
         sql = '''
         SELECT bug_id, prgm_name, prgm_release, prgm_version, attach_id, report_type, severity, prob_summary, reproducibility, reproducibility_steps, suggested_fix, reported_by_name, report_date, farea_id, assigned_to_id, comments, bug_status, bug_priority, resolution, resolution_version, resolved_by_id, resolution_date, tested_by_id, tested_by_date, treat_deferred
         FROM bug_reports
@@ -423,40 +423,15 @@ class Bugs:
         cur.execute(sql)
         allRows = cur.fetchall()
 
-        jsonExport = []
+        asciiHeader = 'bug_id\tprgm_name\tprgm_release\tprgm_version\tattach_id\treport_type\tseverity\tprob_summary\treproducibility\treproducibility_steps\tsuggested_fix\treported_by_name\treport_date\tfarea_id\tassigned_to_id\tcomments\tbug_status\tbug_priority\tresolution\tresolution_version\tresolved_by_id\tresolution_date\ttested_by_id\ttested_by_date\ttreat_deferred'
+        asciiExport = ''
         for row in allRows:
-            jsonExport.append({
-                'BugID': row[0],
-                'PrgName': row[1],
-                'PrgRel': row[2],
-                'PrgVer': row[3],
-                'AttachID': row[4],
-                'ReportType': row[5],
-                'Severity': row[6],
-                'ProbSummary': row[7],
-                'Reproduceable': row[8],
-                'ReproduceableSteps': row[9],
-                'SuggestedFix': row[10],
-                'ReportedBy': row[11],
-                'ReportDate': dateFormatter(row[12]),
-                'FunctionalArea': row[13],
-                'AssignedTo': row[14],
-                'Comments': row[15],
-                'Status': row[16],
-                'Priority': row[17],
-                'Resolution': row[18],
-                'ResolutionVersion': row[19],
-                'ResolvedBy': row[20],
-                'ResolutionDate': dateFormatter(row[21]),
-                'TestBy': row[22],
-                'TestByDate': dateFormatter(row[23]),
-                'TreatDeferred': row[24]
-            })
-            
+            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22], row[23], row[24])
+
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
-        file = open("BugExport.txt", "w")
-        file.write(json.dumps(jsonExport))
+        file = open("BugExport_ASCII.txt", "w")
+        file.write(asciiHeader + asciiExport)
         file.close()
         
         self.sendData['Result'] = 'Success'
-        self.sendData['FileName'] = 'Export\BugExport.txt'
+        self.sendData['FileName'] = 'Export\BugExport_ASCII.txt'

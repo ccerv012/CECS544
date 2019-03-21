@@ -18,7 +18,8 @@ class employees:
             'Add': self.add_employee,
             'Delete': self.delete_employee,
             'Populate' : self.populate_employees,
-            'Update' : self.update_employee
+            'Update' : self.update_employee,
+            'ASCII' : self.ExportEmployeeData_ASCII
         }
     
     def POST(self, params):
@@ -149,3 +150,23 @@ class employees:
 
         self.sendData['Result'] = 'Success'
     
+    def ExportEmployeeData_ASCII(self, cur):
+        sql = '''
+        SELECT EMP_ID, EMP_NAME, EMP_USERNAME, EMP_PASSWORD,  EMP_ROLE
+        FROM EMPLOYEE
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        asciiExport = 'EMP_ID, EMP_NAME, EMP_USERNAME, EMP_PASSWORD,  EMP_ROLE'
+        for row in allRows:
+            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3], row[4])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        file = open("EmployeeExport_ASCII.txt", "w")
+        file.write(asciiExport)
+        file.close()
+        
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\EmployeeExport_ASCII.txt'
