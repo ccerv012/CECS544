@@ -2,6 +2,7 @@ import cherrypy
 import json
 import os
 from datetime import datetime
+import xml.etree.ElementTree
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -448,6 +449,18 @@ class Bugs:
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         with open("BugExport_XML.xml", "w") as file:
             file.write(xml_data)
+
+        # add timestamp as attribute of root
+        et = xml.etree.ElementTree.parse('BugExport_XML.xml')
+        root = et.getroot()
+        root.tag = "BUG_REPORTS"
+        root.set("timestamp", str(datetime.now()))
+
+        for element in root.iter("ROW"):
+            element.tag = "BUG_REPORT"
+
+        # write back to file
+        et.write('BugExport_XML.xml')
 
         self.sendData['Result'] = 'Success'
         self.sendData['FileName'] = 'Export\BugExport_XML.xml'

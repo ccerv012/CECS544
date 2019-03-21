@@ -1,6 +1,9 @@
 import cherrypy
 import json
 import cx_Oracle
+from datetime import datetime
+import xml.etree.ElementTree
+import os
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -20,7 +23,8 @@ class functionalAreas:
             'Populate' : self.populateFunctionalArea,
             'Update' : self.updateFunctionalArea,
             'DropDown' : self.prgmDropDown,
-            'ASCII' : self.ExportFuncAreaData_ASCII
+            'ASCII' : self.ExportFuncAreaData_ASCII,
+            'XML' : self.ExportFuncAreaData_XML
         }
 
     def POST(self, params):
@@ -196,6 +200,33 @@ class functionalAreas:
         file = open("FuncAreaExport_ASCII.txt", "w")
         file.write(asciiExport)
         file.close()
-        
+
         self.sendData['Result'] = 'Success'
         self.sendData['FileName'] = 'Export\FuncAreaExport_ASCII.txt'
+
+    def ExportFuncAreaData_XML(self, cur):
+        sql = '''
+        select dbms_xmlgen.getxml('select * from FUNCTIONAL_AREA') xml from dual
+        '''
+
+        cur.execute(sql)
+        xml_data = str(cur.fetchone()[0])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        with open("FuncAreaExport_XML.xml", "w") as file:
+            file.write(xml_data)
+
+        # add timestamp as attribute of root
+        et = xml.etree.ElementTree.parse('FuncAreaExport_XML.xml')
+        root = et.getroot()
+        root.tag = "FUNCTIONAL_AREAS"
+        root.set("timestamp", str(datetime.now()))
+
+        for element in root.iter("ROW"):
+            element.tag = "FUNCTIONAL_AREA"
+
+        # write back to file
+        et.write('FuncAreaExport_XML.xml')
+
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\FuncAreaExport_XML.xml'
