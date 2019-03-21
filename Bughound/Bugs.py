@@ -96,7 +96,7 @@ class Bugs:
     def AddBug(self, cur):
         #  insert record into the database
         self.Params['ReportDate'] = datetime.now()
-        self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
+        # self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
         self.FileCount = self.Params['fileCount']
 
         sql = '''
@@ -238,7 +238,7 @@ class Bugs:
             sql = sql + ' AND BUG_STATUS = :Status'
             bindVars['Status'] = self.Params['Status']
 
-        if self.Params['Priority'] != "":
+        if self.Params['Priority'] != 'PleaseSelect':
             sql = sql + ' AND BUG_PRIORITY = :Priority'
             bindVars['Priority'] = self.Params['Priority']
 

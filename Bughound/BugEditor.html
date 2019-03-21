@@ -98,7 +98,16 @@
 								<option value="2">Closed</option>
 							</select>
 
-							<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
+							<span>Priority (1-6): </span>
+								<select id="priority" value="" class="select-field">
+										<option value="PleaseSelect">Please Select</option>
+										<option value="1">1 - Fix immediately</option>
+										<option value="2">2 - Fix as soon as possible</option>
+										<option value="3">3 - Fix before next milestone</option>
+										<option value="4">4 - Fix before release</option>
+										<option value="5">5 - Fix if possible</option>
+										<option value="6">6 - Optional</option>
+									</select>
 						</label>
 
 						<label><span>Resolution</span>

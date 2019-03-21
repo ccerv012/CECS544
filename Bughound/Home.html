@@ -106,7 +106,16 @@
 					</label>
 
 					<label>
-						<span>Priority (1-5): </span><input type="number" class="small-input-field" id="priority" value="" />
+						<span>Priority (1-6): </span>
+							<select id="priority" value="" class="select-field">
+								<option value="PleaseSelect">Please Select</option>
+								<option value="1">1 - Fix immediately</option>
+								<option value="2">2 - Fix as soon as possible</option>
+								<option value="3">3 - Fix before next milestone</option>
+								<option value="4">4 - Fix before release</option>
+								<option value="5">5 - Fix if possible</option>
+								<option value="6">6 - Optional</option>
+							</select>
 
 						<span>Assigned To: </span><input type="text" class="input-field" id="assigned" value="" />
 					</label>
@@ -182,7 +191,11 @@
 					<div id="files"></div>
 
 					<label>
-						<span>Reported By: </span><input disabled type="text" class="small-input-field" id="addReportBy" value="" />
+						<span>Reported By: </span><span class="required">*</span>
+						<select id="addReportBy" class="select-field">
+							<option value="PleaseSelect" selected>Please Select</option>
+						</select>
+						
 						<span>Date: </span><input disabled type="text" class="small-input-field datepicker" id="addReportDate" value="" />
 					</label>
 

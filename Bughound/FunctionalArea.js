@@ -112,23 +112,26 @@ function searchFuncArea(){
             // clear any existing search results
             $('#functionalSearchResults').empty();
 
-            //  creeate a table to dsiplay the results
-            $('#functionalSearchResults').append('<table id="FunctionalResultsTable" class="ResultsTable">');
+            if (AJAX_Response['Data'].length > 0){
+                //  creeate a table to dsiplay the results
+                $('#functionalSearchResults').append('<table id="FunctionalResultsTable" class="ResultsTable">');
 
-            // add a header row to the table
-            $('#FunctionalResultsTable').append('<thead><th>Program Name</th><th>Program Rel</th><th>Program Ver</th><th>Functional Area</th><th>Delete</th></thead>');
+                // add a header row to the table
+                $('#FunctionalResultsTable').append('<thead><th>Program Name</th><th>Program Rel</th><th>Program Ver</th><th>Functional Area</th></thead>');
 
-            // loop through the search results and add them to the results table
-            var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
-                tr = $('<tr/>'); // this is jquery short hand for adding a new row object
-                tr.append('<td onclick="openfunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')" class="link">' + AJAX_Response['Data'][i].Program_Name + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Program_Rel + '</td>');
-                tr.append('<td>' + AJAX_Response['Data'][i].Program_Ver + '</td>');
-                tr.append('<td>' + AJAX_Response['Data'][i].FuntionalAreaName + '</td>'); // populate the new row, cell by cell
-                tr.append('<td><button onclick="deletefunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
-                $('#FunctionalResultsTable').append(tr); // add the row you just built to the table
+                // loop through the search results and add them to the results table
+                var tr;
+                for (var i = 0; i < AJAX_Response['Data'].length; i++) {
+                    tr = $('<tr/>'); // this is jquery short hand for adding a new row object
+                    tr.append('<td onclick="openfunctionalArea(\'' + AJAX_Response['Data'][i].FunctionalArea_ID + '\')" class="link">' + AJAX_Response['Data'][i].Program_Name + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Program_Rel + '</td>');
+                    tr.append('<td>' + AJAX_Response['Data'][i].Program_Ver + '</td>');
+                    tr.append('<td>' + AJAX_Response['Data'][i].FuntionalAreaName + '</td>'); // populate the new row, cell by cell
+                    $('#FunctionalResultsTable').append(tr); // add the row you just built to the table
+                }
             }
+            else
+                $('#functionalSearchResults').append('No results found');
         }
     })
 }

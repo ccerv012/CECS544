@@ -95,24 +95,26 @@ function search_employees(){
         if (AJAX_Response['Result'] == 'Success') {
             // clear any existing search results
             $('#employeeSearchResults').empty();
+            if (AJAX_Response['Data'].length > 0){
+                //  creeate a table to dsiplay the results
+                $('#employeeSearchResults').append('<table id="EmployeeResultsTable" class="ResultsTable">');
 
-            //  creeate a table to dsiplay the results
-            $('#employeeSearchResults').append('<table id="EmployeeResultsTable" class="ResultsTable">');
+                // add a header row to the table
+                $('#EmployeeResultsTable').append('<thead><th>Employee ID</th><th>Employee Username</th><th>Employee Name</th><th>Employee Role</th></thead>');
 
-            // add a header row to the table
-            $('#EmployeeResultsTable').append('<thead><th>Employee ID</th><th>Employee Username</th><th>Employee Name</th><th>Employee Role</th><th>Delete</th></thead>');
-
-            // loop through the search results and add them to the results table
-            var tr;
-            for (var i = 0; i < AJAX_Response['Data'].length; i++) {
-                tr = $('<tr/>'); // this is jquery short hand for adding a new row object
-                tr.append('<td onclick="open_employee(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Username + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Name + '</td>'); // populate the new row, cell by cell
-                tr.append('<td>' + AJAX_Response['Data'][i].Role + '</td>'); // populate the new row, cell by cell
-                tr.append('<td><button onclick="delete_employees(\'' + AJAX_Response['Data'][i].ID + '\')">Delete</button></td>'); // populate the new row, cell by cell
-                $('#EmployeeResultsTable').append(tr); // add the row you just built to the table
+                // loop through the search results and add them to the results table
+                var tr;
+                for (var i = 0; i < AJAX_Response['Data'].length; i++) {
+                    tr = $('<tr/>'); // this is jquery short hand for adding a new row object
+                    tr.append('<td onclick="open_employee(\'' + AJAX_Response['Data'][i].ID + '\')" class="link">' + AJAX_Response['Data'][i].ID + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Username + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Name + '</td>'); // populate the new row, cell by cell
+                    tr.append('<td>' + AJAX_Response['Data'][i].Role + '</td>'); // populate the new row, cell by cell
+                    $('#EmployeeResultsTable').append(tr); // add the row you just built to the table
+                }
             }
+            else
+            $('#employeeSearchResults').append('No results found');
         }
     })
 
