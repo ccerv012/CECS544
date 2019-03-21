@@ -19,7 +19,8 @@ class functionalAreas:
             'Delete': self.deleteFunctionalArea,
             'Populate' : self.populateFunctionalArea,
             'Update' : self.updateFunctionalArea,
-            'DropDown' : self.prgmDropDown
+            'DropDown' : self.prgmDropDown,
+            'ASCII' : self.ExportFuncAreaData_ASCII
         }
 
     def POST(self, params):
@@ -177,3 +178,24 @@ class functionalAreas:
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
+
+    def ExportFuncAreaData_ASCII(self, cur):
+        sql = '''
+        SELECT FAREA_ID, FAREA_NAME, PRGM_ID
+        FROM FUNCTIONAL_AREA
+        '''
+
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        asciiExport = 'FAREA_ID, FAREA_NAME, PRGM_ID'
+        for row in allRows:
+            asciiExport = asciiExport + '\n%s\t%s\t%s' % (row[0], row[1], row[2])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        file = open("FuncAreaExport_ASCII.txt", "w")
+        file.write(asciiExport)
+        file.close()
+        
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\FuncAreaExport_ASCII.txt'
