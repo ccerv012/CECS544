@@ -191,7 +191,11 @@
 					<div id="files"></div>
 
 					<label>
-						<span>Reported By: </span><input disabled type="text" class="small-input-field" id="addReportBy" value="" />
+						<span>Reported By: </span><span class="required">*</span>
+						<select id="addReportBy" class="select-field">
+							<option value="PleaseSelect" selected>Please Select</option>
+						</select>
+						
 						<span>Date: </span><input disabled type="text" class="small-input-field datepicker" id="addReportDate" value="" />
 					</label>
 

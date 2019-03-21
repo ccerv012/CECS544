@@ -96,7 +96,7 @@ class Bugs:
     def AddBug(self, cur):
         #  insert record into the database
         self.Params['ReportDate'] = datetime.now()
-        self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
+        # self.Params['ReportBy'] = cherrypy.session.get('Employee_Info')['Name']
         self.FileCount = self.Params['fileCount']
 
         sql = '''

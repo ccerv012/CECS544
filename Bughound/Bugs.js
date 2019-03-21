@@ -117,7 +117,7 @@ function AddBug(){
         'fileCount' : uploadList.length
     }
 
-    if (params['ProgramID']!='PleaseSelect' && params['ReportType']!='PleaseSelect' && params['Severity']!='PleaseSelect' && params['ProblemSummary']!='' && params['Reproduce']!='' && params['ReproduceSteps']!=''){
+    if (params['ProgramID']!='PleaseSelect' && params['ReportType']!='PleaseSelect' && params['Severity']!='PleaseSelect' && params['ProblemSummary']!='' && params['Reproduce']!='' && params['ReproduceSteps']!='' && params['ReportBy']!='PleaseSelect'){
         // data needs to be formatted before it can be sent via ajax
         var formData = new FormData()
         formData.append('params', JSON.stringify(params));
@@ -220,6 +220,11 @@ function showBugSection(){
             //populate the employee fields
             var Employees = AJAX_Response['DropdownVals']['Employees'];
             $.each(Employees, function (i, Emp){
+                $('#addReportBy').append($('<option>', {
+                    value: Emp['Name'],
+                    text: Emp['Name']
+                }));
+
                 $('#reportBy').append($('<option>', {
                     value: Emp['Name'],
                     text: Emp['Name']
@@ -436,6 +441,7 @@ function CancelBug(){
     $('#addRelVer').val('PleaseSelect');
     $('#addRptType').val('PleaseSelect');
     $('#addSeverity').val('PleaseSelect');
+    $('#addReportBy').val('PleaseSelect');
     $('#addProbSumm').val('');
     $('#addReproduce').val('');
     $('#addReproduceSteps').val('');
