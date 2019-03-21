@@ -3,6 +3,7 @@ function showFuncAreaSection(){
     $('#bugs').hide();
     $('#functionalAreas').show();
     $('#programs').hide();
+    $('#export').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');

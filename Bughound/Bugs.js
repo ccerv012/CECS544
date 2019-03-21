@@ -172,6 +172,7 @@ function showBugSection(){
     $('#employees').hide();
     $('#programs').hide();
     $('#functionalAreas').hide();
+    $('#export').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');

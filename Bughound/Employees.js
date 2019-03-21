@@ -4,6 +4,7 @@ function showEmployeesSection(){
   $('#functionalAreas').hide();
   $('#employees').show();
   $('#programs').hide();
+  $('#export').hide();
 
 
   // change the active flag on the navigation bar
