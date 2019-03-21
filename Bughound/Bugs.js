@@ -453,7 +453,7 @@ function ResetSearchBugs(){
     $('#rptType').val('PleaseSelect');
     $('#severity').val('PleaseSelect');
     $('#funcArea').val('');
-    $('#status').val('PleaseSelect');
+    $('#status').val('Open');
     $('#resolution').val('PleaseSelect');
     $('#priority').val('');
     $('#assigned').val('');
