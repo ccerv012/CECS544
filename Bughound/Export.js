@@ -1,3 +1,20 @@
+function showExportSection(){
+    // show/hide the sections we want the user to see
+  $('#bugs').hide();
+  $('#functionalAreas').hide();
+  $('#employees').hide();
+  $('#programs').hide();
+  $('#export').hide();
+
+  // change the active flag on the navigation bar
+  $('#Home').removeClass('active');
+  $('#Bugs').removeClass('active');
+  $('#FunctionalArea').removeClass('active');
+  $('#Employees').removeClass('active');
+  $('#Programs').removeClass('active');
+  $('#Export').addClass('active');
+}
+
 function exportBugsXML(){
     var params = {
         'Method': 'XML'

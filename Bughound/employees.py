@@ -1,6 +1,7 @@
 import cherrypy
 import json
 import cx_Oracle
+import os
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -159,13 +160,14 @@ class employees:
         cur.execute(sql)
         allRows = cur.fetchall()
 
-        asciiExport = 'EMP_ID, EMP_NAME, EMP_USERNAME, EMP_PASSWORD,  EMP_ROLE'
+        asciiHeader = 'EMP_ID\tEMP_NAME\tEMP_USERNAME\tEMP_PASSWORD\tEMP_ROLE'
+        asciiExport = ''
         for row in allRows:
             asciiExport = asciiExport + '\n%s\t%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3], row[4])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         file = open("EmployeeExport_ASCII.txt", "w")
-        file.write(asciiExport)
+        file.write(asciiHeader+asciiExport)
         file.close()
         
         self.sendData['Result'] = 'Success'

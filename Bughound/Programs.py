@@ -1,6 +1,7 @@
 import cherrypy
 import json
 import cx_Oracle
+import os
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -161,13 +162,14 @@ class Programs:
         cur.execute(sql)
         allRows = cur.fetchall()
 
-        asciiExport = 'PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE'
+        asciiHeader = 'PRGM_ID\tPRGM_NAME\tPRGM_VERSION\tPRGM_RELEASE'
+        asciiExport = ''
         for row in allRows:
             asciiExport = asciiExport + '\n%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         file = open("ProgramExport_ASCII.txt", "w")
-        file.write(asciiExport)
+        file.write(asciiHeader+asciiExport)
         file.close()
         
         self.sendData['Result'] = 'Success'
