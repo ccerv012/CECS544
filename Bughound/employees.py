@@ -1,6 +1,9 @@
 import cherrypy
 import json
 import cx_Oracle
+from datetime import datetime
+import xml.etree.ElementTree
+
 import os
 
 import sys
@@ -20,9 +23,10 @@ class employees:
             'Delete': self.delete_employee,
             'Populate' : self.populate_employees,
             'Update' : self.update_employee,
-            'ASCII' : self.ExportEmployeeData_ASCII
+            'ASCII' : self.ExportEmployeeData_ASCII,
+            'XML' : self.ExportEmployeeData_XML
         }
-    
+
     def POST(self, params):
         # create a connection to the database
         try:
@@ -56,7 +60,7 @@ class employees:
         try:
             cur.execute(sql, Employee_Name=self.Params['Employee_Name'], Employee_Username=self.Params['Employee_Username'], Employee_Password=self.Params['Employee_Password'], Employee_Role=self.Params['Employee_Role'])
             self.CECS544_DB.conn.commit()
-        
+
         except cx_Oracle.IntegrityError as e:
             self.sendData['Result']='PK Violation'
             raise ValueError()
@@ -68,7 +72,7 @@ class employees:
         UPDATE EMPLOYEE
             SET
             emp_username = :username,
-            emp_name = :name, 
+            emp_name = :name,
             emp_password = :password,
             emp_role = :role
         WHERE
@@ -79,7 +83,7 @@ class employees:
         self.CECS544_DB.conn.commit()
 
         self.sendData['Result'] = 'Success'
-    
+
     def delete_employee(self, cur):
         sql = '''
         DELETE FROM EMPLOYEE
@@ -94,15 +98,15 @@ class employees:
 
     def search_employees(self, cur):
         sql = '''
-        select EMP_ID, EMP_USERNAME, EMP_NAME, EMP_ROLE 
-        from EMPLOYEE 
+        select EMP_ID, EMP_USERNAME, EMP_NAME, EMP_ROLE
+        from EMPLOYEE
         WHERE 1=1
         '''
         bindVars = {}
         if self.Params['Employee_ID'] != "":
             sql = sql + ' AND EMP_ID = :Employee_ID'
             bindVars['Employee_ID'] = self.Params['Employee_ID']
-        
+
         if self.Params['Employee_Username'] != "":
             sql = sql + ' AND EMP_USERNAME = :Employee_Username'
             bindVars['Employee_Username'] = self.Params['Employee_Username']
@@ -133,7 +137,7 @@ class employees:
     def populate_employees(self, cur):
         sql = '''
         select EMP_ID, EMP_USERNAME, EMP_NAME, EMP_ROLE, EMP_PASSWORD
-        from EMPLOYEE 
+        from EMPLOYEE
         WHERE EMP_ID=:emp_id
         '''
 
@@ -150,7 +154,7 @@ class employees:
             })
 
         self.sendData['Result'] = 'Success'
-    
+
     def ExportEmployeeData_ASCII(self, cur):
         sql = '''
         SELECT EMP_ID, EMP_NAME, EMP_USERNAME, EMP_PASSWORD,  EMP_ROLE
@@ -169,6 +173,33 @@ class employees:
         file = open("EmployeeExport_ASCII.txt", "w")
         file.write(asciiHeader+asciiExport)
         file.close()
-        
+
         self.sendData['Result'] = 'Success'
         self.sendData['FileName'] = 'Export\EmployeeExport_ASCII.txt'
+
+    def ExportEmployeeData_XML(self, cur):
+        sql = '''
+        select dbms_xmlgen.getxml('select * from EMPLOYEE') xml from dual
+        '''
+
+        cur.execute(sql)
+        xml_data = str(cur.fetchone()[0])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        with open("EmployeeExport_XML.xml", "w") as file:
+            file.write(xml_data)
+
+        # modify node names and attributes
+        et = xml.etree.ElementTree.parse('EmployeeExport_XML.xml')
+        root = et.getroot()
+        root.tag = "EMPLOYEES"
+        root.set("timestamp", str(datetime.now()))
+
+        for element in root.iter("ROW"):
+            element.tag = "EMPLOYEE"
+
+        # write back to file
+        et.write('EmployeeExport_XML.xml')
+
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\EmployeeExport_XML.xml'

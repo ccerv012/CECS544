@@ -87,15 +87,15 @@ function searchPrograms() {
 
   // wait for the ajax call to finish then execute...
   $.when(AJAX_Call).then(function (AJAX_Response){
-      if (AJAX_Response['Result'] == 'Success') {
+      if (AJAX_Response['Data'].length > 0) {
           // clear any existing search results
           $('#program-search-results').empty();
 
-          //  creeate a table to display the results
+          //  create a table to display the results
           $('#program-search-results').append('<table id="program-results-table" class="ResultsTable">');
 
           // add a header row to the table
-          $('#program-results-table').append('<thead><th>Program ID</th><th>Program Name</th><th>Release</th><th>Version</th><th>Delete</th></thead>');
+          $('#program-results-table').append('<thead><th>Program ID</th><th>Program Name</th><th>Release</th><th>Version</th></thead>');
 
           // loop through the search results and add them to the results table
 
@@ -106,9 +106,10 @@ function searchPrograms() {
               tr.append('<td>' + AJAX_Response['Data'][i].Prgm_Name + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Release + '</td>'); // populate the new row, cell by cell
               tr.append('<td>' + AJAX_Response['Data'][i].Version + '</td>'); // populate the new row, cell by cell
-              tr.append('<td><button onclick="deleteProgram(\'' + AJAX_Response['Data'][i].Prgm_ID + '\', \'' + AJAX_Response['Data'][i].Prgm_Name + '\')">Delete</button></td>'); // populate the new row, cell by cell
               $('#program-results-table').append(tr); // add the row you just built to the table
           }
+      } else {
+        $('#program-search-results').html('No Results Found! Please change your search criteria and try again.');
       }
     })
     .fail(function(load){ // the AJAX call was not issued succesfully
@@ -133,7 +134,7 @@ function openProgramEditor(programID){
 function loadPrograms(){
     if (document.cookie.indexOf("EmployeeName")>=0){
         var EmployeeName = getCookie("EmployeeName");
-        
+
         if (document.cookie.indexOf("program_id_cookie")>=0){
 
             // save the program id to a variable that we will send to the search function

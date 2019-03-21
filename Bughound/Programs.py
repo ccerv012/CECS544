@@ -2,6 +2,9 @@ import cherrypy
 import json
 import cx_Oracle
 import os
+from datetime import datetime
+import xml.etree.ElementTree
+
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -20,7 +23,8 @@ class Programs:
             'Delete': self.delete_program,
             'Populate' : self.populate_program,
             'Update' : self.update_program,
-            'ASCII' : self.ExportProgramData_ASCII
+            'ASCII' : self.ExportProgramData_ASCII,
+            'XML' : self.ExportProgramData_XML
         }
 
     def POST(self, params):
@@ -171,6 +175,34 @@ class Programs:
         file = open("ProgramExport_ASCII.txt", "w")
         file.write(asciiHeader+asciiExport)
         file.close()
-        
+
         self.sendData['Result'] = 'Success'
         self.sendData['FileName'] = 'Export\ProgramExport_ASCII.txt'
+
+    def ExportProgramData_XML(self, cur):
+        sql = '''
+        select dbms_xmlgen.getxml('select * from PROGRAM') xml from dual
+        '''
+
+        cur.execute(sql)
+
+        xml_data = str(cur.fetchone()[0])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        with open("ProgramsExport_XML.xml", "w") as file:
+            file.write(xml_data)
+
+        # modify node names and attributes
+        et = xml.etree.ElementTree.parse('ProgramsExport_XML.xml')
+        root = et.getroot()
+        root.tag = "PROGRAMS"
+        root.set("timestamp", str(datetime.now()))
+
+        for element in root.iter("ROW"):
+            element.tag = "PROGRAM"
+
+        # write back to file
+        et.write('ProgramsExport_XML.xml')
+
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\ProgramsExport_XML.xml'
