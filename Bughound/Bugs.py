@@ -423,13 +423,14 @@ class Bugs:
         cur.execute(sql)
         allRows = cur.fetchall()
 
-        asciiExport = 'bug_id, prgm_name, prgm_release, prgm_version, attach_id, report_type, severity, prob_summary, reproducibility, reproducibility_steps, suggested_fix, reported_by_name, report_date, farea_id, assigned_to_id, comments, bug_status, bug_priority, resolution, resolution_version, resolved_by_id, resolution_date, tested_by_id, tested_by_date, treat_deferred'
+        asciiHeader = 'bug_id\tprgm_name\tprgm_release\tprgm_version\tattach_id\treport_type\tseverity\tprob_summary\treproducibility\treproducibility_steps\tsuggested_fix\treported_by_name\treport_date\tfarea_id\tassigned_to_id\tcomments\tbug_status\tbug_priority\tresolution\tresolution_version\tresolved_by_id\tresolution_date\ttested_by_id\ttested_by_date\ttreat_deferred'
+        asciiExport = ''
         for row in allRows:
-            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14] row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22], row[23], row[24])
+            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22], row[23], row[24])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         file = open("BugExport_ASCII.txt", "w")
-        file.write(asciiExport)
+        file.write(asciiHeader + asciiExport)
         file.close()
         
         self.sendData['Result'] = 'Success'
