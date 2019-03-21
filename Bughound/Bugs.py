@@ -59,7 +59,7 @@ class Bugs:
         serverFilePath = 'Attachments\%s\\' % bugID
 
         # transfer the file from the client to the server
-        clientFile = open(filePath + fileName, 'wb')
+        clientFile = open(filePath + fileName, 'wb', encoding="utf-8")
         clientFile.write(fileInfo.file.read())
         clientFile.close()
 
@@ -196,7 +196,7 @@ class Bugs:
 
     def SearchBugs(self, cur):
         sql = '''
-        SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_NAME, REPORT_DATE, RESOLVED_BY_ID
+        SELECT BUG_ID, PRGM_NAME, REPORT_TYPE, SEVERITY, FAREA_ID, ASSIGNED_TO_ID, BUG_STATUS, BUG_PRIORITY, RESOLUTION,  REPORTED_BY_NAME, REPORT_DATE, RESOLVED_BY_ID, PRGM_RELEASE, PRGM_VERSION
         FROM bug_reports
             inner join program
             on program.prgm_id = bug_reports.prgm_id
@@ -213,6 +213,10 @@ class Bugs:
         if self.Params['Pgm'] != "" and self.Params['Pgm'] != 'PleaseSelect':
             sql = sql + ' AND PRGM_NAME = :Pgm'
             bindVars['Pgm'] = self.Params['Pgm']
+
+        if self.Params['PgmID'] != "" and self.Params['PgmID'] != 'PleaseSelect':
+            sql = sql + ' AND PRGM_ID = :PgmID'
+            bindVars['PgmID'] = self.Params['PgmID']
 
         if self.Params['ReportType'] != "" and self.Params['ReportType'] != 'PleaseSelect':
             sql = sql + ' AND REPORT_TYPE = :rptType'
@@ -262,7 +266,7 @@ class Bugs:
             # save the data to our strucutre we are sending back via AJAX
             self.sendData['Data'].append({
                 'ID' : row[0],
-                'Program' : row[1],
+                'Program' : '%s, %s, %s' % (row[1], row[12], row[13]),
                 'ReportType' : row[2],
                 'Severity' : row[3],
                 'FuncArea' : row[4],
