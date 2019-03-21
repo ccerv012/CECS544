@@ -59,7 +59,7 @@ function SearchBugs(){
                 }
             }
             else
-                $('#bugSearchResults').html('No Results Found! Please change your search criteria and try again');  
+                $('#bugSearchResults').html('No Results Found! Please change your search criteria and try again');
         }
     })
 
@@ -159,10 +159,10 @@ function AddBug(){
             alert("The webpage is unable to load, please contact the system admin");
         })
     }
-    else    
+    else
         alert('Please fill out all required fields');
 
-    
+
 }
 
 var BUG_DROP_DOWN_VALUES = '';
@@ -253,7 +253,7 @@ function OpenBugReport(bugID){
 function LoadBugReport(){
     if (document.cookie.indexOf("EmployeeName")>=0){
         var EmployeeName = getCookie("EmployeeName");
-        
+
         EnableLoadingGraphic();
         if (document.cookie.indexOf("bugID")>=0){
             // save the bugID to a variable that we will send to the search function
@@ -291,18 +291,18 @@ function PopulateBugEditor(bugID){
                      value: Emp['ID'],
                      text: Emp['Name']
                  }));
- 
+
                  $('#resolTestedBy').append($('<option>', {
                      value: Emp['ID'],
                      text: Emp['Name']
                  }));
- 
+
                  $('#assigned').append($('<option>', {
                      value: Emp['ID'],
                      text: Emp['Name']
                  }));
              })
- 
+
              // populate func areas
              var FuncAreas = AJAX_Response['DropdownVals']['FuncAreas'];
              $.each(FuncAreas, function (i, Func){
@@ -374,7 +374,7 @@ function SaveBug(){
         'Severity' : $('#severity').val(),
         'ProblemSumm' : $('#probSumm').val(),
         'Reproduceable' : $('#reproduce').val(),
-        'ReproduceableSteps' : $('#reproduceSteps').val(), 
+        'ReproduceableSteps' : $('#reproduceSteps').val(),
         'SuggestFix' : $('#suggFix').val(),
         // 'ReportBy' : $('#reportBy').val(),
         // 'ReportByDate' : $('#reportDate').val(),

@@ -50,7 +50,7 @@ function addProgram() {
 
             // let the user know it was successful
             if (use_default_ver_or_rel)
-              alert('You have successfully added a new program. A default version or release was provided.');
+              alert('You have successfully added a new program. A default version/release was provided.');
             else {
               alert('You have successfully added a new program.');
             }
