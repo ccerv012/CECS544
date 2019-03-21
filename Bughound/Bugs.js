@@ -179,6 +179,7 @@ function showBugSection(){
     $('#Employees').removeClass('active');
     $('#Programs').removeClass('active');
     $('#FunctionalArea').removeClass('active');
+    $('#Export').removeClass('active');
 
     // populate the Add Date
     $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));

@@ -11,6 +11,7 @@ function showProgramsSection(){
     $('#Employees').removeClass('active');
     $('#Programs').addClass('active');
     $('#FunctionalArea').removeClass('active');
+    $('#Export').removeClass('active');
 }
 
 function addProgram() {

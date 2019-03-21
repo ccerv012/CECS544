@@ -10,6 +10,7 @@ function showFuncAreaSection(){
     $('#Employees').removeClass('active');
     $('#FunctionalArea').addClass('active');
     $('#Programs').removeClass('active');
+    $('#Export').removeClass('active');
 
     var params = {
         'Method' : 'DropDown',

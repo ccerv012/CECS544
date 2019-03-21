@@ -12,6 +12,7 @@ function showEmployeesSection(){
   $('#FunctionalArea').removeClass('active');
   $('#Employees').addClass('active');
   $('#Programs').removeClass('active');
+  $('#Export').removeClass('active');
 }
 
 function ResetEmpSearch(){
