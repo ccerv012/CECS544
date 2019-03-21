@@ -503,28 +503,3 @@ $(document).on('change', '#prg', function () {
     })
 
 });
-
-function exportBugInfo(){
-    var params = {
-        'Method': 'Export'
-    }
-
-    // data needs to be formatted before it can be sent via ajax
-    var formData = new FormData()
-    formData.append('params', JSON.stringify(params));
-
-    // make the ajax call
-    var AJAX_Call = getData(formData, './Bugs');
-
-    // wait for the ajax call to finish then execute...
-    $.when(AJAX_Call).then(function (AJAX_Response){
-        if (AJAX_Response['Result']=='Success'){
-            window.open(AJAX_Response['FileName']);
-        }    
-    })
-
-    // the AJAX call was not issued succesfully
-	.fail(function(load){
-		alert("The webpage is unable to load, please contact the system admin")
-	})
-}

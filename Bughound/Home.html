@@ -18,6 +18,7 @@
 		<script src='./Bugs.js'></script>
 		<script src='./Programs.js'></script>
 		<script src='./FunctionalArea.js'></script>
+		<script src='./Export.js'></script>
 
 	</head>
 
@@ -326,6 +327,34 @@
 				</div>
 			</div>
 
+		</div>
+
+		<div id="export">
+			<h3>Export Bughound Informatio</h3>
+
+			<div class="bugInfo">
+				Export Bugs<br>
+				<button id="exportBugs_XML" onclick="exportBugsXML()">Export XML</button>
+				<button id="exportBugs_ASCII" onclick="exportBugsASCII()">Export ASCII</button>
+			</div>
+
+			<div class="employeeInfo">
+				Export Programs<br>
+				<button id="exportEmployees_XML" onclick="exportEmployeesXML()">Export XML</button>
+				<button id="exportEmployees_ASCII" onclick="exportEmployeesASCII()">Export ASCII</button>
+			</div>
+
+			<div class="programInfo">
+				Export Programs<br>
+				<button id="exportPrograms_XML" onclick="exportProgramsXML()">Export XML</button>
+				<button id="exportPrograms_ASCII" onclick="exportProgramsASCII()">Export ASCII</button>
+			</div>
+
+			<div class="functionalAreaInfo">
+				Export Programs<br>
+				<button id="exportFuncArea_XML" onclick="exportFuncAreaXML()">Export XML</button>
+				<button id="exportFuncArea_ASCII" onclick="exportFuncAreaASCII()">Export ASCII</button>
+			</div>
 		</div>
 
 		<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
