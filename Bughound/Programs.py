@@ -81,7 +81,7 @@ class Programs:
         if self.Params['Program_Release'] != "":
             sql = sql + ' AND PRGM_RELEASE = :Program_Release'
             bind_vars['Program_Release'] = self.Params['Program_Release']
-
+        sql = sql + ' order by PRGM_NAME, PRGM_RELEASE, PRGM_VERSION'
         cur.execute(sql, bind_vars) # execute the sql statement
         allRows = cur.fetchall() # get the results on the query
 
