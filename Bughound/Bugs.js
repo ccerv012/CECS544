@@ -455,7 +455,7 @@ function ResetSearchBugs(){
     $('#funcArea').val('');
     $('#status').val('PleaseSelect');
     $('#resolution').val('PleaseSelect');
-    $('#priority').val('');
+    $('#priority').val('PleaseSelect');
     $('#assigned').val('');
     $('#reportBy').val('PleaseSelect');
     $('#reportDate').val('');

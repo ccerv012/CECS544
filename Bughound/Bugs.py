@@ -238,7 +238,7 @@ class Bugs:
             sql = sql + ' AND BUG_STATUS = :Status'
             bindVars['Status'] = self.Params['Status']
 
-        if self.Params['Priority'] != "":
+        if self.Params['Priority'] != 'PleaseSelect':
             sql = sql + ' AND BUG_PRIORITY = :Priority'
             bindVars['Priority'] = self.Params['Priority']
 
