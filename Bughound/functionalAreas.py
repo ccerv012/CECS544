@@ -3,6 +3,7 @@ import json
 import cx_Oracle
 from datetime import datetime
 import xml.etree.ElementTree
+
 import os
 
 import sys
@@ -192,13 +193,14 @@ class functionalAreas:
         cur.execute(sql)
         allRows = cur.fetchall()
 
-        asciiExport = 'FAREA_ID, FAREA_NAME, PRGM_ID'
+        asciiHeader = 'FAREA_ID\tFAREA_NAME\tPRGM_ID'
+        asciiExport = ''
         for row in allRows:
             asciiExport = asciiExport + '\n%s\t%s\t%s' % (row[0], row[1], row[2])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         file = open("FuncAreaExport_ASCII.txt", "w")
-        file.write(asciiExport)
+        file.write(asciiHeader+asciiExport)
         file.close()
 
         self.sendData['Result'] = 'Success'
@@ -216,7 +218,7 @@ class functionalAreas:
         with open("FuncAreaExport_XML.xml", "w") as file:
             file.write(xml_data)
 
-        # add timestamp as attribute of root
+        # modify node names and attributes
         et = xml.etree.ElementTree.parse('FuncAreaExport_XML.xml')
         root = et.getroot()
         root.tag = "FUNCTIONAL_AREAS"

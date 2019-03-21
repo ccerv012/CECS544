@@ -3,6 +3,7 @@ function showFuncAreaSection(){
     $('#bugs').hide();
     $('#functionalAreas').show();
     $('#programs').hide();
+    $('#export').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
@@ -10,6 +11,7 @@ function showFuncAreaSection(){
     $('#Employees').removeClass('active');
     $('#FunctionalArea').addClass('active');
     $('#Programs').removeClass('active');
+    $('#Export').removeClass('active');
 
     var params = {
         'Method' : 'DropDown',

@@ -4,6 +4,7 @@ function showEmployeesSection(){
   $('#functionalAreas').hide();
   $('#employees').show();
   $('#programs').hide();
+  $('#export').hide();
 
 
   // change the active flag on the navigation bar
@@ -12,6 +13,7 @@ function showEmployeesSection(){
   $('#FunctionalArea').removeClass('active');
   $('#Employees').addClass('active');
   $('#Programs').removeClass('active');
+  $('#Export').removeClass('active');
 }
 
 function ResetEmpSearch(){

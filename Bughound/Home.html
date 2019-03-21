@@ -30,7 +30,7 @@
 			<a id='Employees' class='restricted' href="#" onclick="showEmployeesSection()">Employees</a>
 			<a id='Programs' class='restricted' href="#" onclick="showProgramsSection()">Programs</a>
 			<a id='FunctionalArea' class='restricted' href="#" onclick="showFuncAreaSection()">Functional Area</a>
-			<a id='ExportBugInfo' href="#" onclick="showExportSection()">Export</a>
+			<a id='Export' href="#" class='restricted' onclick="showExportSection()">Export</a>
 			<!-- add each new section here -->
 		</div>
 
@@ -333,25 +333,25 @@
 			<h3>Export Bughound Information</h3>
 
 			<div class="bugInfo">
-				Export Bugs<br>
+				<b>Export Bugs</b><br>
 				<button id="exportBugs_XML" onclick="exportBugsXML()">Export XML</button>
 				<button id="exportBugs_ASCII" onclick="exportBugsASCII()">Export ASCII</button>
-			</div>
+			</div><br>
 
 			<div class="employeeInfo">
-				Export Employees<br>
+				<b> Export Employees</b><br>
 				<button id="exportEmployees_XML" onclick="exportEmployeesXML()">Export XML</button>
 				<button id="exportEmployees_ASCII" onclick="exportEmployeesASCII()">Export ASCII</button>
-			</div>
+			</div><br>
 
 			<div class="programInfo">
-				Export Programs<br>
+				<b>Export Programs</b><br>
 				<button id="exportPrograms_XML" onclick="exportProgramsXML()">Export XML</button>
 				<button id="exportPrograms_ASCII" onclick="exportProgramsASCII()">Export ASCII</button>
-			</div>
+			</div><br>
 
 			<div class="functionalAreaInfo">
-				Export Functional Areas<br>
+				<b>Export Functional Areas</b><br>
 				<button id="exportFuncArea_XML" onclick="exportFuncAreaXML()">Export XML</button>
 				<button id="exportFuncArea_ASCII" onclick="exportFuncAreaASCII()">Export ASCII</button>
 			</div>

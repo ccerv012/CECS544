@@ -217,7 +217,7 @@ class Bugs:
             bindVars['Pgm'] = self.Params['Pgm']
 
         if self.Params['PgmID'] != "" and self.Params['PgmID'] != 'PleaseSelect':
-            sql = sql + ' AND PRGM_ID = :PgmID'
+            sql = sql + ' AND program.PRGM_ID = :PgmID'
             bindVars['PgmID'] = self.Params['PgmID']
 
         if self.Params['ReportType'] != "" and self.Params['ReportType'] != 'PleaseSelect':
@@ -450,7 +450,7 @@ class Bugs:
         with open("BugExport_XML.xml", "w") as file:
             file.write(xml_data)
 
-        # add timestamp as attribute of root
+        # modify node names and attributes
         et = xml.etree.ElementTree.parse('BugExport_XML.xml')
         root = et.getroot()
         root.tag = "BUG_REPORTS"

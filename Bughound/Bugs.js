@@ -172,6 +172,7 @@ function showBugSection(){
     $('#employees').hide();
     $('#programs').hide();
     $('#functionalAreas').hide();
+    $('#export').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
@@ -179,6 +180,7 @@ function showBugSection(){
     $('#Employees').removeClass('active');
     $('#Programs').removeClass('active');
     $('#FunctionalArea').removeClass('active');
+    $('#Export').removeClass('active');
 
     // populate the Add Date
     $('#addReportDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
@@ -491,7 +493,7 @@ $(document).on('change', '#prg', function () {
     $('#prgRelVer').append('<option value="PleaseSelect">Please Select</option>');
 
     // get the program the user selected
-    selectedPrg = $('#addPrg').val();
+    selectedPrg = $('#prg').val();
 
     // populate the two corresponding drop downs
     Releases = Object.keys(BUG_DROP_DOWN_VALUES['Programs'][selectedPrg]);

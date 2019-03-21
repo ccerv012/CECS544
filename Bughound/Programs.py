@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import xml.etree.ElementTree
 
+
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
 from DB_Connection import db_CECS544
@@ -22,8 +23,8 @@ class Programs:
             'Delete': self.delete_program,
             'Populate' : self.populate_program,
             'Update' : self.update_program,
-            'ASCII' : self.export_programs_ASCII,
-            'XML' : self.export_programs_XML
+            'ASCII' : self.ExportProgramData_ASCII,
+            'XML' : self.ExportProgramData_XML
         }
 
     def POST(self, params):
@@ -156,22 +157,42 @@ class Programs:
 
         self.sendData['Result'] = 'Success'
 
-    def export_programs_ASCII(self):
-        pass
+    def ExportProgramData_ASCII(self, cur):
+        sql = '''
+        SELECT PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE
+        FROM PROGRAM
+        '''
 
-    def export_programs_XML(self, cur):
+        cur.execute(sql)
+        allRows = cur.fetchall()
+
+        asciiHeader = 'PRGM_ID\tPRGM_NAME\tPRGM_VERSION\tPRGM_RELEASE'
+        asciiExport = ''
+        for row in allRows:
+            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        file = open("ProgramExport_ASCII.txt", "w")
+        file.write(asciiHeader+asciiExport)
+        file.close()
+
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\ProgramExport_ASCII.txt'
+
+    def ExportProgramData_XML(self, cur):
         sql = '''
         select dbms_xmlgen.getxml('select * from PROGRAM') xml from dual
         '''
 
         cur.execute(sql)
+
         xml_data = str(cur.fetchone()[0])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
         with open("ProgramsExport_XML.xml", "w") as file:
             file.write(xml_data)
 
-        # add timestamp as attribute of root
+        # modify node names and attributes
         et = xml.etree.ElementTree.parse('ProgramsExport_XML.xml')
         root = et.getroot()
         root.tag = "PROGRAMS"

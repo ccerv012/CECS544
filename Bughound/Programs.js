@@ -4,6 +4,7 @@ function showProgramsSection(){
     $('#employees').hide();
     $('#programs').show();
     $('#functionalAreas').hide();
+    $('#export').hide();
 
     // change the active flag on the navigation bar
     $('#Home').removeClass('active');
@@ -11,6 +12,7 @@ function showProgramsSection(){
     $('#Employees').removeClass('active');
     $('#Programs').addClass('active');
     $('#FunctionalArea').removeClass('active');
+    $('#Export').removeClass('active');
 }
 
 function addProgram() {
