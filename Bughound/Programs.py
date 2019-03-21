@@ -1,6 +1,9 @@
 import cherrypy
 import json
 import cx_Oracle
+import os
+from datetime import datetime
+import xml.etree.ElementTree
 
 import sys
 sys.path.insert(0, 'c:\inetpub\wwwroot\CSULB\CECS544\ReusablePython')
@@ -19,7 +22,8 @@ class Programs:
             'Delete': self.delete_program,
             'Populate' : self.populate_program,
             'Update' : self.update_program,
-            'ASCII' : self.ExportProgramData_ASCII
+            'ASCII' : self.export_programs_ASCII,
+            'XML' : self.export_programs_XML
         }
 
     def POST(self, params):
@@ -152,23 +156,32 @@ class Programs:
 
         self.sendData['Result'] = 'Success'
 
-    def ExportProgramData_ASCII(self, cur):
+    def export_programs_ASCII(self):
+        pass
+
+    def export_programs_XML(self, cur):
         sql = '''
-        SELECT PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE
-        FROM PROGRAM
+        select dbms_xmlgen.getxml('select * from PROGRAM') xml from dual
         '''
 
         cur.execute(sql)
-        allRows = cur.fetchall()
-
-        asciiExport = 'PRGM_ID, PRGM_NAME, PRGM_VERSION, PRGM_RELEASE'
-        for row in allRows:
-            asciiExport = asciiExport + '\n%s\t%s\t%s\t%s' % (row[0], row[1], row[2], row[3])
+        xml_data = str(cur.fetchone()[0])
 
         os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
-        file = open("ProgramExport_ASCII.txt", "w")
-        file.write(asciiExport)
-        file.close()
-        
+        with open("ProgramsExport_XML.xml", "w") as file:
+            file.write(xml_data)
+
+        # add timestamp as attribute of root
+        et = xml.etree.ElementTree.parse('ProgramsExport_XML.xml')
+        root = et.getroot()
+        root.tag = "PROGRAMS"
+        root.set("timestamp", str(datetime.now()))
+
+        for element in root.iter("ROW"):
+            element.tag = "PROGRAM"
+
+        # write back to file
+        et.write('ProgramsExport_XML.xml')
+
         self.sendData['Result'] = 'Success'
-        self.sendData['FileName'] = 'Export\ProgramExport_ASCII.txt'
+        self.sendData['FileName'] = 'Export\ProgramsExport_XML.xml'

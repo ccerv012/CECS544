@@ -30,7 +30,8 @@ class Bugs:
             'Delete': self.DeleteBug,
             'PopulateBug': self.PopulateBugEditor,
             'PopulateDropdown': self.PopulateDropdown,
-            'ASCII' : self.ExportBugData_ASCII
+            'ASCII' : self.ExportBugData_ASCII,
+            'XML' : self.ExportBugData_XML
         }
 
     def POST(self, params, fileItem=None):
@@ -432,6 +433,21 @@ class Bugs:
         file = open("BugExport_ASCII.txt", "w")
         file.write(asciiHeader + asciiExport)
         file.close()
-        
+
         self.sendData['Result'] = 'Success'
         self.sendData['FileName'] = 'Export\BugExport_ASCII.txt'
+
+    def ExportBugData_XML(self, cur):
+        sql = '''
+        select dbms_xmlgen.getxml('select * from BUG_REPORTS') xml from dual
+        '''
+
+        cur.execute(sql)
+        xml_data = str(cur.fetchone()[0])
+
+        os.chdir('c:\inetpub\wwwroot\CSULB\CECS544\Bughound\Export')
+        with open("BugExport_XML.xml", "w") as file:
+            file.write(xml_data)
+
+        self.sendData['Result'] = 'Success'
+        self.sendData['FileName'] = 'Export\BugExport_XML.xml'

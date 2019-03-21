@@ -14,7 +14,7 @@ function exportBugsXML(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -39,7 +39,7 @@ function exportBugsASCII(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -64,7 +64,7 @@ function exportEmployeesXML(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -89,7 +89,7 @@ function exportEmployeesASCII(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -114,7 +114,7 @@ function exportProgramsXML(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -139,7 +139,7 @@ function exportProgramsASCII(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -164,7 +164,7 @@ function exportFuncAreaXML(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
@@ -189,7 +189,7 @@ function exportFuncAreaASCII(){
     $.when(AJAX_Call).then(function (AJAX_Response){
         if (AJAX_Response['Result']=='Success'){
             window.open(AJAX_Response['FileName']);
-        }    
+        }
     })
 
     // the AJAX call was not issued succesfully
