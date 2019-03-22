@@ -61,7 +61,7 @@ class Bugs:
         serverFilePath = 'Attachments\%s\\' % bugID
 
         # transfer the file from the client to the server
-        clientFile = open(filePath + fileName, 'w')
+        clientFile = open(filePath + fileName, 'wb')
         clientFile.write(fileInfo.file.read())
         clientFile.close()
 
